@@ -5,12 +5,13 @@ import static org.junit.Assert.*;
 
 public class ClockingTest {
 
-    // TODO: Remove duplicate test string "working"
     // TODO: Make Clocking immutable
+    // TODO: Implement Clocking Builder
+    // TODO: Better encapsulate state
     @Test
-    public void createClockingTest(){
-        String clockingLabel = "working";
-        Clocking workClocking = new Clocking(clockingLabel);
-        assertEquals(workClocking.label, clockingLabel);
+    public void createClocking_WithLabel(){
+        Clocking workClocking = new Clocking.Builder("working")
+                .build();
+        assertEquals(workClocking.label(), "working");
     }
 }

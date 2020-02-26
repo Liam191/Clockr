@@ -6,4 +6,18 @@ public class Clocking {
         this.label = label;
     }
 
+    public String label(){
+        return label;
+    }
+
+    public static class Builder {
+        private String label;
+        public Builder(String label){
+            this.label = label;
+        }
+
+        public Clocking build(){
+            return new Clocking(label);
+        }
+    }
 }
