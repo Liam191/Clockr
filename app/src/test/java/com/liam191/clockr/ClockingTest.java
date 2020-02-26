@@ -9,7 +9,8 @@ public class ClockingTest {
     // TODO: Make Clocking immutable
     @Test
     public void createClockingTest(){
-       Clocking workClocking = new Clocking("working");
-       assertEquals(workClocking.label, "working");
+        String clockingLabel = "working";
+        Clocking workClocking = new Clocking(clockingLabel);
+        assertEquals(workClocking.label, clockingLabel);
     }
 }
