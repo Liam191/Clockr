@@ -21,4 +21,13 @@ public class ClockingTest {
                 .build();
         assertEquals(workClocking.description(), "A work clocking");
     }
+
+    @Test
+    public void createClocking_WithDuration(){
+        Clocking workClocking = new Clocking.Builder("working")
+                .description("A work clocking")
+                .duration(0.5)
+                .build();
+        assertEquals(workClocking.duration(), 0.5, 0.001);
+    }
 }
