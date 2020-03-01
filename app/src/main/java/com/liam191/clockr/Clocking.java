@@ -1,15 +1,18 @@
 package com.liam191.clockr;
 
-class Clocking {
+import java.time.LocalDateTime;
+
+public final class Clocking {
     private String label;
     private String description;
     private double duration;
-
+    private LocalDateTime fromTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
         this.description = clockingBuilder.description;
         this.duration = clockingBuilder.duration;
+        this.fromTime = clockingBuilder.fromTime;
     }
 
     public String label(){
@@ -24,10 +27,16 @@ class Clocking {
         return this.duration;
     }
 
-    public static class Builder {
+    public LocalDateTime fromTime(){
+        return this.fromTime;
+    }
+
+
+    public static final class Builder {
         private String label;
         private String description;
         private double duration;
+        private LocalDateTime fromTime;
 
         public Builder(String label){
             this.label = label;
@@ -40,6 +49,11 @@ class Clocking {
 
         public Builder duration(double duration){
             this.duration = duration;
+            return this;
+        }
+
+        public Builder fromTime(LocalDateTime fromTime){
+            this.fromTime = fromTime;
             return this;
         }
 
