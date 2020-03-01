@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 public final class Clocking {
     private String label;
     private String description;
-    private double duration;
+    private int durationInMinutes;
     private LocalDateTime fromTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
         this.description = clockingBuilder.description;
-        this.duration = clockingBuilder.duration;
+        this.durationInMinutes = clockingBuilder.durationInMinutes;
         this.fromTime = clockingBuilder.fromTime;
     }
 
@@ -23,8 +23,8 @@ public final class Clocking {
         return this.description;
     }
 
-    public double duration(){
-        return this.duration;
+    public int durationInMinutes(){
+        return this.durationInMinutes;
     }
 
     public LocalDateTime fromTime(){
@@ -35,20 +35,22 @@ public final class Clocking {
     public static final class Builder {
         private String label;
         private String description;
-        private double duration;
+        private int durationInMinutes;
         private LocalDateTime fromTime;
 
         public Builder(String label){
             this.label = label;
         }
 
+
+
         public Builder description(String description){
             this.description = description;
             return this;
         }
 
-        public Builder duration(double duration){
-            this.duration = duration;
+        public Builder durationInMinutes(int durationInMinutes){
+            this.durationInMinutes = durationInMinutes;
             return this;
         }
 

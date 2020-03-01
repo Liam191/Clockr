@@ -29,18 +29,16 @@ public class ClockingTest {
     @Test
     public void testCreateClockingWithDuration(){
         Clocking workClocking = new Clocking.Builder("working")
-                .description("A work clocking")
-                .duration(0.5)
+                .durationInMinutes(30)
                 .build();
-        assertEquals(workClocking.duration(), 0.5, 0.001);
+        assertEquals(workClocking.durationInMinutes(), 30);
     }
 
     @Test
-    public void testCreateClockingHasFromTime(){
+    public void testCreateClockingWithFromTime(){
         Clocking workClocking = new Clocking.Builder("working")
-                .description("A work clocking")
-                .fromTime(LocalDateTime.parse("2020-03-01T18:37:50.000Z"))
+                .fromTime(LocalDateTime.parse("2020-03-01T18:37:50"))
                 .build();
-        assertTrue(workClocking.fromTime().equals(LocalDateTime.parse("2020-03-01T18:37:50.000Z")));
+        assertEquals(workClocking.fromTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }
 }
