@@ -1,5 +1,6 @@
-package com.liam191.clockr;
+package com.liam191.clockr.clocking;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 public final class Clocking {
@@ -37,12 +38,16 @@ public final class Clocking {
         private String description;
         private int durationInMinutes;
         private LocalDateTime fromTime;
+        private Clock systemClock;
 
         public Builder(String label){
             this.label = label;
         }
 
-
+        Builder(String label, Clock systemClock){
+            this.label = label;
+            this.systemClock = systemClock;
+        }
 
         public Builder description(String description){
             this.description = description;
@@ -60,6 +65,10 @@ public final class Clocking {
         }
 
         public Clocking build(){
+            if (this.fromTime == null) {
+                this.fromTime = (this.systemClock == null) ?
+                    LocalDateTime.now() : LocalDateTime.now(systemClock);
+            }
             return new Clocking(this);
         }
     }
