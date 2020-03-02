@@ -13,6 +13,9 @@ public class ClockingTest {
 
     // TODO: Make Clocking immutable
     // TODO: Make duration field mandatory
+    // TODO: Create automatic endTime (startTime plusHours(duration)?)
+    //      TODO: Ability to set endTime manually
+    //      TODO: Cannot set endTime and duration at the same time??
     @Test
     public void testCreateClocking_WithLabel(){
         Clocking workClocking = new Clocking.Builder("working")
@@ -39,9 +42,9 @@ public class ClockingTest {
     @Test
     public void testCreateClocking_WithFromTime(){
         Clocking workClocking = new Clocking.Builder("working")
-                .fromTime(LocalDateTime.parse("2020-03-01T18:37:50"))
+                .startTime(LocalDateTime.parse("2020-03-01T18:37:50"))
                 .build();
-        assertEquals(workClocking.fromTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
+        assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }
 
     @Test
@@ -58,7 +61,7 @@ public class ClockingTest {
 
         Clocking workClocking = new Clocking.Builder("working", systemClockStub)
                 .build();
-        assertEquals(workClocking.fromTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
+        assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }
 
 }

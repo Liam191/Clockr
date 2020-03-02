@@ -7,13 +7,13 @@ public final class Clocking {
     private String label;
     private String description;
     private int durationInMinutes;
-    private LocalDateTime fromTime;
+    private LocalDateTime startTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
         this.description = clockingBuilder.description;
         this.durationInMinutes = clockingBuilder.durationInMinutes;
-        this.fromTime = clockingBuilder.fromTime;
+        this.startTime = clockingBuilder.startTime;
     }
 
     public String label(){
@@ -28,8 +28,8 @@ public final class Clocking {
         return this.durationInMinutes;
     }
 
-    public LocalDateTime fromTime(){
-        return this.fromTime;
+    public LocalDateTime startTime(){
+        return this.startTime;
     }
 
 
@@ -37,7 +37,7 @@ public final class Clocking {
         private String label;
         private String description;
         private int durationInMinutes;
-        private LocalDateTime fromTime;
+        private LocalDateTime startTime;
         private Clock systemClock;
 
         public Builder(String label){
@@ -59,14 +59,14 @@ public final class Clocking {
             return this;
         }
 
-        public Builder fromTime(LocalDateTime fromTime){
-            this.fromTime = fromTime;
+        public Builder startTime(LocalDateTime fromTime){
+            this.startTime = fromTime;
             return this;
         }
 
         public Clocking build(){
-            if (this.fromTime == null) {
-                this.fromTime = (this.systemClock == null) ?
+            if (this.startTime == null) {
+                this.startTime = (this.systemClock == null) ?
                     LocalDateTime.now() : LocalDateTime.now(systemClock);
             }
             return new Clocking(this);
