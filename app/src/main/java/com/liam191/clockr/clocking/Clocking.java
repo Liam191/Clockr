@@ -44,18 +44,19 @@ public final class Clocking {
             this.label = label;
         }
 
+        public Builder(String label, int durationInMinutes){
+            this(label);
+            this.durationInMinutes = durationInMinutes;
+        }
+
         Builder(String label, Clock systemClock){
-            this.label = label;
+            this(label);
             this.systemClock = systemClock;
         }
 
+
         public Builder description(String description){
             this.description = description;
-            return this;
-        }
-
-        public Builder durationInMinutes(int durationInMinutes){
-            this.durationInMinutes = durationInMinutes;
             return this;
         }
 

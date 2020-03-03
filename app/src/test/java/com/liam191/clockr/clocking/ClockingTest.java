@@ -10,8 +10,6 @@ import static org.junit.Assert.*;
 
 public class ClockingTest {
 
-    // TODO: Make Clocking immutable
-    // TODO: Make duration field mandatory
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
@@ -31,11 +29,10 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithDuration(){
-        Clocking workClocking = new Clocking.Builder("working")
-                .durationInMinutes(30)
+    public void testCreateClocking_WithDurationInMinutes(){
+        Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.durationInMinutes(), 30);
+        assertEquals(workClocking.durationInMinutes(), 60);
     }
 
     @Test
