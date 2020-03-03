@@ -1,7 +1,6 @@
 package com.liam191.clockr.clocking;
 
 import org.junit.Test;
-
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -4,10 +4,10 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 
 public final class Clocking {
-    private String label;
-    private String description;
-    private int durationInMinutes;
-    private LocalDateTime startTime;
+    private final String label;
+    private final String description;
+    private final int durationInMinutes;
+    private final LocalDateTime startTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
