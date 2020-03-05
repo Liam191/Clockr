@@ -16,14 +16,14 @@ public class ClockingTest {
     //      TODO: Cannot set endTime and duration at the same time??
     @Test
     public void testCreateClocking_WithLabel(){
-        Clocking workClocking = new Clocking.Builder("working")
+        Clocking workClocking = new Clocking.Builder("working", 10)
                 .build();
         assertEquals(workClocking.label(), "working");
     }
 
     @Test
     public void testCreateClocking_WithDescription(){
-        Clocking workClocking = new Clocking.Builder("working")
+        Clocking workClocking = new Clocking.Builder("working", 20)
                 .description("A work clocking")
                 .build();
         assertEquals(workClocking.description(), "A work clocking");
@@ -38,7 +38,7 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_WithFromTime(){
-        Clocking workClocking = new Clocking.Builder("working")
+        Clocking workClocking = new Clocking.Builder("working", 70)
                 .startTime(LocalDateTime.parse("2020-03-01T18:37:50"))
                 .build();
         assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
@@ -56,7 +56,7 @@ public class ClockingTest {
             }
         };
 
-        Clocking workClocking = new Clocking.Builder("working", systemClockStub)
+        Clocking workClocking = new Clocking.Builder("working", 60, systemClockStub)
                 .build();
         assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }

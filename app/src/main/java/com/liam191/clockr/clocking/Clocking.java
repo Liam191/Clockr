@@ -38,20 +38,16 @@ public final class Clocking {
         private String description;
         private int durationInMinutes;
         private LocalDateTime startTime;
-        private Clock systemClock;
-
-        public Builder(String label){
-            this.label = label;
-        }
+        private Clock testSystemClock;
 
         public Builder(String label, int durationInMinutes){
-            this(label);
+            this.label = label;
             this.durationInMinutes = durationInMinutes;
         }
 
-        Builder(String label, Clock systemClock){
-            this(label);
-            this.systemClock = systemClock;
+        Builder(String label, int durationInMinutes, Clock testSystemClock){
+            this(label, durationInMinutes);
+            this.testSystemClock = testSystemClock;
         }
 
 
@@ -67,8 +63,8 @@ public final class Clocking {
 
         public Clocking build(){
             if (this.startTime == null) {
-                this.startTime = (this.systemClock == null) ?
-                    LocalDateTime.now() : LocalDateTime.now(systemClock);
+                this.startTime = (this.testSystemClock == null) ?
+                    LocalDateTime.now() : LocalDateTime.now(testSystemClock);
             }
             return new Clocking(this);
         }
