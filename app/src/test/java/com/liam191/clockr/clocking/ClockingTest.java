@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 public class ClockingTest {
 
+    // TODO: Unique IDs for Clockings
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
