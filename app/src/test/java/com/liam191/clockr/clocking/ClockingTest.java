@@ -31,6 +31,7 @@ public class ClockingTest {
         }
     }
 
+    // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
@@ -42,9 +43,25 @@ public class ClockingTest {
     }
 
     @Test
+    public void testCreateClocking_WithLabelAndTrimmedWhitespace(){
+        Clocking workClocking = new Clocking.Builder("      working      ", 10)
+                .build();
+        assertEquals(workClocking.label(), "working");
+    }
+
+
+    @Test
     public void testCreateClocking_WithDescription(){
         Clocking workClocking = new Clocking.Builder("working", 20)
                 .description("A work clocking")
+                .build();
+        assertEquals(workClocking.description(), "A work clocking");
+    }
+
+    @Test
+    public void testCreateClocking_WithDescriptionAndTrimmedWhitespace(){
+        Clocking workClocking = new Clocking.Builder("working", 20)
+                .description("         A work clocking          ")
                 .build();
         assertEquals(workClocking.description(), "A work clocking");
     }

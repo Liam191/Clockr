@@ -57,7 +57,7 @@ public final class Clocking {
         private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
-            this.label = label;
+            this.label = label.trim();
             this.durationInMinutes = durationInMinutes;
         }
 
@@ -68,7 +68,7 @@ public final class Clocking {
 
 
         public Builder description(String description){
-            this.description = description;
+            this.description = description.trim();
             return this;
         }
 
