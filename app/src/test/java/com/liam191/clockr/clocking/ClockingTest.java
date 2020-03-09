@@ -8,9 +8,29 @@ import java.time.ZoneId;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("SimplifiableJUnitAssertion")
 public class ClockingTest {
 
-    // TODO: Unique IDs for Clockings
+    private class SystemClockStub {
+        private final LocalDateTime stubbedTime;
+
+        SystemClockStub(final String timeString) {
+            stubbedTime = LocalDateTime.parse(timeString);
+        }
+
+        Clock getClock() {
+            return new Clock() {
+                @Override public ZoneId getZone() { return ZoneId.systemDefault(); }
+                @Override public Clock withZone(ZoneId zone) { return systemDefaultZone(); }
+
+                @Override
+                public Instant instant() {
+                    return stubbedTime.atZone(ZoneId.systemDefault()).toInstant();
+                }
+            };
+        }
+    }
+
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
@@ -46,19 +66,51 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_HasDefaultFromTime(){
-        Clock systemClockStub = new Clock() {
-            @Override public ZoneId getZone() { return ZoneId.systemDefault(); }
-            @Override public Clock withZone(ZoneId zone) { return systemDefaultZone(); }
-
-            @Override
-            public Instant instant() {
-                return Instant.parse("2020-03-01T18:37:50.00Z");
-            }
-        };
+        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
 
         Clocking workClocking = new Clocking.Builder("working", 60, systemClockStub)
                 .build();
         assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }
 
+    @Test
+    public void testClockingEquals(){
+        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
+
+        Clocking clockingX = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
+        Clocking clockingZ = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
+        Clocking otherClocking = new Clocking.Builder("Different clocking", 120, systemClockStub).build();
+
+        assertTrue(clockingX.equals(clockingX));
+
+        assertTrue(clockingX.equals(clockingY));
+        assertTrue(clockingY.equals(clockingX));
+
+        assertTrue(clockingX.equals(clockingY));
+        assertTrue(clockingY.equals(clockingZ));
+        assertTrue(clockingZ.equals(clockingX));
+
+        assertFalse(clockingX.equals(otherClocking));
+        assertFalse(otherClocking.equals(clockingX));
+        assertFalse(clockingX.equals(null));
+    }
+
+    @Test
+    public void testClockingEquals_fromSameAndDifferentBuilders(){
+        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
+
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60, systemClockStub);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60, systemClockStub);
+
+        Clocking clockingA = builderOne.build();
+        Clocking clockingB = builderOne.build();
+        Clocking clockingX = builderTwo.build();
+        Clocking clockingY = builderTwo.build();
+
+        assertTrue(clockingA.equals(clockingB));
+        assertTrue(clockingB.equals(clockingX));
+        assertTrue(clockingX.equals(clockingY));
+        assertTrue(clockingY.equals(clockingA));
+    }
 }

@@ -32,13 +32,29 @@ public final class Clocking {
         return this.startTime;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(o == null || o.getClass() != getClass()){
+            return false;
+        }
+        Clocking clocking = (Clocking) o;
+
+        return (label.equals(clocking.label) &&
+            description.equals(clocking.description) &&
+            durationInMinutes == clocking.durationInMinutes &&
+            description.equals(clocking.description) &&
+            startTime.equals(clocking.startTime));
+    }
+
 
     public static final class Builder {
-        private String label;
-        private String description;
-        private int durationInMinutes;
-        private LocalDateTime startTime;
-        private Clock testSystemClock;
+        private String label = "";
+        private String description = "";
+        private int durationInMinutes = 0;
+        // startTime does *not* get a default time value as the time should be set
+        // when a Clocking is created, not when the Builder is created.
+        private LocalDateTime startTime = null;
+        private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
             this.label = label;
@@ -47,7 +63,7 @@ public final class Clocking {
 
         Builder(String label, int durationInMinutes, Clock testSystemClock){
             this(label, durationInMinutes);
-            this.testSystemClock = testSystemClock;
+            this.systemClock = testSystemClock;
         }
 
 
@@ -62,9 +78,8 @@ public final class Clocking {
         }
 
         public Clocking build(){
-            if (this.startTime == null) {
-                this.startTime = (this.testSystemClock == null) ?
-                    LocalDateTime.now() : LocalDateTime.now(testSystemClock);
+            if (startTime == null) {
+                startTime = LocalDateTime.now(systemClock);
             }
             return new Clocking(this);
         }
