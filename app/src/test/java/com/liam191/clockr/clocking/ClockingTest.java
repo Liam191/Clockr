@@ -51,10 +51,11 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithNullLabel(){
-        Clocking workClocking = new Clocking.Builder(null, 10)
-                .build();
-        assertEquals(workClocking.label(), "");
+    public void testCreateClocking_ThrowsExceptionWithNullLabel(){
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                new Clocking.Builder(null, 10).build()
+        );
+        assertTrue(e.getMessage().contains("label cannot be null"));
     }
 
     @Test
@@ -74,11 +75,13 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithNullDescription(){
-        Clocking workClocking = new Clocking.Builder("working", 20)
-                .description(null)
-                .build();
-        assertEquals(workClocking.description(), "");
+    public void testCreateClocking_ThrowsExceptionWithNullDescription(){
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                new Clocking.Builder("working", 10)
+                        .description(null)
+                        .build()
+        );
+        assertTrue(e.getMessage().contains("description cannot be null"));
     }
 
 
@@ -90,7 +93,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithNegativeDurationInMinutes(){
+    public void testCreateClocking_ThrowsExceptionWithNegativeDurationInMinutes(){
         Exception e = assertThrows(IllegalArgumentException.class, () ->
             new Clocking.Builder("working", -720).build()
         );
@@ -98,7 +101,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithFromTime(){
+    public void testCreateClocking_WithStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
                 .startTime(LocalDateTime.parse("2020-03-01T18:37:50"))
                 .build();
@@ -106,13 +109,24 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_HasDefaultFromTime(){
+    public void testCreateClocking_HasDefaultStartTime(){
         Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
 
         Clocking workClocking = new Clocking.Builder("working", 60, systemClockStub)
                 .build();
         assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
     }
+
+    @Test
+    public void testCreateClocking_ThrowsExceptionWithNullStartTime(){
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                new Clocking.Builder("working", 60)
+                        .startTime(null)
+                        .build()
+        );
+        assertTrue(e.getMessage().contains("startTime cannot be null"));
+    }
+
 
     @Test
     public void testClockingEquals(){
