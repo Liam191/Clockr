@@ -50,6 +50,12 @@ public class ClockingTest {
         assertEquals(workClocking.label(), "working");
     }
 
+    @Test
+    public void testCreateClocking_WithNullLabel(){
+        Clocking workClocking = new Clocking.Builder(null, 10)
+                .build();
+        assertEquals(workClocking.label(), "");
+    }
 
     @Test
     public void testCreateClocking_WithDescription(){
@@ -66,6 +72,15 @@ public class ClockingTest {
                 .build();
         assertEquals(workClocking.description(), "A work clocking");
     }
+
+    @Test
+    public void testCreateClocking_WithNullDescription(){
+        Clocking workClocking = new Clocking.Builder("working", 20)
+                .description(null)
+                .build();
+        assertEquals(workClocking.description(), "");
+    }
+
 
     @Test
     public void testCreateClocking_WithDurationInMinutes(){

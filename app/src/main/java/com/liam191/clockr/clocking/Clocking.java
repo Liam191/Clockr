@@ -57,7 +57,7 @@ public final class Clocking {
         private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
-            setLabel(label);
+            this.label = (label == null) ? "" : label.trim();
             setDurationInMinutes(durationInMinutes);
         }
 
@@ -67,14 +67,6 @@ public final class Clocking {
         }
 
 
-
-        private void setLabel(String label){
-            this.label = label.trim();
-        }
-
-        private void setDescription(String description){
-            this.description = description.trim();
-        }
 
         private void setDurationInMinutes(int durationInMinutes) throws IllegalArgumentException{
             if(durationInMinutes < 0) {
@@ -94,7 +86,7 @@ public final class Clocking {
 
 
         public Builder description(String description){
-            setDescription(description);
+            this.description =  (description == null) ? "" : description.trim();
             return this;
         }
 
