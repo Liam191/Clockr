@@ -57,29 +57,52 @@ public final class Clocking {
         private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
-            this.label = label.trim();
-            this.durationInMinutes = durationInMinutes;
+            setLabel(label);
+            setDurationInMinutes(durationInMinutes);
         }
 
         Builder(String label, int durationInMinutes, Clock testSystemClock){
             this(label, durationInMinutes);
-            this.systemClock = testSystemClock;
+            setSystemClock(testSystemClock);
         }
+
+
+
+        private void setLabel(String label){
+            this.label = label.trim();
+        }
+
+        private void setDescription(String description){
+            this.description = description.trim();
+        }
+
+        private void setDurationInMinutes(int durationInMinutes){
+            this.durationInMinutes = durationInMinutes;
+        }
+
+        private void setStartTime(LocalDateTime startTime){
+            this.startTime = startTime;
+        }
+
+        private void setSystemClock(Clock systemClock){
+            this.systemClock = systemClock;
+        }
+
 
 
         public Builder description(String description){
-            this.description = description.trim();
+            setDescription(description);
             return this;
         }
 
-        public Builder startTime(LocalDateTime fromTime){
-            this.startTime = fromTime;
+        public Builder startTime(LocalDateTime startTime){
+            setStartTime(startTime);
             return this;
         }
 
         public Clocking build(){
             if (startTime == null) {
-                startTime = LocalDateTime.now(systemClock);
+                setStartTime(LocalDateTime.now(systemClock));
             }
             return new Clocking(this);
         }
