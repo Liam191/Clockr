@@ -76,7 +76,10 @@ public final class Clocking {
             this.description = description.trim();
         }
 
-        private void setDurationInMinutes(int durationInMinutes){
+        private void setDurationInMinutes(int durationInMinutes) throws IllegalArgumentException{
+            if(durationInMinutes < 0) {
+                throw new IllegalArgumentException("durationInMinutes cannot be zero or negative");
+            }
             this.durationInMinutes = durationInMinutes;
         }
 

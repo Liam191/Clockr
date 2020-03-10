@@ -1,15 +1,16 @@
 package com.liam191.clockr.clocking;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("SimplifiableJUnitAssertion")
 public class ClockingTest {
+
 
     private class SystemClockStub {
         private final LocalDateTime stubbedTime;
@@ -71,6 +72,14 @@ public class ClockingTest {
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
         assertEquals(workClocking.durationInMinutes(), 60);
+    }
+
+    @Test
+    public void testCreateClocking_WithNegativeDurationInMinutes(){
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+            new Clocking.Builder("working", -720).build()
+        );
+        assertTrue(e.getMessage().contains("durationInMinutes cannot be zero or negative"));
     }
 
     @Test
