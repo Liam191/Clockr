@@ -2,12 +2,13 @@ package com.liam191.clockr.clocking;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public final class Clocking {
     private final String label;
     private final String description;
     private final int durationInMinutes;
-    private final LocalDateTime startTime;
+    private final Date startTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
@@ -28,7 +29,7 @@ public final class Clocking {
         return this.durationInMinutes;
     }
 
-    public LocalDateTime startTime(){
+    public Date startTime(){
         return this.startTime;
     }
 
@@ -53,8 +54,8 @@ public final class Clocking {
         private int durationInMinutes = 0;
         // startTime does *not* get a default time value as the time should be set
         // when a Clocking is created, not when the Builder is created.
-        private LocalDateTime startTime = null;
-        private Clock systemClock = Clock.systemDefaultZone();
+        private Date startTime = null;
+        //private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
             if(label == null) {
@@ -68,10 +69,10 @@ public final class Clocking {
             this.durationInMinutes = durationInMinutes;
         }
 
-        Builder(String label, int durationInMinutes, Clock testSystemClock){
-            this(label, durationInMinutes);
-            this.systemClock = testSystemClock;
-        }
+        //Builder(String label, int durationInMinutes, Clock testSystemClock){
+        //    this(label, durationInMinutes);
+        //    this.systemClock = testSystemClock;
+        //}
 
 
 
@@ -83,7 +84,7 @@ public final class Clocking {
             return this;
         }
 
-        public Builder startTime(LocalDateTime startTime) throws IllegalArgumentException {
+        public Builder startTime(Date startTime) throws IllegalArgumentException {
             if(startTime == null) {
                 throw new IllegalArgumentException("startTime cannot be null");
             }
@@ -93,7 +94,7 @@ public final class Clocking {
 
         public Clocking build(){
             if (startTime == null) {
-                this.startTime = LocalDateTime.now(systemClock);
+                this.startTime = new Date();
             }
             return new Clocking(this);
         }

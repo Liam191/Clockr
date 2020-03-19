@@ -5,6 +5,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClockingTest {
 
 
-    private class SystemClockStub {
+    /*private class SystemClockStub {
         private final LocalDateTime stubbedTime;
 
         SystemClockStub(final String timeString) {
@@ -30,12 +31,13 @@ public class ClockingTest {
                 }
             };
         }
-    }
+    }*/
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
+    // TODO: Fix startTime/Date mutability
     @Test
     public void testCreateClocking_WithLabel(){
         Clocking workClocking = new Clocking.Builder("working", 10)
@@ -103,18 +105,18 @@ public class ClockingTest {
     @Test
     public void testCreateClocking_WithStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
-                .startTime(LocalDateTime.parse("2020-03-01T18:37:50"))
+                .startTime(new Date(2020, 03, 01, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
+        assertEquals(workClocking.startTime(), new Date(2020, 03, 01, 18 , 37, 50));
     }
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
-        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
+        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
 
-        Clocking workClocking = new Clocking.Builder("working", 60, systemClockStub)
+        Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.startTime(), LocalDateTime.parse("2020-03-01T18:37:50"));
+        assertEquals(workClocking.startTime().getTime(),    new Date().getTime(), 100);
     }
 
     @Test
@@ -130,12 +132,12 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals(){
-        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
+        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
 
-        Clocking clockingX = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
-        Clocking clockingY = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
-        Clocking clockingZ = new Clocking.Builder("Same clocking", 60, systemClockStub).build();
-        Clocking otherClocking = new Clocking.Builder("Different clocking", 120, systemClockStub).build();
+        Clocking clockingX = new Clocking.Builder("Same clocking", 60).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking", 60).build();
+        Clocking clockingZ = new Clocking.Builder("Same clocking", 60).build();
+        Clocking otherClocking = new Clocking.Builder("Different clocking", 120).build();
 
         assertTrue(clockingX.equals(clockingX));
 
@@ -153,10 +155,10 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_fromSameAndDifferentBuilders(){
-        Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
+        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
 
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60, systemClockStub);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60, systemClockStub);
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
