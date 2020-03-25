@@ -30,7 +30,7 @@ public final class Clocking {
     }
 
     public Date startTime(){
-        return this.startTime;
+        return (Date)(this.startTime.clone());
     }
 
     @Override
