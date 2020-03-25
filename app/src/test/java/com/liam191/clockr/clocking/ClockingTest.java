@@ -103,7 +103,7 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_hasImmutableStartTime(){
+    void testCreateClocking_HasImmutableStartTime(){
         Clocking clockingOne = new Clocking.Builder("working", 100)
                 .build();
         Clocking clockingTwo = new Clocking.Builder("working", 100)
@@ -144,7 +144,7 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_fromSameAndDifferentBuilders(){
+    void testClockingEquals_FromSameAndDifferentBuilders(){
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60);
         Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60);
 
