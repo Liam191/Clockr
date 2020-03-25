@@ -55,7 +55,6 @@ public final class Clocking {
         // startTime does *not* get a default time value as the time should be set
         // when a Clocking is created, not when the Builder is created.
         private Date startTime = null;
-        //private Clock systemClock = Clock.systemDefaultZone();
 
         public Builder(String label, int durationInMinutes){
             if(label == null) {
@@ -68,12 +67,6 @@ public final class Clocking {
             }
             this.durationInMinutes = durationInMinutes;
         }
-
-        //Builder(String label, int durationInMinutes, Clock testSystemClock){
-        //    this(label, durationInMinutes);
-        //    this.systemClock = testSystemClock;
-        //}
-
 
 
         public Builder description(String description) throws IllegalArgumentException {

@@ -12,27 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("SimplifiableJUnitAssertion")
 public class ClockingTest {
 
-
-    /*private class SystemClockStub {
-        private final LocalDateTime stubbedTime;
-
-        SystemClockStub(final String timeString) {
-            stubbedTime = LocalDateTime.parse(timeString);
-        }
-
-        Clock getClock() {
-            return new Clock() {
-                @Override public ZoneId getZone() { return ZoneId.systemDefault(); }
-                @Override public Clock withZone(ZoneId zone) { return systemDefaultZone(); }
-
-                @Override
-                public Instant instant() {
-                    return stubbedTime.atZone(ZoneId.systemDefault()).toInstant();
-                }
-            };
-        }
-    }*/
-
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
@@ -112,8 +91,6 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
-        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
-
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
         assertEquals(workClocking.startTime().getTime(),    new Date().getTime(), 100);
@@ -132,8 +109,6 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals(){
-        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
-
         Clocking clockingX = new Clocking.Builder("Same clocking", 60).build();
         Clocking clockingY = new Clocking.Builder("Same clocking", 60).build();
         Clocking clockingZ = new Clocking.Builder("Same clocking", 60).build();
@@ -155,8 +130,6 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_fromSameAndDifferentBuilders(){
-        //Clock systemClockStub = new SystemClockStub("2020-03-01T18:37:50").getClock();
-
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60);
         Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60);
 
