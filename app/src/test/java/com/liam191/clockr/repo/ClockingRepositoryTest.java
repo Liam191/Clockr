@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -20,13 +21,28 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(InstantExecutorExtension.class)
 public class ClockingRepositoryTest {
 
+    // TODO: Refactor ClockingRepository to use a factory instead of singleton
 
     @Test
     public void testClockingRepo_getClockingsForGivenDay(){
         LiveData<List<Clocking>> clockings = ClockingRepository.getInstance()
-                .getClockingsForDay();
+                .getClockingsForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
+    }
+
+    @Test
+    public void testClockingRepo_addClocking(){
+        ClockingRepository repository = ClockingRepository.getInstance();
+        Date testDay = new Date(2020, 3, 3);
+        LiveData<List<Clocking>> clockings = repository.getClockingsForDate(testDay);
+
+        Clocking clocking = new Clocking.Builder("Test", 34)
+                .startTime(testDay)
+                .build();
+
+        repository.addClocking(clocking);
+        assertTrue(repository.getClockingsForDate(testDay).getValue().contains(clocking));
     }
 }
 
