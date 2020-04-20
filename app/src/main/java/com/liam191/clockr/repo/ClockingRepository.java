@@ -9,9 +9,8 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-public class ClockingRepository {
+public final class ClockingRepository {
 
-    private final
     private final MutableLiveData<List<Clocking>> clockings = new MutableLiveData<>();
     {
         clockings.postValue(new ArrayList<>());
@@ -19,14 +18,6 @@ public class ClockingRepository {
 
     ClockingRepository(){
 
-    }
-
-    private static class ClockingRepositorySingleton {
-        private static final ClockingRepository INSTANCE = new ClockingRepository();
-    }
-
-    public static ClockingRepository getInstance(){
-        return ClockingRepositorySingleton.INSTANCE;
     }
 
     public LiveData<List<Clocking>> getClockingsForDate(Date date){
@@ -38,4 +29,5 @@ public class ClockingRepository {
         newClockings.add(clocking);
         clockings.postValue(newClockings);
     }
+
 }

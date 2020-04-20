@@ -22,10 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClockingRepositoryTest {
 
     // TODO: Refactor ClockingRepository to use a factory instead of singleton
+    //          - Public factory and private constructor?
+    //              - Other classes use factory (which calls constructor)
+    //              - Tests use constructor
 
     @Test
     public void testClockingRepo_getClockingsForGivenDay(){
-        LiveData<List<Clocking>> clockings = ClockingRepository.getInstance()
+        LiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getClockingsForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
@@ -33,7 +36,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testClockingRepo_addClocking(){
-        ClockingRepository repository = ClockingRepository.getInstance();
+        ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
         LiveData<List<Clocking>> clockings = repository.getClockingsForDate(testDay);
 
