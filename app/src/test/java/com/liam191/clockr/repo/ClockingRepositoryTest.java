@@ -29,7 +29,7 @@ public class ClockingRepositoryTest {
     @Test
     public void testClockingRepo_getClockingsForGivenDay(){
         LiveData<List<Clocking>> clockings = new ClockingRepository()
-                .getClockingsForDate(new Date(2020, 3, 3));
+                .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
     }
@@ -38,14 +38,14 @@ public class ClockingRepositoryTest {
     public void testClockingRepo_addClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = repository.getClockingsForDate(testDay);
+        LiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
         Clocking clocking = new Clocking.Builder("Test", 34)
                 .startTime(testDay)
                 .build();
 
-        repository.addClocking(clocking);
-        assertTrue(repository.getClockingsForDate(testDay).getValue().contains(clocking));
+        repository.add(clocking);
+        assertTrue(repository.getAllForDate(testDay).getValue().contains(clocking));
     }
 }
 

@@ -20,11 +20,11 @@ public final class ClockingRepository {
 
     }
 
-    public LiveData<List<Clocking>> getClockingsForDate(Date date){
+    public LiveData<List<Clocking>> getAllForDate(Date date){
         return clockings;
     }
 
-    public void addClocking(Clocking clocking){
+    public void add(Clocking clocking){
         ArrayList<Clocking> newClockings = new ArrayList<>(clockings.getValue());
         newClockings.add(clocking);
         clockings.postValue(newClockings);
