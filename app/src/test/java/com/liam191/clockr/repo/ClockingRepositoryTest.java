@@ -14,7 +14,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.arch.core.executor.TaskExecutor;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import static org.junit.jupiter.api.Assertions.*;
