@@ -12,15 +12,12 @@ import androidx.lifecycle.MutableLiveData;
 public final class ClockingRepository {
 
     private final MutableLiveData<List<Clocking>> clockings = new MutableLiveData<>();
-    {
+
+    ClockingRepository(){
         clockings.postValue(new ArrayList<>());
     }
 
-    ClockingRepository(){
-
-    }
-
-    public LiveData<List<Clocking>> getAllForDate(Date date){
+    public MutableLiveData<List<Clocking>> getAllForDate(Date date){
         return clockings;
     }
 

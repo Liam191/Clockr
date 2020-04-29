@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.arch.core.executor.TaskExecutor;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +29,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testClockingRepo_getClockingsForGivenDay(){
-        LiveData<List<Clocking>> clockings = new ClockingRepository()
+        MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
@@ -38,7 +39,7 @@ public class ClockingRepositoryTest {
     public void testClockingRepo_addClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
+        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
         Clocking clocking = new Clocking.Builder("Test", 34)
                 .startTime(testDay)
