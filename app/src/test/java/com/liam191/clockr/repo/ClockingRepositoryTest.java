@@ -22,7 +22,7 @@ public class ClockingRepositoryTest {
     // TODO: Try using in-memory RoomDatabase for testing.
 
     @Test
-    public void testClockingRepo_getClockingsForGivenDay(){
+    public void testGetClockingsForGivenDay(){
         MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
@@ -30,7 +30,7 @@ public class ClockingRepositoryTest {
     }
 
     @Test
-    public void testClockingRepo_addClocking(){
+    public void testAddClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
         MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
