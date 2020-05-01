@@ -25,6 +25,7 @@ public class ClockingRepositoryTest {
     //          - Public factory and private constructor?
     //              - Other classes use factory (which calls constructor)
     //              - Tests use constructor
+    // TODO: Try using in-memory RoomDatabase for testing.
 
     @Test
     public void testClockingRepo_getClockingsForGivenDay(){
