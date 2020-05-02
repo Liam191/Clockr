@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("SimplifiableJUnitAssertion")
 class ClockingTest {
 
+    // TODO: Implement hashCode()
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
@@ -89,7 +90,7 @@ class ClockingTest {
     void testCreateClocking_HasDefaultStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.startTime().getTime(),    new Date().getTime(), 100);
+        assertEquals(workClocking.startTime().getTime(), new Date().getTime(), 100);
     }
 
     @Test
@@ -124,10 +125,12 @@ class ClockingTest {
     @SuppressWarnings("EqualsWithItself")
     @Test
     void testClockingEquals(){
-        Clocking clockingX = new Clocking.Builder("Same clocking", 60).build();
-        Clocking clockingY = new Clocking.Builder("Same clocking", 60).build();
-        Clocking clockingZ = new Clocking.Builder("Same clocking", 60).build();
-        Clocking otherClocking = new Clocking.Builder("Different clocking", 120).build();
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+
+        Clocking clockingX = new Clocking.Builder("Same clocking", 60).startTime(date).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking", 60).startTime(date).build();
+        Clocking clockingZ = new Clocking.Builder("Same clocking", 60).startTime(date).build();
+        Clocking otherClocking = new Clocking.Builder("Different clocking", 120).startTime(date).build();
 
         assertTrue(clockingX.equals(clockingX));
 
@@ -145,8 +148,9 @@ class ClockingTest {
 
     @Test
     void testClockingEquals_FromSameAndDifferentBuilders(){
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60);
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -159,3 +163,4 @@ class ClockingTest {
         assertTrue(clockingY.equals(clockingA));
     }
 }
+qa
