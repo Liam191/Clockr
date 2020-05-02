@@ -21,6 +21,7 @@ public class ClockingRepositoryTest {
     //              - Tests use constructor
     // TODO: Try using in-memory RoomDatabase for testing.
 
+    // TODO: Rename to testGetAllForGivenDate_withNoData
     @Test
     public void testGetClockings_forGivenDay(){
         MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
@@ -42,4 +43,45 @@ public class ClockingRepositoryTest {
         repository.add(clocking);
         assertTrue(repository.getAllForDate(testDay).getValue().contains(clocking));
     }
+
+    @Test
+    public void testRemoveClockings_withOneClocking(){
+        ClockingRepository repository = new ClockingRepository();
+        Date testDay = new Date(2020, 3, 3);
+        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
+
+        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34)
+                .startTime(testDay)
+                .build();
+
+        repository.add(clocking1);
+        repository.remove(clocking1);
+
+        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+    }
+
+    @Test
+    public void testRemoveClockings_withThreeClockings(){
+        ClockingRepository repository = new ClockingRepository();
+        Date testDay = new Date(2020, 3, 3);
+        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
+
+        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34)
+                .startTime(testDay)
+                .build();
+        Clocking clocking2 = new Clocking.Builder("TestClocking2", 34)
+                .startTime(testDay)
+                .build();
+        Clocking clocking3 = new Clocking.Builder("TestClocking3", 34)
+                .startTime(testDay)
+                .build();
+
+        repository.add(clocking1);
+        repository.add(clocking2);
+        repository.add(clocking3);
+        repository.remove(clocking1);
+
+        assertEquals(2, repository.getAllForDate(testDay).getValue().size());
+    }
+
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public final class ClockingRepository {
@@ -26,4 +27,9 @@ public final class ClockingRepository {
         clockings.postValue(newClockings);
     }
 
+    public void remove(Clocking clocking){
+        List newClockings = clockings.getValue();
+        newClockings.remove(clocking);
+        clockings.postValue(newClockings);
+    }
 }
