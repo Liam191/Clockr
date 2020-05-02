@@ -13,6 +13,8 @@ class ClockingTest {
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
+
+    // Clocking instantiation
     @Test
     void testCreateClocking_WithLabel(){
         Clocking workClocking = new Clocking.Builder("working", 10)
@@ -121,6 +123,9 @@ class ClockingTest {
     }
 
 
+
+
+    // Clocking.equals()
     @SuppressWarnings("EqualsWithItself")
     @Test
     void testClockingEquals(){
@@ -163,16 +168,59 @@ class ClockingTest {
     }
 
     @Test
+    void testClockingEquals_WithDifferentLabels(){
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking clockingA = new Clocking.Builder("Label", 60).startTime(date).build();
+        Clocking clockingB = new Clocking.Builder("Different label", 60).startTime(date).build();
+
+        assertFalse(clockingA.equals(clockingB));
+        assertFalse(clockingB.equals(clockingA));
+    }
+
+    @Test
     void testClockingEquals_WithDifferentDescriptions(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
-        Clocking clockingA = new Clocking.Builder("Description", 60).startTime(date).build();
-        Clocking clockingB = new Clocking.Builder("Different description", 60).startTime(date).build();
+        Clocking clockingA = new Clocking.Builder("Label", 60)
+                .description("Hello, world description!")
+                .startTime(date)
+                .build();
+        Clocking clockingB = new Clocking.Builder("Label", 60)
+                .description("Goodbye, world description!")
+                .startTime(date)
+                .build();
+
+        assertFalse(clockingA.equals(clockingB));
+        assertFalse(clockingB.equals(clockingA));
+    }
+
+    @Test
+    void testClockingEquals_WithDifferentDurations(){
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking clockingA = new Clocking.Builder("Label", 200).startTime(date).build();
+        Clocking clockingB = new Clocking.Builder("Label", 153).startTime(date).build();
+
+        assertFalse(clockingA.equals(clockingB));
+        assertFalse(clockingB.equals(clockingA));
+    }
+
+    @Test
+    void testClockingEquals_WithDifferentStartTimes(){
+        Clocking clockingA = new Clocking.Builder("Label", 60)
+                .startTime(new Date(2020, 3, 3, 12 , 0, 0))
+                .build();
+        Clocking clockingB = new Clocking.Builder("Label", 60)
+                .startTime(new Date(2020, 3, 3, 14 , 59, 59))
+                .build();
 
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
     }
 
 
+
+
+
+    // Clocking.hashCode()
     @Test
     void testClockingHashCode(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
