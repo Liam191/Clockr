@@ -21,9 +21,8 @@ public class ClockingRepositoryTest {
     //              - Tests use constructor
     // TODO: Try using in-memory RoomDatabase for testing.
 
-    // TODO: Rename to testGetAllForGivenDate_withNoData
     @Test
-    public void testGetClockings_forGivenDay(){
+    public void testGetAllForGivenDate_withNoData(){
         MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
