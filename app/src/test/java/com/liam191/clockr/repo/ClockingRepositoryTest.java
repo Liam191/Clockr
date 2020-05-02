@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Date;
 import java.util.List;
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +21,13 @@ public class ClockingRepositoryTest {
     //              - Tests use constructor
     // TODO: Decide on identity/primary key for Clockings/DAOs
     // TODO: Try using in-memory RoomDatabase for testing.
+    // TODO: Try using both a collection-like interface *and* a MutableLiveData
+    //          - See which way works better
+    //          - If using MutableLiveData, ensure list is unmodifiable.
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
+        LiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
@@ -34,7 +37,6 @@ public class ClockingRepositoryTest {
     public void testAddClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
         Clocking clocking = new Clocking.Builder("Test", 34, testDay)
                 .build();
@@ -47,7 +49,6 @@ public class ClockingRepositoryTest {
     public void testRemoveClockings_withOneClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay)
                 .build();
@@ -62,7 +63,6 @@ public class ClockingRepositoryTest {
     public void testRemoveClockings_withThreeClockings(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
         Clocking clocking2 = new Clocking.Builder("TestClocking2", 47, testDay).build();
@@ -75,5 +75,28 @@ public class ClockingRepositoryTest {
         repository.remove(clocking1);
         assertEquals(2, repository.getAllForDate(testDay).getValue().size());
     }
+
+    @Test
+    public void testRemoveClockings_withNoClockings(){
+        ClockingRepository repository = new ClockingRepository();
+        Date testDay = new Date(2020, 3, 3);
+
+        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
+
+        repository.remove(clocking1);
+
+        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+    }
+
+    @Test
+    public void testRemoveClockings_withNull(){
+        ClockingRepository repository = new ClockingRepository();
+        Date testDay = new Date(2020, 3, 3);
+
+        repository.remove(null);
+
+        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+    }
+
 
 }
