@@ -39,10 +39,10 @@ public final class Clocking {
         }
         Clocking clocking = (Clocking) o;
 
-        return (label.equals(clocking.label) &&
+        return (
+            label.equals(clocking.label) &&
             description.equals(clocking.description) &&
             durationInMinutes == clocking.durationInMinutes &&
-            description.equals(clocking.description) &&
             startTime.equals(clocking.startTime));
     }
 

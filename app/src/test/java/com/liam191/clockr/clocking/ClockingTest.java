@@ -163,6 +163,17 @@ class ClockingTest {
     }
 
     @Test
+    void testClockingEquals_WithDifferentDescriptions(){
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking clockingA = new Clocking.Builder("Description", 60).startTime(date).build();
+        Clocking clockingB = new Clocking.Builder("Different description", 60).startTime(date).build();
+
+        assertFalse(clockingA.equals(clockingB));
+        assertFalse(clockingB.equals(clockingA));
+    }
+
+
+    @Test
     void testClockingHashCode(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
