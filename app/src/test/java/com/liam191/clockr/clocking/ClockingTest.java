@@ -131,10 +131,10 @@ class ClockingTest {
     void testClockingEquals(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
 
-        Clocking clockingX = new Clocking.Builder("Same clocking", 60).startTime(date).build();
-        Clocking clockingY = new Clocking.Builder("Same clocking", 60).startTime(date).build();
-        Clocking clockingZ = new Clocking.Builder("Same clocking", 60).startTime(date).build();
-        Clocking otherClocking = new Clocking.Builder("Different clocking", 120).startTime(date).build();
+        Clocking clockingX = new Clocking.Builder("Same clocking", 60, date).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking", 60, date).build();
+        Clocking clockingZ = new Clocking.Builder("Same clocking", 60, date).build();
+        Clocking otherClocking = new Clocking.Builder("Different clocking", 120, date).build();
 
         assertTrue(clockingX.equals(clockingX));
 
@@ -153,8 +153,8 @@ class ClockingTest {
     @Test
     void testClockingEquals_FromSameAndDifferentBuilders(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60, date);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60, date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -170,8 +170,8 @@ class ClockingTest {
     @Test
     void testClockingEquals_WithDifferentLabels(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
-        Clocking clockingA = new Clocking.Builder("Label", 60).startTime(date).build();
-        Clocking clockingB = new Clocking.Builder("Different label", 60).startTime(date).build();
+        Clocking clockingA = new Clocking.Builder("Label", 60, date).build();
+        Clocking clockingB = new Clocking.Builder("Different label", 60, date).build();
 
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
@@ -180,13 +180,11 @@ class ClockingTest {
     @Test
     void testClockingEquals_WithDifferentDescriptions(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
-        Clocking clockingA = new Clocking.Builder("Label", 60)
+        Clocking clockingA = new Clocking.Builder("Label", 60, date)
                 .description("Hello, world description!")
-                .startTime(date)
                 .build();
-        Clocking clockingB = new Clocking.Builder("Label", 60)
+        Clocking clockingB = new Clocking.Builder("Label", 60, date)
                 .description("Goodbye, world description!")
-                .startTime(date)
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -196,8 +194,8 @@ class ClockingTest {
     @Test
     void testClockingEquals_WithDifferentDurations(){
         Date date = new Date(2020, 3, 3, 12 , 0, 0);
-        Clocking clockingA = new Clocking.Builder("Label", 200).startTime(date).build();
-        Clocking clockingB = new Clocking.Builder("Label", 153).startTime(date).build();
+        Clocking clockingA = new Clocking.Builder("Label", 200, date).build();
+        Clocking clockingB = new Clocking.Builder("Label", 153, date).build();
 
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
@@ -215,7 +213,6 @@ class ClockingTest {
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
     }
-
 
 
 
