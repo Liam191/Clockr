@@ -36,8 +36,7 @@ public class ClockingRepositoryTest {
         Date testDay = new Date(2020, 3, 3);
         MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
-        Clocking clocking = new Clocking.Builder("Test", 34)
-                .startTime(testDay)
+        Clocking clocking = new Clocking.Builder("Test", 34, testDay)
                 .build();
 
         repository.add(clocking);
@@ -50,8 +49,7 @@ public class ClockingRepositoryTest {
         Date testDay = new Date(2020, 3, 3);
         MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
-        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34)
-                .startTime(testDay)
+        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay)
                 .build();
 
         repository.add(clocking1);
@@ -66,21 +64,15 @@ public class ClockingRepositoryTest {
         Date testDay = new Date(2020, 3, 3);
         MutableLiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
-        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34)
-                .startTime(testDay)
-                .build();
-        Clocking clocking2 = new Clocking.Builder("TestClocking2", 34)
-                .startTime(testDay)
-                .build();
-        Clocking clocking3 = new Clocking.Builder("TestClocking3", 34)
-                .startTime(testDay)
-                .build();
+        Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
+        Clocking clocking2 = new Clocking.Builder("TestClocking2", 47, testDay).build();
+        Clocking clocking3 = new Clocking.Builder("TestClocking3", 23, testDay).build();
 
         repository.add(clocking1);
         repository.add(clocking2);
         repository.add(clocking3);
-        repository.remove(clocking1);
 
+        repository.remove(clocking1);
         assertEquals(2, repository.getAllForDate(testDay).getValue().size());
     }
 

@@ -75,6 +75,11 @@ public final class Clocking {
             this.durationInMinutes = durationInMinutes;
         }
 
+        public Builder(String label, int durationInMinutes, Date startTime){
+            this(label, durationInMinutes);
+            this.startTime(startTime);
+        }
+
 
         public Builder description(String description) throws IllegalArgumentException {
             if(description == null) {
