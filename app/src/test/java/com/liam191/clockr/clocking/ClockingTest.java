@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("SimplifiableJUnitAssertion")
 class ClockingTest {
 
-    // TODO: Implement hashCode()
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
@@ -162,5 +161,39 @@ class ClockingTest {
         assertTrue(clockingX.equals(clockingY));
         assertTrue(clockingY.equals(clockingA));
     }
+
+    @Test
+    void testClockingHashCode(){
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
+
+        Clocking clockingA = builderOne.build();
+        Clocking clockingB = builderOne.build();
+        Clocking clockingX = builderTwo.build();
+        Clocking clockingY = builderTwo.build();
+
+        assertEquals(clockingA.hashCode(), clockingB.hashCode());
+        assertEquals(clockingB.hashCode(), clockingX.hashCode());
+        assertEquals(clockingX.hashCode(), clockingY.hashCode());
+        assertEquals(clockingY.hashCode(), clockingA.hashCode());
+    }
+
+    @Test
+    void testClockingHashCode_FromSameAndDifferentBuilders(){
+        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
+
+        Clocking clockingA = builderOne.build();
+        Clocking clockingB = builderOne.build();
+        Clocking clockingX = builderTwo.build();
+        Clocking clockingY = builderTwo.build();
+
+        assertTrue(clockingA.equals(clockingB));
+        assertTrue(clockingB.equals(clockingX));
+        assertTrue(clockingX.equals(clockingY));
+        assertTrue(clockingY.equals(clockingA));
+    }
+
 }
-qa

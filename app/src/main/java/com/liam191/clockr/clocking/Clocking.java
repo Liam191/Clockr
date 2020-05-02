@@ -1,6 +1,7 @@
 package com.liam191.clockr.clocking;
 
 import java.util.Date;
+import java.util.Objects;
 
 public final class Clocking {
     private final String label;
@@ -45,6 +46,14 @@ public final class Clocking {
             startTime.equals(clocking.startTime));
     }
 
+    @Override
+    public int hashCode(){
+        return Objects.hash(
+                this.label,
+                this.description,
+                this.durationInMinutes,
+                this.startTime);
+    }
 
     public static final class Builder {
         private String label = "";
