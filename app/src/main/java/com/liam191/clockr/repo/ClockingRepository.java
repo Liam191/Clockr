@@ -17,7 +17,7 @@ public final class ClockingRepository {
         clockings.postValue(new ArrayList<>());
     }
 
-    public LiveData<List<Clocking>> getAllForDate(Date date){
+    public MutableLiveData<List<Clocking>> getAllForDate(Date date){
         return clockings;
     }
 

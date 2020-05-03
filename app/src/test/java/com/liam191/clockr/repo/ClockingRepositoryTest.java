@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +28,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        LiveData<List<Clocking>> clockings = new ClockingRepository()
+        MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
