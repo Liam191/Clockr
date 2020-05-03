@@ -24,7 +24,10 @@ public class ClockingRepositoryTest {
     // TODO: Try using in-memory RoomDatabase for testing.
     // TODO: Try using both a collection-like interface *and* a MutableLiveData
     //          - See which way works better
-    //          - If using MutableLiveData, ensure list is unmodifiable.
+    //          - For MutableLiveData Lists, because clockings are immutable there is no need for
+    //            UPDATE operations. Everything is either INSERT or DELETE. We can either delete
+    //            and add the entire list for a given day, or have a fancier List diff to only
+    //            update what has changed.
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
@@ -39,6 +42,9 @@ public class ClockingRepositoryTest {
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
 
+        // Observe LiveData from repo
+        // Change the Clocking List
+        // Assert that the published updated List matches.
         Clocking clocking = new Clocking.Builder("Test", 34, testDay)
                 .build();
 
