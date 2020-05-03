@@ -7,9 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,17 +42,15 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testAddClocking(){
-        ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
+        MutableLiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
 
-        // Observe LiveData from repo
-        // Change the Clocking List
-        // Assert that the published updated List matches.
-        Clocking clocking = new Clocking.Builder("Test", 34, testDay)
-                .build();
+        List<Clocking> clockingsBeforeUpdate = clockings.getValue();
+        clockingsBeforeUpdate.add(new Clocking.Builder("Test", 34, testDay).build());
+        clockings.postValue(clockingsBeforeUpdate);
 
-        repository.add(clocking);
-        assertTrue(repository.getAllForDate(testDay).getValue().contains(clocking));
+        List<Clocking> clockingsAfterUpdate = clockings.getValue();
+        assertEquals(clockingsBeforeUpdate, clockingsAfterUpdate);
     }
 
     @Test
