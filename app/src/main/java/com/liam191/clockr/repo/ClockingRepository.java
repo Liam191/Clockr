@@ -17,19 +17,11 @@ public final class ClockingRepository {
         clockings.postValue(new ArrayList<>());
     }
 
-    public MutableLiveData<List<Clocking>> getAllForDate(Date date){
+    public LiveData<List<Clocking>> getAllForDate(Date date){
         return clockings;
     }
 
-    public void add(Clocking clocking){
-        ArrayList<Clocking> newClockings = new ArrayList<>(clockings.getValue());
-        newClockings.add(clocking);
-        clockings.postValue(newClockings);
-    }
-
-    public void remove(Clocking clocking){
-        List newClockings = clockings.getValue();
-        newClockings.remove(clocking);
-        clockings.postValue(newClockings);
+    public void update(List<Clocking> newClockingList){
+        clockings.postValue(new ArrayList<>(newClockingList));
     }
 }

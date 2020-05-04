@@ -7,12 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,46 +19,61 @@ public class ClockingRepositoryTest {
     //          - Public factory and private constructor?
     //              - Other classes use factory (which calls constructor)
     //              - Tests use constructor
-    // TODO: Decide on identity/primary key for Clockings/DAOs
     // TODO: Try using in-memory RoomDatabase for testing.
-    // TODO: Try using both a collection-like interface *and* a MutableLiveData
-    //          - See which way works better
-    //          - For MutableLiveData Lists, because clockings are immutable there is no need for
-    //            UPDATE operations. Everything is either INSERT or DELETE. We can either delete
-    //            and add the entire list for a given day, or have a fancier List diff to only
-    //            update what has changed.
+    // TODO: Test getAllForDate() with different dates
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        MutableLiveData<List<Clocking>> clockings = new ClockingRepository()
+        LiveData<List<Clocking>> clockings = new ClockingRepository()
                 .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
     }
 
     @Test
-    public void testAddClocking(){
+    public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
+        ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
-        MutableLiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
+        LiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
-        List<Clocking> clockingsBeforeUpdate = clockings.getValue();
-        clockingsBeforeUpdate.add(new Clocking.Builder("Test", 34, testDay).build());
-        clockings.postValue(clockingsBeforeUpdate);
+        List<Clocking> oldClockingList = clockings.getValue();
+        oldClockingList.add(new Clocking.Builder("TestClocking1", 34, testDay).build());
+        repository.update(oldClockingList);
 
-        List<Clocking> clockingsAfterUpdate = clockings.getValue();
-        assertEquals(clockingsBeforeUpdate, clockingsAfterUpdate);
+        oldClockingList.add(new Clocking.Builder("TestClocking2", 46, testDay).build());
+        List<Clocking> newClockingList = clockings.getValue();
+
+        assertNotEquals(oldClockingList, newClockingList);
+        assertNotSame(oldClockingList, newClockingList);
+    }
+
+    @Test
+    public void testAddClocking(){
+        ClockingRepository repository = new ClockingRepository();
+        Date testDay = new Date(2020, 3, 3);
+        LiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
+
+        List<Clocking> clockingList = clockings.getValue();
+        clockingList.add(new Clocking.Builder("Test", 34, testDay).build());
+        repository.update(clockingList);
+
+        assertEquals(clockingList, clockings.getValue());
     }
 
     @Test
     public void testRemoveClockings_withOneClocking(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
+        LiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay)
                 .build();
 
-        repository.add(clocking1);
-        repository.remove(clocking1);
+        List<Clocking> clockingList = clockings.getValue();
+
+        clockingList.add(clocking1);
+        clockingList.remove(clocking1);
+        repository.update(clockingList);
 
         assertEquals(0, repository.getAllForDate(testDay).getValue().size());
     }
@@ -71,16 +82,19 @@ public class ClockingRepositoryTest {
     public void testRemoveClockings_withThreeClockings(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
+        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
         Clocking clocking2 = new Clocking.Builder("TestClocking2", 47, testDay).build();
         Clocking clocking3 = new Clocking.Builder("TestClocking3", 23, testDay).build();
 
-        repository.add(clocking1);
-        repository.add(clocking2);
-        repository.add(clocking3);
+        clockingList.add(clocking1);
+        clockingList.add(clocking2);
+        clockingList.add(clocking3);
+        clockingList.remove(clocking1);
 
-        repository.remove(clocking1);
+        repository.update(clockingList);
+
         assertEquals(2, repository.getAllForDate(testDay).getValue().size());
     }
 
@@ -88,10 +102,12 @@ public class ClockingRepositoryTest {
     public void testRemoveClockings_withNoClockings(){
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
+        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
 
-        repository.remove(clocking1);
+        clockingList.remove(clocking1);
+        repository.update(clockingList);
 
         assertEquals(0, repository.getAllForDate(testDay).getValue().size());
     }
@@ -101,10 +117,10 @@ public class ClockingRepositoryTest {
         ClockingRepository repository = new ClockingRepository();
         Date testDay = new Date(2020, 3, 3);
 
-        repository.remove(null);
+        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
+        clockingList.remove(null);
+        repository.update(clockingList);
 
         assertEquals(0, repository.getAllForDate(testDay).getValue().size());
     }
-
-
 }
