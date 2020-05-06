@@ -105,21 +105,27 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_HasImmutableStartTime(){
-        Clocking clockingOne = new Clocking.Builder("working", 100)
-                .build();
-        Clocking clockingTwo = new Clocking.Builder("working", 100)
-                .startTime(new Date())
+    void testCreateClocking_HasImmutableDefaultStartTime(){
+        Clocking clocking = new Clocking.Builder("working", 100)
                 .build();
 
-        Date clockingOneTimeRef = clockingOne.startTime();
-        Date clockingTwoTimeRef = clockingTwo.startTime();
+        Date clockingStartTime = clocking.startTime();
 
-        clockingOneTimeRef.setYear(103);
-        clockingTwoTimeRef.setYear(104);
+        clockingStartTime.setYear(103);
 
-        assertFalse(clockingOneTimeRef.equals(clockingOne.startTime()));
-        assertFalse(clockingTwoTimeRef.equals(clockingTwo.startTime()));
+        assertFalse(clockingStartTime.equals(clocking.startTime()));
+    }
+
+    @Test
+    void testCreateClocking_HasImmutableStartTimeWithBuilder(){
+        Date originalClockingStartTime = new Date(2020, 10, 10);
+        Clocking clocking = new Clocking.Builder("working", 100)
+                .startTime(originalClockingStartTime)
+                .build();
+
+        originalClockingStartTime.setYear(103);
+
+        assertFalse(originalClockingStartTime.equals(clocking.startTime()));
     }
 
 

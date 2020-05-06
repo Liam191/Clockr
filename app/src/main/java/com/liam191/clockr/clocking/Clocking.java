@@ -93,7 +93,7 @@ public final class Clocking {
             if(startTime == null) {
                 throw new IllegalArgumentException("startTime cannot be null");
             }
-            this.startTime = startTime;
+            this.startTime = (Date)(startTime.clone());
             return this;
         }
 
