@@ -4,10 +4,10 @@ public final class ClockingRepositorySingleton {
 
     // TODO: Create database instances, etc. to initialise ClockingRepository
     private static class Singleton {
-        private static final ClockingRepository INSTANCE = new ClockingRepository();
+        private static final ClockingDayView INSTANCE = new ClockingDayView();
     }
 
-    public static ClockingRepository getInstance(){
+    public static ClockingDayView getInstance(){
         return Singleton.INSTANCE;
     }
 }

@@ -13,7 +13,7 @@ import androidx.lifecycle.LiveData;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(InstantExecutorExtension.class)
-public class ClockingRepositoryTest {
+public class ClockingDayViewTest {
 
     // TODO: Refactor ClockingRepository to use a factory instead of singleton
     //          - Public factory and private constructor?
@@ -24,7 +24,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        LiveData<List<Clocking>> clockings = new ClockingRepository()
+        LiveData<List<Clocking>> clockings = new ClockingDayView()
                 .getAllForDate(new Date(2020, 3, 3));
 
         assertEquals(0, clockings.getValue().size());
@@ -32,7 +32,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
         LiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
 
@@ -49,9 +49,9 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testAddClocking(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
+        LiveData<List<Clocking>> clockings = new ClockingDayView().getAllForDate(testDay);
 
         List<Clocking> clockingList = clockings.getValue();
         clockingList.add(new Clocking.Builder("Test", 34, testDay).build());
@@ -62,9 +62,9 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testRemoveClockings_withOneClocking(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = new ClockingRepository().getAllForDate(testDay);
+        LiveData<List<Clocking>> clockings = new ClockingDayView().getAllForDate(testDay);
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay)
                 .build();
@@ -80,7 +80,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testRemoveClockings_withThreeClockings(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
         List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
 
@@ -100,7 +100,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testRemoveClockings_withNoClockings(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
         List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
 
@@ -114,7 +114,7 @@ public class ClockingRepositoryTest {
 
     @Test
     public void testRemoveClockings_withNull(){
-        ClockingRepository repository = new ClockingRepository();
+        ClockingDayView repository = new ClockingDayView();
         Date testDay = new Date(2020, 3, 3);
 
         List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
