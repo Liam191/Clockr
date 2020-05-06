@@ -15,12 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(InstantExecutorExtension.class)
 public class ClockingDayViewTest {
 
-    // TODO: Refactor ClockingRepository to use a factory instead of singleton
-    //          - Public factory and private constructor?
-    //              - Other classes use factory (which calls constructor)
-    //              - Tests use constructor
     // TODO: Try using in-memory RoomDatabase for testing.
-    // TODO: Test getAllForDate() with different dates
+    // TODO: Test ClockingDayView with different dates
+    // TODO: Cache for ClockingDayView instances of different dates?
+    //          - Static factory with cache can't be easily tested.
+    //          - Use service locator for instantiation and caching instead?
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
