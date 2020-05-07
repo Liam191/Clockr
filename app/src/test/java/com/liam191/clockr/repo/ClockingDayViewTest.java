@@ -25,10 +25,18 @@ public class ClockingDayViewTest {
     //          - Use service locator for instantiation and caching instead?
 
     @Test
-    public void testFactoryOfDate_returnsSameInstance(){
+    public void testFactoryOfDate_returnsSameInstanceWithSameDate(){
         ClockingDayView.Factory factory = new ClockingDayView.Factory();
         Date testDate = new Date(2017 - 1900, 4, 16);
         assertSame(factory.ofDate(testDate), factory.ofDate(testDate));
+    }
+
+    @Test
+    public void testFactoryOfDate_returnsDifferentInstancesForDifferentDates(){
+        ClockingDayView clockingDayView1 = new ClockingDayView.Factory().ofDate(new Date(2017 - 1900, 4, 16));
+        ClockingDayView clockingDayView2 = new ClockingDayView.Factory().ofDate(new Date(2017 - 1900, 4, 17));
+
+        assertNotSame(clockingDayView1, clockingDayView2);
     }
 
     @Test
