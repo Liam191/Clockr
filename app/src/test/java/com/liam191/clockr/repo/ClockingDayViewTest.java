@@ -1,5 +1,7 @@
 package com.liam191.clockr.repo;
 
+import androidx.lifecycle.LiveData;
+
 import com.liam191.clockr.clocking.Clocking;
 
 import org.junit.jupiter.api.Test;
@@ -8,9 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Date;
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @ExtendWith(InstantExecutorExtension.class)
 public class ClockingDayViewTest {
@@ -22,22 +25,30 @@ public class ClockingDayViewTest {
     //          - Use service locator for instantiation and caching instead?
 
     @Test
+    public void testFactoryOfDate_returnsSameInstance(){
+        ClockingDayView.Factory factory = new ClockingDayView.Factory();
+        Date testDate = new Date(2017 - 1900, 4, 16);
+        assertSame(factory.ofDate(testDate), factory.ofDate(testDate));
+    }
+
+    @Test
     public void testGetAllForGivenDate_withNoData(){
-        LiveData<List<Clocking>> clockings = new ClockingDayView()
-                .getAllForDate(new Date(2020, 3, 3));
+        LiveData<List<Clocking>> clockings = new ClockingDayView.Factory()
+                .ofDate(new Date(2020 - 1900, 3, 3))
+                .get();
 
         assertEquals(0, clockings.getValue().size());
     }
 
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = repository.getAllForDate(testDay);
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        LiveData<List<Clocking>> clockings = clockingDayView.get();
 
         List<Clocking> oldClockingList = clockings.getValue();
         oldClockingList.add(new Clocking.Builder("TestClocking1", 34, testDay).build());
-        repository.update(oldClockingList);
+        clockingDayView.update(oldClockingList);
 
         oldClockingList.add(new Clocking.Builder("TestClocking2", 46, testDay).build());
         List<Clocking> newClockingList = clockings.getValue();
@@ -48,22 +59,22 @@ public class ClockingDayViewTest {
 
     @Test
     public void testAddClocking(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = new ClockingDayView().getAllForDate(testDay);
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        LiveData<List<Clocking>> clockings = clockingDayView.get();
 
         List<Clocking> clockingList = clockings.getValue();
         clockingList.add(new Clocking.Builder("Test", 34, testDay).build());
-        repository.update(clockingList);
+        clockingDayView.update(clockingList);
 
         assertEquals(clockingList, clockings.getValue());
     }
 
     @Test
     public void testRemoveClockings_withOneClocking(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
-        LiveData<List<Clocking>> clockings = new ClockingDayView().getAllForDate(testDay);
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        LiveData<List<Clocking>> clockings = clockingDayView.get();
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay)
                 .build();
@@ -72,16 +83,16 @@ public class ClockingDayViewTest {
 
         clockingList.add(clocking1);
         clockingList.remove(clocking1);
-        repository.update(clockingList);
+        clockingDayView.update(clockingList);
 
-        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+        assertEquals(0, clockingDayView.get().getValue().size());
     }
 
     @Test
     public void testRemoveClockings_withThreeClockings(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
-        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        List<Clocking> clockingList = clockingDayView.get().getValue();
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
         Clocking clocking2 = new Clocking.Builder("TestClocking2", 47, testDay).build();
@@ -92,34 +103,34 @@ public class ClockingDayViewTest {
         clockingList.add(clocking3);
         clockingList.remove(clocking1);
 
-        repository.update(clockingList);
+        clockingDayView.update(clockingList);
 
-        assertEquals(2, repository.getAllForDate(testDay).getValue().size());
+        assertEquals(2, clockingDayView.get().getValue().size());
     }
 
     @Test
     public void testRemoveClockings_withNoClockings(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
-        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        List<Clocking> clockingList = clockingDayView.get().getValue();
 
         Clocking clocking1 = new Clocking.Builder("TestClocking1", 34, testDay).build();
 
         clockingList.remove(clocking1);
-        repository.update(clockingList);
+        clockingDayView.update(clockingList);
 
-        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+        assertEquals(0, clockingDayView.get().getValue().size());
     }
 
     @Test
     public void testRemoveClockings_withNull(){
-        ClockingDayView repository = new ClockingDayView();
-        Date testDay = new Date(2020, 3, 3);
+        Date testDay = new Date(2020 - 1900, 3, 3);
+        ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
+        List<Clocking> clockingList = clockingDayView.get().getValue();
 
-        List<Clocking> clockingList = repository.getAllForDate(testDay).getValue();
         clockingList.remove(null);
-        repository.update(clockingList);
+        clockingDayView.update(clockingList);
 
-        assertEquals(0, repository.getAllForDate(testDay).getValue().size());
+        assertEquals(0, clockingDayView.get().getValue().size());
     }
 }
