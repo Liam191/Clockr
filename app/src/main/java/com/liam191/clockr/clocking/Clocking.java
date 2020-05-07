@@ -60,7 +60,7 @@ public final class Clocking {
         private String description = "";
         private int durationInMinutes = 0;
         // startTime does *not* get a default time value as the time should be set
-        // when a Clocking is created, not when the Builder is created.
+        // when a ClockingEntity is created, not when the Builder is created.
         private Date startTime = null;
 
         public Builder(String label, int durationInMinutes){

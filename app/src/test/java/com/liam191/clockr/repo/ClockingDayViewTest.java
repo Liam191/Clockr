@@ -1,7 +1,5 @@
 package com.liam191.clockr.repo;
 
-import androidx.lifecycle.LiveData;
-
 import com.liam191.clockr.clocking.Clocking;
 
 import org.junit.jupiter.api.Test;
@@ -9,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -24,6 +24,7 @@ public class ClockingDayViewTest {
     //          - Static factory with cache can't be easily tested.
     //          - Use service locator for instantiation and caching instead?
 
+    // ClockingDayView Factory
     @Test
     public void testFactoryOfDate_returnsSameInstanceWithSameDate(){
         ClockingDayView.Factory factory = new ClockingDayView.Factory();
@@ -38,6 +39,9 @@ public class ClockingDayViewTest {
 
         assertNotSame(clockingDayView1, clockingDayView2);
     }
+
+
+
 
     @Test
     public void testGetAllForGivenDate_withNoData(){

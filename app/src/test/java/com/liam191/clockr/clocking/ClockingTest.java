@@ -1,44 +1,51 @@
 package com.liam191.clockr.clocking;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("SimplifiableJUnitAssertion")
-class ClockingTest {
+public class ClockingTest {
+
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     // TODO: Create automatic endTime (startTime plusHours(duration)?)
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
 
-    // Clocking instantiation
+    // ClockingEntity instantiation
     @Test
-    void testCreateClocking_WithLabel(){
+    public void testCreateClocking_WithLabel(){
         Clocking workClocking = new Clocking.Builder("working", 10)
                 .build();
         assertEquals(workClocking.label(), "working");
     }
 
     @Test
-    void testCreateClocking_WithLabelAndTrimmedWhitespace(){
+    public void testCreateClocking_WithLabelAndTrimmedWhitespace(){
         Clocking workClocking = new Clocking.Builder("      working      ", 10)
                 .build();
         assertEquals(workClocking.label(), "working");
     }
 
     @Test
-    void testCreateClocking_ThrowsExceptionWithNullLabel(){
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                new Clocking.Builder(null, 10).build()
-        );
-        assertTrue(e.getMessage().contains("label cannot be null"));
+    public void testCreateClocking_ThrowsExceptionWithNullLabel(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("label cannot be null");
+
+        new Clocking.Builder(null, 10).build();
     }
 
     @Test
-    void testCreateClocking_WithDescription(){
+    public void testCreateClocking_WithDescription(){
         Clocking workClocking = new Clocking.Builder("working", 20)
                 .description("A work clocking")
                 .build();
@@ -46,7 +53,7 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_WithDescriptionAndTrimmedWhitespace(){
+    public void testCreateClocking_WithDescriptionAndTrimmedWhitespace(){
         Clocking workClocking = new Clocking.Builder("working", 20)
                 .description("         A work clocking          ")
                 .build();
@@ -54,33 +61,33 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_ThrowsExceptionWithNullDescription(){
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                new Clocking.Builder("working", 10)
-                        .description(null)
-                        .build()
-        );
-        assertTrue(e.getMessage().contains("description cannot be null"));
+    public void testCreateClocking_ThrowsExceptionWithNullDescription(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("description cannot be null");
+
+        new Clocking.Builder("working", 10)
+                .description(null)
+                .build();
     }
 
 
     @Test
-    void testCreateClocking_WithDurationInMinutes(){
+    public void testCreateClocking_WithDurationInMinutes(){
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
         assertEquals(workClocking.durationInMinutes(), 60);
     }
 
     @Test
-    void testCreateClocking_ThrowsExceptionWithNegativeDurationInMinutes(){
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-            new Clocking.Builder("working", -720).build()
-        );
-        assertTrue(e.getMessage().contains("durationInMinutes cannot be zero or negative"));
+    public void testCreateClocking_ThrowsExceptionWithNegativeDurationInMinutes(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("durationInMinutes cannot be zero or negative");
+
+        new Clocking.Builder("working", -720).build();
     }
 
     @Test
-    void testCreateClocking_WithStartTime(){
+    public void testCreateClocking_WithStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
                 .startTime(new Date(2020 - 1900, 3, 1, 18 , 37, 50))
                 .build();
@@ -88,24 +95,24 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_HasDefaultStartTime(){
+    public void testCreateClocking_HasDefaultStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
         assertEquals(workClocking.startTime().getTime(), new Date().getTime(), 100);
     }
 
     @Test
-    void testCreateClocking_ThrowsExceptionWithNullStartTime(){
-        Exception e = assertThrows(IllegalArgumentException.class, () ->
-                new Clocking.Builder("working", 60)
-                        .startTime(null)
-                        .build()
-        );
-        assertTrue(e.getMessage().contains("startTime cannot be null"));
+    public void testCreateClocking_ThrowsExceptionWithNullStartTime(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("startTime cannot be null");
+
+        new Clocking.Builder("working", 60)
+                .startTime(null)
+                .build();
     }
 
     @Test
-    void testCreateClocking_HasImmutableDefaultStartTime(){
+    public void testCreateClocking_HasImmutableDefaultStartTime(){
         Clocking clocking = new Clocking.Builder("working", 100)
                 .build();
 
@@ -117,7 +124,7 @@ class ClockingTest {
     }
 
     @Test
-    void testCreateClocking_HasImmutableStartTimeWithBuilder(){
+    public void testCreateClocking_HasImmutableStartTimeWithBuilder(){
         Date originalClockingStartTime = new Date(2020 - 1900, 10, 10);
         Clocking clocking = new Clocking.Builder("working", 100)
                 .startTime(originalClockingStartTime)
@@ -131,10 +138,10 @@ class ClockingTest {
 
 
 
-    // Clocking.equals()
+    // ClockingEntity.equals()
     @SuppressWarnings("EqualsWithItself")
     @Test
-    void testClockingEquals(){
+    public void testClockingEquals(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
 
         Clocking clockingX = new Clocking.Builder("Same clocking", 60, date).build();
@@ -157,10 +164,10 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_FromSameAndDifferentBuilders(){
+    public void testClockingEquals_FromSameAndDifferentBuilders(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60, date);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60, date);
+        Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60, date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60, date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -174,7 +181,7 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_WithDifferentLabels(){
+    public void testClockingEquals_WithDifferentLabels(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date).build();
         Clocking clockingB = new Clocking.Builder("Different label", 60, date).build();
@@ -184,7 +191,7 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_WithDifferentDescriptions(){
+    public void testClockingEquals_WithDifferentDescriptions(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date)
                 .description("Hello, world description!")
@@ -198,7 +205,7 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_WithDifferentDurations(){
+    public void testClockingEquals_WithDifferentDurations(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 200, date).build();
         Clocking clockingB = new Clocking.Builder("Label", 153, date).build();
@@ -208,7 +215,7 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingEquals_WithDifferentStartTimes(){
+    public void testClockingEquals_WithDifferentStartTimes(){
         Clocking clockingA = new Clocking.Builder("Label", 60)
                 .startTime(new Date(2020 - 1900, 3, 3, 12 , 0, 0))
                 .build();
@@ -223,12 +230,12 @@ class ClockingTest {
 
 
 
-    // Clocking.hashCode()
+    // ClockingEntity.hashCode()
     @Test
-    void testClockingHashCode(){
+    public void testClockingHashCode(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -242,10 +249,10 @@ class ClockingTest {
     }
 
     @Test
-    void testClockingHashCode_FromSameAndDifferentBuilders(){
+    public void testClockingHashCode_FromSameAndDifferentBuilders(){
         Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
-        Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
+        Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
