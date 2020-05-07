@@ -82,9 +82,9 @@ class ClockingTest {
     @Test
     void testCreateClocking_WithStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
-                .startTime(new Date(2020, 3, 1, 18 , 37, 50))
+                .startTime(new Date(2020 - 1900, 3, 1, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), new Date(2020, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime(), new Date(2020 - 1900, 3, 1, 18 , 37, 50));
     }
 
     @Test
@@ -118,7 +118,7 @@ class ClockingTest {
 
     @Test
     void testCreateClocking_HasImmutableStartTimeWithBuilder(){
-        Date originalClockingStartTime = new Date(2020, 10, 10);
+        Date originalClockingStartTime = new Date(2020 - 1900, 10, 10);
         Clocking clocking = new Clocking.Builder("working", 100)
                 .startTime(originalClockingStartTime)
                 .build();
@@ -135,7 +135,7 @@ class ClockingTest {
     @SuppressWarnings("EqualsWithItself")
     @Test
     void testClockingEquals(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
 
         Clocking clockingX = new Clocking.Builder("Same clocking", 60, date).build();
         Clocking clockingY = new Clocking.Builder("Same clocking", 60, date).build();
@@ -158,7 +158,7 @@ class ClockingTest {
 
     @Test
     void testClockingEquals_FromSameAndDifferentBuilders(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60, date);
         Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60, date);
 
@@ -175,7 +175,7 @@ class ClockingTest {
 
     @Test
     void testClockingEquals_WithDifferentLabels(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date).build();
         Clocking clockingB = new Clocking.Builder("Different label", 60, date).build();
 
@@ -185,7 +185,7 @@ class ClockingTest {
 
     @Test
     void testClockingEquals_WithDifferentDescriptions(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date)
                 .description("Hello, world description!")
                 .build();
@@ -199,7 +199,7 @@ class ClockingTest {
 
     @Test
     void testClockingEquals_WithDifferentDurations(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 200, date).build();
         Clocking clockingB = new Clocking.Builder("Label", 153, date).build();
 
@@ -210,10 +210,10 @@ class ClockingTest {
     @Test
     void testClockingEquals_WithDifferentStartTimes(){
         Clocking clockingA = new Clocking.Builder("Label", 60)
-                .startTime(new Date(2020, 3, 3, 12 , 0, 0))
+                .startTime(new Date(2020 - 1900, 3, 3, 12 , 0, 0))
                 .build();
         Clocking clockingB = new Clocking.Builder("Label", 60)
-                .startTime(new Date(2020, 3, 3, 14 , 59, 59))
+                .startTime(new Date(2020 - 1900, 3, 3, 14 , 59, 59))
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -226,7 +226,7 @@ class ClockingTest {
     // Clocking.hashCode()
     @Test
     void testClockingHashCode(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
 
@@ -243,7 +243,7 @@ class ClockingTest {
 
     @Test
     void testClockingHashCode_FromSameAndDifferentBuilders(){
-        Date date = new Date(2020, 3, 3, 12 , 0, 0);
+        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("Clocking one", 60).startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("Clocking one", 60).startTime(date);
 
