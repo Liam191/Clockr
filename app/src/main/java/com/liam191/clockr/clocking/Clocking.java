@@ -1,14 +1,16 @@
 package com.liam191.clockr.clocking;
 
-import java.util.Date;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.OffsetDateTime;
+
 import java.util.Objects;
 
 public final class Clocking {
     private final String label;
     private final String description;
     private final int durationInMinutes;
-    private final Date startTime;
-    private final Date endTime;
+    private final OffsetDateTime startTime;
+    private final OffsetDateTime endTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
@@ -30,12 +32,12 @@ public final class Clocking {
         return this.durationInMinutes;
     }
 
-    public Date startTime(){
-        return (Date)(this.startTime.clone());
+    public LocalDateTime startTime(){
+        return this.startTime;
     }
 
-    public Date endTime(){
-        return (Date)(this.endTime.clone());
+    public LocalDateTime endTime(){
+        return this.endTime;
     }
 
     @Override
@@ -64,13 +66,14 @@ public final class Clocking {
     }
 
     public static final class Builder {
+        private static final int DEFAULT_DURATION_IN_MINS = 30;
         private String label = "";
         private String description = "";
         private int durationInMinutes = 0;
         // startTime does *not* get a default time value as the time should be set
         // when a ClockingEntity is created, not when the Builder is created.
-        private Date startTime = null;
-        private Date endTime = null;
+        private LocalDateTime startTime = null;
+        private LocalDateTime endTime = null;
 
         public Builder(String label, int durationInMinutes){
             if(label == null) {
@@ -84,7 +87,7 @@ public final class Clocking {
             this.durationInMinutes = durationInMinutes;
         }
 
-        public Builder(String label, int durationInMinutes, Date startTime){
+        public Builder(String label, int durationInMinutes, LocalDateTime startTime){
             this(label, durationInMinutes);
             this.startTime(startTime);
         }
@@ -98,28 +101,28 @@ public final class Clocking {
             return this;
         }
 
-        public Builder startTime(Date startTime) throws IllegalArgumentException {
+        public Builder startTime(LocalDateTime startTime) throws IllegalArgumentException {
             if(startTime == null) {
                 throw new IllegalArgumentException("startTime cannot be null");
             }
-            this.startTime = (Date)(startTime.clone());
+            this.startTime = startTime;
             return this;
         }
 
-        public Builder endTime(Date endTime) throws IllegalArgumentException {
+        public Builder endTime(LocalDateTime endTime) throws IllegalArgumentException {
             if(endTime == null) {
                 throw new IllegalArgumentException("endTime cannot be null");
             }
-            this.endTime = (Date)(endTime.clone());
+            this.endTime = endTime;
             return this;
         }
 
         public Clocking build(){
             if (startTime == null) {
-                this.startTime = new Date();
+                this.startTime = LocalDateTime.now();
             }
             if (endTime == null){
-                Date d = (Date) startTime.clone();
+                endTime = startTime.plusMinutes(DEFAULT_DURATION_IN_MINS);
 
             }
             return new Clocking(this);

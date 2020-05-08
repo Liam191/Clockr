@@ -3,6 +3,7 @@ package com.liam191.clockr.clocking;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.threeten.bp.LocalDateTime;
 
 import java.util.Date;
 
@@ -89,17 +90,16 @@ public class ClockingTest {
     @Test
     public void testCreateClocking_WithStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
-                .startTime(new Date(2020 - 1900, 3, 1, 18 , 37, 50))
+                .startTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), new Date(2020 - 1900, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
     }
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
-        long deltaInMilliSeconds = 100;
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.startTime().getTime(), new Date().getTime(), deltaInMilliSeconds);
+        assertEquals(workClocking.startTime(), LocalDateTime.now());
     }
 
     @Test
@@ -112,48 +112,21 @@ public class ClockingTest {
                 .build();
     }
 
-    @Test
-    public void testCreateClocking_HasImmutableDefaultStartTime(){
-        Clocking clocking = new Clocking.Builder("working", 100)
-                .build();
-
-        Date clockingStartTime = clocking.startTime();
-
-        clockingStartTime.setYear(103);
-
-        assertFalse(clockingStartTime.equals(clocking.startTime()));
-    }
-
-    @Test
-    public void testCreateClocking_HasImmutableStartTimeWithBuilder(){
-        Date originalClockingStartTime = new Date(2020 - 1900, 10, 10);
-        Clocking clocking = new Clocking.Builder("working", 100)
-                .startTime(originalClockingStartTime)
-                .build();
-
-        originalClockingStartTime.setYear(103);
-
-        assertFalse(originalClockingStartTime.equals(clocking.startTime()));
-    }
-
-
 
     // endTime
     @Test
     public void testCreateClocking_WithEndTime(){
         Clocking workClocking = new Clocking.Builder("working", 70)
-                .startTime(new Date(2020 - 1900, 3, 1, 18 , 37, 50))
+                .startTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), new Date(2020 - 1900, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime(), new Date(2020, 3, 1, 18 , 37, 50));
     }
 
     @Test
     public void testCreateClocking_HasDefaultEndTime(){
-        long deltaInMilliSeconds = 100;
-        long thirtyMinutesInMilliseconds = 1_800_000;
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.endTime().getTime(), (new Date().getTime() + thirtyMinutesInMilliseconds));
+        assertEquals(workClocking.endTime(), (LocalDateTime.now().plusMinutes(30)));
     }
 /*
     @Test
@@ -171,7 +144,7 @@ public class ClockingTest {
         Clocking clocking = new Clocking.Builder("working", 100)
                 .build();
 
-        Date clockingStartTime = clocking.startTime();
+        LocalDateTime clockingStartTime = clocking.startTime();
 
         clockingStartTime.setYear(103);
 
@@ -180,7 +153,7 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_HasImmutableEndTimeWithBuilder(){
-        Date originalClockingStartTime = new Date(2020 - 1900, 10, 10);
+        LocalDateTime originalClockingStartTime = LocalDateTime.of(2020, 10, 10);
         Clocking clocking = new Clocking.Builder("working", 100)
                 .startTime(originalClockingStartTime)
                 .build();
@@ -196,7 +169,7 @@ public class ClockingTest {
     @SuppressWarnings("EqualsWithItself")
     @Test
     public void testClockingEquals(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
 
         Clocking clockingX = new Clocking.Builder("Same clocking", 60, date).build();
         Clocking clockingY = new Clocking.Builder("Same clocking", 60, date).build();
@@ -219,7 +192,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_FromSameAndDifferentBuilders(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020 , 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60, date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60, date);
 
@@ -236,7 +209,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentLabels(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date).build();
         Clocking clockingB = new Clocking.Builder("Different label", 60, date).build();
 
@@ -246,7 +219,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentDescriptions(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 60, date)
                 .description("Hello, world description!")
                 .build();
@@ -260,7 +233,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentDurations(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
         Clocking clockingA = new Clocking.Builder("Label", 200, date).build();
         Clocking clockingB = new Clocking.Builder("Label", 153, date).build();
 
@@ -271,10 +244,10 @@ public class ClockingTest {
     @Test
     public void testClockingEquals_WithDifferentStartTimes(){
         Clocking clockingA = new Clocking.Builder("Label", 60)
-                .startTime(new Date(2020 - 1900, 3, 3, 12 , 0, 0))
+                .startTime(LocalDateTime.of(2020, 3, 3, 12 , 0, 0))
                 .build();
         Clocking clockingB = new Clocking.Builder("Label", 60)
-                .startTime(new Date(2020 - 1900, 3, 3, 14 , 59, 59))
+                .startTime(LocalDateTime.of(2020, 3, 3, 14 , 59, 59))
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -287,7 +260,7 @@ public class ClockingTest {
     // ClockingEntity.hashCode()
     @Test
     public void testClockingHashCode(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
 
@@ -304,7 +277,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingHashCode_FromSameAndDifferentBuilders(){
-        Date date = new Date(2020 - 1900, 3, 3, 12 , 0, 0);
+        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", 60).startTime(date);
 
