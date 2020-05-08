@@ -8,12 +8,14 @@ public final class Clocking {
     private final String description;
     private final int durationInMinutes;
     private final Date startTime;
+    private final Date endTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
         this.description = clockingBuilder.description;
         this.durationInMinutes = clockingBuilder.durationInMinutes;
         this.startTime = clockingBuilder.startTime;
+        this.endTime = clockingBuilder.endTime;
     }
 
     public String label(){
@@ -32,6 +34,10 @@ public final class Clocking {
         return (Date)(this.startTime.clone());
     }
 
+    public Date endTime(){
+        return (Date)(this.endTime.clone());
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == null || o.getClass() != getClass()){
@@ -43,7 +49,8 @@ public final class Clocking {
             label.equals(clocking.label) &&
             description.equals(clocking.description) &&
             durationInMinutes == clocking.durationInMinutes &&
-            startTime.equals(clocking.startTime));
+            startTime.equals(clocking.startTime) &&
+            endTime.equals(clocking.endTime));
     }
 
     @Override
@@ -52,7 +59,8 @@ public final class Clocking {
                 this.label,
                 this.description,
                 this.durationInMinutes,
-                this.startTime);
+                this.startTime,
+                this.endTime);
     }
 
     public static final class Builder {
@@ -62,6 +70,7 @@ public final class Clocking {
         // startTime does *not* get a default time value as the time should be set
         // when a ClockingEntity is created, not when the Builder is created.
         private Date startTime = null;
+        private Date endTime = null;
 
         public Builder(String label, int durationInMinutes){
             if(label == null) {
@@ -97,9 +106,21 @@ public final class Clocking {
             return this;
         }
 
+        public Builder endTime(Date endTime) throws IllegalArgumentException {
+            if(endTime == null) {
+                throw new IllegalArgumentException("endTime cannot be null");
+            }
+            this.endTime = (Date)(endTime.clone());
+            return this;
+        }
+
         public Clocking build(){
             if (startTime == null) {
                 this.startTime = new Date();
+            }
+            if (endTime == null){
+                Date d = (Date) startTime.clone();
+
             }
             return new Clocking(this);
         }

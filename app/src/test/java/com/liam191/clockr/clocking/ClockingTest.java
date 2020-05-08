@@ -30,7 +30,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithLabelAndTrimmedWhitespace(){
+    public void testCreateClocking_WithLabelAndWhitespace(){
         Clocking workClocking = new Clocking.Builder("      working      ", 10)
                 .build();
         assertEquals(workClocking.label(), "working");
@@ -53,7 +53,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithDescriptionAndTrimmedWhitespace(){
+    public void testCreateClocking_WithDescriptionAndWhitespace(){
         Clocking workClocking = new Clocking.Builder("working", 20)
                 .description("         A work clocking          ")
                 .build();
@@ -96,9 +96,10 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
+        long deltaInMilliSeconds = 100;
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.startTime().getTime(), new Date().getTime(), 100);
+        assertEquals(workClocking.startTime().getTime(), new Date().getTime(), deltaInMilliSeconds);
     }
 
     @Test
@@ -136,6 +137,59 @@ public class ClockingTest {
     }
 
 
+
+    // endTime
+    @Test
+    public void testCreateClocking_WithEndTime(){
+        Clocking workClocking = new Clocking.Builder("working", 70)
+                .startTime(new Date(2020 - 1900, 3, 1, 18 , 37, 50))
+                .build();
+        assertEquals(workClocking.startTime(), new Date(2020 - 1900, 3, 1, 18 , 37, 50));
+    }
+
+    @Test
+    public void testCreateClocking_HasDefaultEndTime(){
+        long deltaInMilliSeconds = 100;
+        long thirtyMinutesInMilliseconds = 1_800_000;
+        Clocking workClocking = new Clocking.Builder("working", 60)
+                .build();
+        assertEquals(workClocking.endTime().getTime(), (new Date().getTime() + thirtyMinutesInMilliseconds));
+    }
+/*
+    @Test
+    public void testCreateClocking_ThrowsExceptionWithNullEndTime(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("startTime cannot be null");
+
+        new Clocking.Builder("working", 60)
+                .endTime(null)
+                .build();
+    }
+
+    @Test
+    public void testCreateClocking_HasImmutableDefaultEndTime(){
+        Clocking clocking = new Clocking.Builder("working", 100)
+                .build();
+
+        Date clockingStartTime = clocking.startTime();
+
+        clockingStartTime.setYear(103);
+
+        assertFalse(clockingStartTime.equals(clocking.startTime()));
+    }
+
+    @Test
+    public void testCreateClocking_HasImmutableEndTimeWithBuilder(){
+        Date originalClockingStartTime = new Date(2020 - 1900, 10, 10);
+        Clocking clocking = new Clocking.Builder("working", 100)
+                .startTime(originalClockingStartTime)
+                .build();
+
+        originalClockingStartTime.setYear(103);
+
+        assertFalse(originalClockingStartTime.equals(clocking.startTime()));
+    }
+*/
 
 
     // ClockingEntity.equals()
