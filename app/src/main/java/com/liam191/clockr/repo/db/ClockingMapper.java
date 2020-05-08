@@ -1,15 +1,14 @@
 package com.liam191.clockr.repo.db;
 
-import androidx.room.TypeConverter;
-
 import com.liam191.clockr.clocking.Clocking;
 
 import java.util.Date;
 
-public class ClockingConverter {
+public class ClockingMapper {
 
-    @TypeConverter
-    public static ClockingEntity fromClocking(Clocking clocking){
+    private ClockingMapper(){}
+
+    public static ClockingEntity map(Clocking clocking){
         ClockingEntity entity = new ClockingEntity();
         entity.label = clocking.label();
         entity.description = clocking.description();
@@ -18,8 +17,7 @@ public class ClockingConverter {
         return entity;
     }
 
-    @TypeConverter
-    public static Clocking fromClockingEntity(ClockingEntity entity){
+    public static Clocking map(ClockingEntity entity){
         Date clockingStartTime = new Date();
         clockingStartTime.setTime(entity.startTime);
 

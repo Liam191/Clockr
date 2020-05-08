@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ClockingConverterTest {
+public class ClockingMapperTest {
     // TODO: Handling errors if conversion fails
     @Test
     public void testConverter_fromClockingToEntity(){
         Clocking clocking = new Clocking.Builder("TestClocking", 45)
                 .build();
 
-        ClockingEntity entity = ClockingConverter.fromClocking(clocking);
+        ClockingEntity entity = ClockingMapper.fromClocking(clocking);
 
         assertEquals(entity.label, clocking.label());
         assertEquals(entity.description, clocking.description());
