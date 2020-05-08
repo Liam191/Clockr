@@ -8,12 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClockingMapperTest {
     // TODO: Handling errors if conversion fails
+    // TODO: Complete testing here
     @Test
     public void testConverter_fromClockingToEntity(){
         Clocking clocking = new Clocking.Builder("TestClocking", 45)
                 .build();
 
-        ClockingEntity entity = ClockingMapper.fromClocking(clocking);
+        ClockingEntity entity = ClockingMapper.map(clocking);
 
         assertEquals(entity.label, clocking.label());
         assertEquals(entity.description, clocking.description());
