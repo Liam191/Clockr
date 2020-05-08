@@ -5,19 +5,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class ClockingEntity {
+class ClockingEntity {
     @PrimaryKey(autoGenerate = true)
-    public int uid;
+    int uid;
 
     @ColumnInfo(name = "label")
-    public String label;
+    String label;
 
     @ColumnInfo(name = "description")
-    public String description;
+    String description;
 
     @ColumnInfo(name = "duration_in_minutes")
-    public int durationInMinutes;
+    int durationInMinutes;
 
-    //@ColumnInfo(name = "start_time")
-    //public Date startTime;
+    @ColumnInfo(name = "start_time")
+    Long startTime;
 }
