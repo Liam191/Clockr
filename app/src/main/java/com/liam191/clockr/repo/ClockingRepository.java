@@ -1,20 +1,19 @@
 package com.liam191.clockr.repo;
 
 import com.liam191.clockr.clocking.Clocking;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.liam191.clockr.repo.db.ClockingDao;
+import com.liam191.clockr.repo.db.ClockingMapper;
 
 final class ClockingRepository {
 
-    private List<Clocking> clockingList = new ArrayList<>();
+    private ClockingDao clockingDao;
 
-    ClockingRepository(){
-
+    ClockingRepository(ClockingDao clockingDao){
+        this.clockingDao = clockingDao;
     }
 
     void add(Clocking clocking){
         // TODO: map between dao and domain object
-        clockingList.add(clocking);
+        clockingDao.add(ClockingMapper.map(clocking));
     }
 }
