@@ -2,25 +2,25 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SmallTest
-@RunWith(AndroidJUnit4ClassRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class ClockingRepositoryTest {
 
     private ClockrDatabase testDb;
