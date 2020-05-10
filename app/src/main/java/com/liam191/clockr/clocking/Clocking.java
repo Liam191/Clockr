@@ -86,17 +86,6 @@ public final class Clocking {
             this.clock = clock;
         }
 
-        public Builder(String label, ZonedDateTime startTime){
-            this(label);
-            startTime(startTime);
-        }
-
-        public Builder(String label, ZonedDateTime startTime, ZonedDateTime endTime){
-            this(label);
-            startTime(startTime);
-            endTime(endTime);
-        }
-
 
         public Builder description(String description) throws IllegalArgumentException {
             if(description == null || description.trim().length() == 0) {

@@ -33,7 +33,9 @@ final class ClockingRepository {
         }
 
         public static Clocking map(ClockingEntity entity){
-            return new Clocking.Builder(entity.label, entity.startTime, entity.endTime)
+            return new Clocking.Builder(entity.label)
+                    .startTime(entity.startTime)
+                    .endTime(entity.endTime)
                     .description(entity.description)
                     .build();
         }

@@ -61,10 +61,10 @@ public class ClockingDayViewTest {
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
         List<Clocking> oldClockingList = clockings.getValue();
-        oldClockingList.add(new Clocking.Builder("TestClocking1", testDay).build());
+        oldClockingList.add(new Clocking.Builder("TestClocking1").startTime(testDay).build());
         clockingDayView.update(oldClockingList);
 
-        oldClockingList.add(new Clocking.Builder("TestClocking2", testDay).build());
+        oldClockingList.add(new Clocking.Builder("TestClocking2").startTime(testDay).build());
         List<Clocking> newClockingList = clockings.getValue();
 
         assertNotEquals(oldClockingList, newClockingList);
@@ -78,7 +78,7 @@ public class ClockingDayViewTest {
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
         List<Clocking> clockingList = clockings.getValue();
-        clockingList.add(new Clocking.Builder("Test", testDay).build());
+        clockingList.add(new Clocking.Builder("Test").startTime(testDay).build());
         clockingDayView.update(clockingList);
 
         assertEquals(clockingList, clockings.getValue());
@@ -90,7 +90,7 @@ public class ClockingDayViewTest {
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
-        Clocking clocking1 = new Clocking.Builder("TestClocking1", testDay)
+        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay)
                 .build();
 
         List<Clocking> clockingList = clockings.getValue();
@@ -108,9 +108,9 @@ public class ClockingDayViewTest {
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
-        Clocking clocking1 = new Clocking.Builder("TestClocking1", testDay).build();
-        Clocking clocking2 = new Clocking.Builder("TestClocking2", testDay).build();
-        Clocking clocking3 = new Clocking.Builder("TestClocking3", testDay).build();
+        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay).build();
+        Clocking clocking2 = new Clocking.Builder("TestClocking2").startTime(testDay).build();
+        Clocking clocking3 = new Clocking.Builder("TestClocking3").startTime(testDay).build();
 
         clockingList.add(clocking1);
         clockingList.add(clocking2);
@@ -128,7 +128,7 @@ public class ClockingDayViewTest {
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
-        Clocking clocking1 = new Clocking.Builder("TestClocking1", testDay).build();
+        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay).build();
 
         clockingList.remove(clocking1);
         clockingDayView.update(clockingList);

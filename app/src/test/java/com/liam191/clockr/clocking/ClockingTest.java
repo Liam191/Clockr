@@ -18,7 +18,6 @@ public class ClockingTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
-    // TODO: Remove startTime and endTime constructors. Only use defaults and setters
 
     // Clocking label
     @Test
@@ -115,7 +114,10 @@ public class ClockingTest {
         ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 3, 0,0,0,0,ZoneId.systemDefault());
         ZonedDateTime endTime = startTime.plusMinutes(expectedDuration);
 
-        Clocking workClocking = new Clocking.Builder("working", startTime, endTime).build();
+        Clocking workClocking = new Clocking.Builder("working")
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
         assertEquals(workClocking.durationInMinutes(), expectedDuration);
     }
 
@@ -219,10 +221,10 @@ public class ClockingTest {
     public void testEquals(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
 
-        Clocking clockingX = new Clocking.Builder("Same clocking", date).build();
-        Clocking clockingY = new Clocking.Builder("Same clocking", date).build();
-        Clocking clockingZ = new Clocking.Builder("Same clocking", date).build();
-        Clocking otherClocking = new Clocking.Builder("Different clocking", date).build();
+        Clocking clockingX = new Clocking.Builder("Same clocking").startTime(date).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking").startTime(date).build();
+        Clocking clockingZ = new Clocking.Builder("Same clocking").startTime(date).build();
+        Clocking otherClocking = new Clocking.Builder("Different clocking").startTime(date).build();
 
         assertTrue(clockingX.equals(clockingX));
 
@@ -241,8 +243,8 @@ public class ClockingTest {
     @Test
     public void testEquals_FromSameAndDifferentBuilders(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
-        Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", date);
-        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", date);
+        Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -258,8 +260,8 @@ public class ClockingTest {
     @Test
     public void testEquals_WithDifferentLabels(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
-        Clocking clockingA = new Clocking.Builder("Label", date).build();
-        Clocking clockingB = new Clocking.Builder("Different label", date).build();
+        Clocking clockingA = new Clocking.Builder("Label").startTime(date).build();
+        Clocking clockingB = new Clocking.Builder("Different label").startTime(date).build();
 
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
@@ -268,10 +270,10 @@ public class ClockingTest {
     @Test
     public void testEquals_WithDifferentDescriptions(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
-        Clocking clockingA = new Clocking.Builder("Label", date)
+        Clocking clockingA = new Clocking.Builder("Label").startTime(date)
                 .description("Hello, world description!")
                 .build();
-        Clocking clockingB = new Clocking.Builder("Label", date)
+        Clocking clockingB = new Clocking.Builder("Label").startTime(date)
                 .description("Goodbye, world description!")
                 .build();
 
@@ -282,8 +284,14 @@ public class ClockingTest {
     @Test
     public void testEquals_WithDifferentDurations(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
-        Clocking clockingA = new Clocking.Builder("Label", date, date.plusMinutes(15)).build();
-        Clocking clockingB = new Clocking.Builder("Label", date, date.plusMinutes(16)).build();
+        Clocking clockingA = new Clocking.Builder("Label")
+                .startTime(date)
+                .endTime(date.plusMinutes(15))
+                .build();
+        Clocking clockingB = new Clocking.Builder("Label")
+                .startTime(date)
+                .endTime(date.plusMinutes(16))
+                .build();
 
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
