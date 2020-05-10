@@ -4,8 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.threeten.bp.LocalDateTime;
-
-import java.util.Date;
+import org.threeten.bp.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -92,26 +91,37 @@ public class ClockingTest {
         Clocking workClocking = new Clocking.Builder("working", 70)
                 .startTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime().toLocalDateTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
     }
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.startTime(), LocalDateTime.now());
+        assertEquals(workClocking.startTime().toLocalDateTime(), LocalDateTime.now());
     }
 
     @Test
-    public void testCreateClocking_ThrowsExceptionWithNullStartTime(){
+    public void testCreateClocking_ThrowsExceptionWithNullStartTimeLocal(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("startTime cannot be null");
 
+        LocalDateTime nullTime = null;
         new Clocking.Builder("working", 60)
-                .startTime(null)
+                .startTime(nullTime)
                 .build();
     }
 
+    @Test
+    public void testCreateClocking_ThrowsExceptionWithNullStartTimeZoned(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("startTime cannot be null");
+
+        ZonedDateTime nullTime = null;
+        new Clocking.Builder("working", 60)
+                .startTime(nullTime)
+                .build();
+    }
 
     // endTime
     @Test
@@ -119,14 +129,14 @@ public class ClockingTest {
         Clocking workClocking = new Clocking.Builder("working", 70)
                 .startTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
                 .build();
-        assertEquals(workClocking.startTime(), new Date(2020, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime().toLocalDateTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
     }
 
     @Test
     public void testCreateClocking_HasDefaultEndTime(){
         Clocking workClocking = new Clocking.Builder("working", 60)
                 .build();
-        assertEquals(workClocking.endTime(), (LocalDateTime.now().plusMinutes(30)));
+        assertEquals(workClocking.endTime().toLocalDateTime(), (LocalDateTime.now().plusMinutes(30)));
     }
 /*
     @Test

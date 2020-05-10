@@ -5,8 +5,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.liam191.clockr.clocking.Clocking;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +18,12 @@ public final class ClockingDayView {
 
     private final MutableLiveData<List<Clocking>> clockings = new MutableLiveData<>();
 
-    private ClockingDayView(Date date){
+    private ClockingDayView(ZonedDateTime date){
         clockings.postValue(new ArrayList<>());
+    }
+
+    private ClockingDayView(LocalDateTime date){
+        this(ZonedDateTime.of(date, ZoneId.systemDefault()));
     }
 
     public LiveData<List<Clocking>> get(){
@@ -28,17 +35,21 @@ public final class ClockingDayView {
     }
 
     public static class Factory {
-        private final Map<Date, ClockingDayView> cache;
+        private final Map<ZonedDateTime, ClockingDayView> cache;
 
         public Factory(){
             cache = new HashMap<>();
         }
 
-        public ClockingDayView ofDate(Date date){
+        public ClockingDayView ofDate(ZonedDateTime date){
             if(cache.containsKey(date) == false){
                 cache.put(date, new ClockingDayView(date));
             }
             return cache.get(date);
+        }
+
+        public ClockingDayView ofDate(LocalDateTime date){
+            return ofDate(ZonedDateTime.of(date, ZoneId.systemDefault()));
         }
     }
 }

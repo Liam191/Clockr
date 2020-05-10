@@ -1,7 +1,8 @@
 package com.liam191.clockr.clocking;
 
 import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.Objects;
 
@@ -9,8 +10,8 @@ public final class Clocking {
     private final String label;
     private final String description;
     private final int durationInMinutes;
-    private final OffsetDateTime startTime;
-    private final OffsetDateTime endTime;
+    private final ZonedDateTime startTime;
+    private final ZonedDateTime endTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
@@ -32,11 +33,11 @@ public final class Clocking {
         return this.durationInMinutes;
     }
 
-    public LocalDateTime startTime(){
+    public ZonedDateTime startTime(){
         return this.startTime;
     }
 
-    public LocalDateTime endTime(){
+    public ZonedDateTime endTime(){
         return this.endTime;
     }
 
@@ -72,8 +73,8 @@ public final class Clocking {
         private int durationInMinutes = 0;
         // startTime does *not* get a default time value as the time should be set
         // when a ClockingEntity is created, not when the Builder is created.
-        private LocalDateTime startTime = null;
-        private LocalDateTime endTime = null;
+        private ZonedDateTime startTime = null;
+        private ZonedDateTime endTime = null;
 
         public Builder(String label, int durationInMinutes){
             if(label == null) {
@@ -87,11 +88,19 @@ public final class Clocking {
             this.durationInMinutes = durationInMinutes;
         }
 
+        public Builder(String label, int durationInMinutes, ZonedDateTime startTime){
+            this(label, durationInMinutes);
+            this.startTime(startTime);
+        }
+
         public Builder(String label, int durationInMinutes, LocalDateTime startTime){
             this(label, durationInMinutes);
             this.startTime(startTime);
         }
 
+        private ZoneId getZone(){
+            return ZoneId.systemDefault();
+        }
 
         public Builder description(String description) throws IllegalArgumentException {
             if(description == null) {
@@ -101,7 +110,7 @@ public final class Clocking {
             return this;
         }
 
-        public Builder startTime(LocalDateTime startTime) throws IllegalArgumentException {
+        public Builder startTime(ZonedDateTime startTime) throws IllegalArgumentException {
             if(startTime == null) {
                 throw new IllegalArgumentException("startTime cannot be null");
             }
@@ -109,7 +118,14 @@ public final class Clocking {
             return this;
         }
 
-        public Builder endTime(LocalDateTime endTime) throws IllegalArgumentException {
+        public Builder startTime(LocalDateTime startTime) throws IllegalArgumentException {
+            if(startTime == null) {
+                throw new IllegalArgumentException("startTime cannot be null");
+            }
+            return startTime(ZonedDateTime.of(startTime, getZone()));
+        }
+
+        public Builder endTime(ZonedDateTime endTime) throws IllegalArgumentException {
             if(endTime == null) {
                 throw new IllegalArgumentException("endTime cannot be null");
             }
@@ -117,13 +133,19 @@ public final class Clocking {
             return this;
         }
 
+        public Builder endTime(LocalDateTime endTime) throws IllegalArgumentException {
+            if(endTime == null) {
+                throw new IllegalArgumentException("endTime cannot be null");
+            }
+            return endTime(ZonedDateTime.of(endTime, getZone()));
+        }
+
         public Clocking build(){
             if (startTime == null) {
-                this.startTime = LocalDateTime.now();
+                this.startTime = ZonedDateTime.now();
             }
             if (endTime == null){
                 endTime = startTime.plusMinutes(DEFAULT_DURATION_IN_MINS);
-
             }
             return new Clocking(this);
         }

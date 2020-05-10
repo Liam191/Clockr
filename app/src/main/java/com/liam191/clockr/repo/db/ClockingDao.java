@@ -8,7 +8,7 @@ import androidx.room.TypeConverters;
 import java.util.List;
 
 @Dao
-@TypeConverters({})
+@TypeConverters({ZonedDateTimeConverter.class})
 public interface ClockingDao {
     @Insert
     public abstract void add(ClockingEntity clocking);

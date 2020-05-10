@@ -2,20 +2,19 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
-import com.liam191.clockr.repo.db.ClockingMapper;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,7 +45,7 @@ public class ClockingRepositoryTest {
         Clocking clocking = new Clocking.Builder("TestClocking1", 34).build();
         repository.add(clocking);
 
-        assertTrue(clockingTestDao.getAll().contains(ClockingMapper.map(clocking)));
+        assertTrue(clockingTestDao.getAll().contains(ClockingRepository.Mapper.map(clocking)));
     }
 
     @Test

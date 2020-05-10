@@ -1,14 +1,14 @@
 package com.liam191.clockr.repo;
 
+import androidx.lifecycle.LiveData;
+
 import com.liam191.clockr.clocking.Clocking;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.threeten.bp.LocalDateTime;
 
-import java.util.Date;
 import java.util.List;
-
-import androidx.lifecycle.LiveData;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -28,14 +28,14 @@ public class ClockingDayViewTest {
     @Test
     public void testFactoryOfDate_returnsSameInstanceWithSameDate(){
         ClockingDayView.Factory factory = new ClockingDayView.Factory();
-        Date testDate = new Date(2017 - 1900, 4, 16);
+        LocalDateTime testDate = LocalDateTime.of(2017, 4, 16, 0, 0 ,0);
         assertSame(factory.ofDate(testDate), factory.ofDate(testDate));
     }
 
     @Test
     public void testFactoryOfDate_returnsDifferentInstancesForDifferentDates(){
-        ClockingDayView clockingDayView1 = new ClockingDayView.Factory().ofDate(new Date(2017 - 1900, 4, 16));
-        ClockingDayView clockingDayView2 = new ClockingDayView.Factory().ofDate(new Date(2017 - 1900, 4, 17));
+        ClockingDayView clockingDayView1 = new ClockingDayView.Factory().ofDate(LocalDateTime.of(2017, 4, 16,0,0,0));
+        ClockingDayView clockingDayView2 = new ClockingDayView.Factory().ofDate(LocalDateTime.of(2017, 4, 17,0,0,0));
 
         assertNotSame(clockingDayView1, clockingDayView2);
     }
@@ -46,7 +46,7 @@ public class ClockingDayViewTest {
     @Test
     public void testGetAllForGivenDate_withNoData(){
         LiveData<List<Clocking>> clockings = new ClockingDayView.Factory()
-                .ofDate(new Date(2020 - 1900, 3, 3))
+                .ofDate(LocalDateTime.of(2020, 3, 3, 0, 0, 0))
                 .get();
 
         assertEquals(0, clockings.getValue().size());
@@ -54,7 +54,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -71,7 +71,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testAddClocking(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -84,7 +84,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withOneClocking(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -102,7 +102,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withThreeClockings(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
@@ -122,7 +122,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withNoClockings(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
@@ -136,7 +136,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withNull(){
-        Date testDay = new Date(2020 - 1900, 3, 3);
+        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 

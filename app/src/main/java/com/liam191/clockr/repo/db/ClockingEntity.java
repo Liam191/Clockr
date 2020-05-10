@@ -3,8 +3,9 @@ package com.liam191.clockr.repo.db;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.Objects;
 
@@ -23,10 +24,12 @@ public class ClockingEntity {
     public int durationInMinutes;
 
     @ColumnInfo(name = "start_time")
-    public OffsetDateTime startTime;
+    @TypeConverters({ZonedDateTimeConverter.class})
+    public ZonedDateTime startTime;
 
     @ColumnInfo(name = "end_time")
-    public OffsetDateTime endTime;
+    @TypeConverters({ZonedDateTimeConverter.class})
+    public ZonedDateTime endTime;
 
     @Override
     public boolean equals(Object o){
