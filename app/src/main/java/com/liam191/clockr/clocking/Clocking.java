@@ -63,19 +63,21 @@ public final class Clocking {
                 this.endTime);
     }
 
+
+
     public static final class Builder {
         private static final int DEFAULT_DURATION_IN_MINS = 30;
         private Clock clock = Clock.systemDefaultZone();
         private String label = "";
         private String description = "";
-        // startTime does *not* get a default time value as the time should be set
-        // when a ClockingEntity is created, not when the Builder is created.
+        // start and end times do *not* get a default time value here as the time should
+        // be set when a ClockingEntity is built, not when the Builder is created.
         private ZonedDateTime startTime = null;
         private ZonedDateTime endTime = null;
 
         public Builder(String label){
-            if(label == null) {
-                throw new IllegalArgumentException("label cannot be null");
+            if(label == null || label.trim().length() == 0) {
+                throw new IllegalArgumentException("label cannot be empty or null");
             }
             this.label = label.trim();
         }
@@ -95,7 +97,6 @@ public final class Clocking {
             startTime(ZonedDateTime.of(startTime, clock.getZone()));
         }
 
-
         public Builder(String label, ZonedDateTime startTime, ZonedDateTime endTime){
             this(label);
             startTime(startTime);
@@ -107,6 +108,8 @@ public final class Clocking {
             startTime(ZonedDateTime.of(startTime, clock.getZone()));
             endTime(ZonedDateTime.of(endTime, clock.getZone()));
         }
+
+
 
         public Builder description(String description) throws IllegalArgumentException {
             if(description == null) {
@@ -145,6 +148,8 @@ public final class Clocking {
             }
             return endTime(ZonedDateTime.of(endTime, clock.getZone()));
         }
+
+
 
         public Clocking build(){
             this.startTime = (startTime == null) ?

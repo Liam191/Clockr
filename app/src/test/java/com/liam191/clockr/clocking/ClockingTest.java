@@ -23,29 +23,47 @@ public class ClockingTest {
     //      TODO: Ability to set endTime manually
     //      TODO: Cannot set endTime and duration at the same time??
 
-    // ClockingEntity instantiation
+    // Clocking label
     @Test
-    public void testCreateClocking_WithLabel(){
+    public void testLabel(){
         Clocking workClocking = new Clocking.Builder("working")
                 .build();
         assertEquals(workClocking.label(), "working");
     }
 
     @Test
-    public void testCreateClocking_WithLabelAndWhitespace(){
+    public void testLabel_WithWhitespace(){
         Clocking workClocking = new Clocking.Builder("      working      ")
                 .build();
         assertEquals(workClocking.label(), "working");
     }
 
     @Test
-    public void testCreateClocking_ThrowsExceptionWithNullLabel(){
+    public void testLabel_WithNullLabelThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("label cannot be null");
+        exceptionRule.expectMessage("label cannot be empty or null");
 
         new Clocking.Builder(null).build();
     }
 
+    @Test
+    public void testLabel_WithEmptyLabelThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("label cannot be empty or null");
+
+        new Clocking.Builder("").build();
+    }
+
+    @Test
+    public void testLabel_WithWhitespaceThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("label cannot be empty or null");
+
+        new Clocking.Builder("            ").build();
+    }
+
+
+    // Clocking description
     @Test
     public void testCreateClocking_WithDescription(){
         Clocking workClocking = new Clocking.Builder("working")
