@@ -19,9 +19,8 @@ public class ClockingTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
-    // TODO: Create automatic endTime (startTime plusHours(duration)?)
-    //      TODO: Ability to set endTime manually
-    //      TODO: Cannot set endTime and duration at the same time??
+    //          - validate that endTime is after startTime
+    // TODO: Remove LocalDateTime in Builder constructors and setters
 
     // Clocking label
     @Test
@@ -107,15 +106,15 @@ public class ClockingTest {
 
     // Clocking duration
     @Test
-    public void testCreateClocking_HasDefaultDurationInMinutes(){
+    public void testDurationInMinutes_HasDefault(){
         Clocking workClocking = new Clocking.Builder("working").build();
         assertEquals(workClocking.durationInMinutes(), 30);
     }
 
     @Test
-    public void testCreateClocking_HasCorrectDurationInMinutes(){
+    public void testDurationInMinutes_WithStartAndEndTimes(){
         int expectedDuration = 123;
-        LocalDateTime startTime = LocalDateTime.of(2020, 01, 03, 0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2020, 1, 3, 0,0,0);
         LocalDateTime endTime = startTime.plusMinutes(expectedDuration);
 
         Clocking workClocking = new Clocking.Builder("working", startTime, endTime).build();
