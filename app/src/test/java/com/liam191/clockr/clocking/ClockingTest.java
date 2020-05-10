@@ -4,7 +4,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.threeten.bp.Clock;
-import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
@@ -114,8 +113,8 @@ public class ClockingTest {
     @Test
     public void testDurationInMinutes_WithStartAndEndTimes(){
         int expectedDuration = 123;
-        LocalDateTime startTime = LocalDateTime.of(2020, 1, 3, 0,0,0);
-        LocalDateTime endTime = startTime.plusMinutes(expectedDuration);
+        ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 3, 0,0,0,0,ZoneId.systemDefault());
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration);
 
         Clocking workClocking = new Clocking.Builder("working", startTime, endTime).build();
         assertEquals(workClocking.durationInMinutes(), expectedDuration);
@@ -125,15 +124,16 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_WithStartTime(){
+        ZonedDateTime expectedStartTime = ZonedDateTime.of(2020, 3, 1, 18 , 37, 50,0,ZoneId.systemDefault());
         Clocking workClocking = new Clocking.Builder("working")
-                .startTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
+                .startTime(expectedStartTime)
                 .build();
-        assertEquals(workClocking.startTime().toLocalDateTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.startTime(), expectedStartTime);
     }
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
-        ZonedDateTime expectedDate = ZonedDateTime.of(LocalDateTime.of(2020, 10, 11, 17,2,3), ZoneId.systemDefault());
+        ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
@@ -146,7 +146,7 @@ public class ClockingTest {
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("startTime cannot be null");
 
-        LocalDateTime nullTime = null;
+        ZonedDateTime nullTime = null;
         new Clocking.Builder("working")
                 .startTime(nullTime)
                 .build();
@@ -166,20 +166,21 @@ public class ClockingTest {
     // endTime
     @Test
     public void testCreateClocking_WithEndTime(){
+        ZonedDateTime expectedEndTime = ZonedDateTime.of(2020, 3, 1, 18 , 37, 50,0,ZoneId.systemDefault());
         Clocking workClocking = new Clocking.Builder("working")
-                .endTime(LocalDateTime.of(2020, 3, 1, 18 , 37, 50))
+                .endTime(expectedEndTime)
                 .build();
-        assertEquals(workClocking.endTime().toLocalDateTime(), LocalDateTime.of(2020, 3, 1, 18 , 37, 50));
+        assertEquals(workClocking.endTime(), expectedEndTime);
     }
 
     @Test
     public void testCreateClocking_HasDefaultEndTime(){
-        ZonedDateTime expectedDate = ZonedDateTime.of(LocalDateTime.of(2020, 10, 11, 17,2,3), ZoneId.systemDefault());
+        ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
                 .build();
-        assertEquals(workClocking.endTime().toLocalDateTime(), expectedDate.plusMinutes(30).toLocalDateTime());
+        assertEquals(workClocking.endTime(), expectedDate.plusMinutes(30));
     }
 /*
     @Test
@@ -222,7 +223,7 @@ public class ClockingTest {
     @SuppressWarnings("EqualsWithItself")
     @Test
     public void testClockingEquals(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
 
         Clocking clockingX = new Clocking.Builder("Same clocking", date).build();
         Clocking clockingY = new Clocking.Builder("Same clocking", date).build();
@@ -245,7 +246,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_FromSameAndDifferentBuilders(){
-        LocalDateTime date = LocalDateTime.of(2020 , 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one", date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one", date);
 
@@ -262,7 +263,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentLabels(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking clockingA = new Clocking.Builder("Label", date).build();
         Clocking clockingB = new Clocking.Builder("Different label", date).build();
 
@@ -272,7 +273,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentDescriptions(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking clockingA = new Clocking.Builder("Label", date)
                 .description("Hello, world description!")
                 .build();
@@ -286,7 +287,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentDurations(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking clockingA = new Clocking.Builder("Label", date, date.plusMinutes(15)).build();
         Clocking clockingB = new Clocking.Builder("Label", date, date.plusMinutes(16)).build();
 
@@ -296,11 +297,12 @@ public class ClockingTest {
 
     @Test
     public void testClockingEquals_WithDifferentStartTimes(){
+
         Clocking clockingA = new Clocking.Builder("Label")
-                .startTime(LocalDateTime.of(2020, 3, 3, 12 , 0, 0))
+                .startTime(ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault()))
                 .build();
         Clocking clockingB = new Clocking.Builder("Label")
-                .startTime(LocalDateTime.of(2020, 3, 3, 14 , 59, 59))
+                .startTime(ZonedDateTime.of(2020, 3, 3, 14 , 59, 59,0,ZoneId.systemDefault()))
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -313,7 +315,7 @@ public class ClockingTest {
     // ClockingEntity.hashCode()
     @Test
     public void testClockingHashCode(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
 
@@ -330,7 +332,7 @@ public class ClockingTest {
 
     @Test
     public void testClockingHashCode_FromSameAndDifferentBuilders(){
-        LocalDateTime date = LocalDateTime.of(2020, 3, 3, 12 , 0, 0);
+        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
 

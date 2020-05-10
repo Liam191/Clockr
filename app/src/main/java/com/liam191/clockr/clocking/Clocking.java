@@ -1,7 +1,6 @@
 package com.liam191.clockr.clocking;
 
 import org.threeten.bp.Clock;
-import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.temporal.ChronoUnit;
 
@@ -92,23 +91,11 @@ public final class Clocking {
             startTime(startTime);
         }
 
-        public Builder(String label, LocalDateTime startTime){
-            this(label);
-            startTime(ZonedDateTime.of(startTime, clock.getZone()));
-        }
-
         public Builder(String label, ZonedDateTime startTime, ZonedDateTime endTime){
             this(label);
             startTime(startTime);
             endTime(endTime);
         }
-
-        public Builder(String label, LocalDateTime startTime, LocalDateTime endTime){
-            this(label);
-            startTime(ZonedDateTime.of(startTime, clock.getZone()));
-            endTime(ZonedDateTime.of(endTime, clock.getZone()));
-        }
-
 
 
         public Builder description(String description) throws IllegalArgumentException {
@@ -127,13 +114,6 @@ public final class Clocking {
             return this;
         }
 
-        public Builder startTime(LocalDateTime startTime) throws IllegalArgumentException {
-            if(startTime == null) {
-                throw new IllegalArgumentException("startTime cannot be null");
-            }
-            return startTime(ZonedDateTime.of(startTime, clock.getZone()));
-        }
-
         public Builder endTime(ZonedDateTime endTime) throws IllegalArgumentException {
             if(endTime == null) {
                 throw new IllegalArgumentException("endTime cannot be null");
@@ -141,14 +121,6 @@ public final class Clocking {
             this.endTime = endTime;
             return this;
         }
-
-        public Builder endTime(LocalDateTime endTime) throws IllegalArgumentException {
-            if(endTime == null) {
-                throw new IllegalArgumentException("endTime cannot be null");
-            }
-            return endTime(ZonedDateTime.of(endTime, clock.getZone()));
-        }
-
 
 
         public Clocking build(){

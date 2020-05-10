@@ -7,6 +7,8 @@ import com.liam191.clockr.clocking.Clocking;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -71,7 +73,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testAddClocking(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -84,7 +86,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withOneClocking(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         LiveData<List<Clocking>> clockings = clockingDayView.get();
 
@@ -102,7 +104,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withThreeClockings(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
@@ -122,7 +124,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withNoClockings(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
@@ -136,7 +138,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testRemoveClockings_withNull(){
-        LocalDateTime testDay = LocalDateTime.of(2020, 3, 3,0,0,0);
+        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
         ClockingDayView clockingDayView = new ClockingDayView.Factory().ofDate(testDay);
         List<Clocking> clockingList = clockingDayView.get().getValue();
 
