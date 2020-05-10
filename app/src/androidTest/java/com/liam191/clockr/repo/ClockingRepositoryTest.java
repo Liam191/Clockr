@@ -42,7 +42,7 @@ public class ClockingRepositoryTest {
     public void testAddClocking(){
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
 
-        Clocking clocking = new Clocking.Builder("TestClocking1", 34).build();
+        Clocking clocking = new Clocking.Builder("TestClocking1").build();
         repository.add(clocking);
 
         assertTrue(clockingTestDao.getAll().contains(ClockingRepository.Mapper.map(clocking)));

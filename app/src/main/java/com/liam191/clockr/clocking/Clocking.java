@@ -1,22 +1,21 @@
 package com.liam191.clockr.clocking;
 
+import org.threeten.bp.Clock;
 import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.temporal.ChronoUnit;
 
 import java.util.Objects;
 
 public final class Clocking {
     private final String label;
     private final String description;
-    private final int durationInMinutes;
     private final ZonedDateTime startTime;
     private final ZonedDateTime endTime;
 
     private Clocking(Builder clockingBuilder){
         this.label = clockingBuilder.label;
         this.description = clockingBuilder.description;
-        this.durationInMinutes = clockingBuilder.durationInMinutes;
         this.startTime = clockingBuilder.startTime;
         this.endTime = clockingBuilder.endTime;
     }
@@ -30,7 +29,7 @@ public final class Clocking {
     }
 
     public int durationInMinutes(){
-        return this.durationInMinutes;
+        return (int)ChronoUnit.MINUTES.between(startTime, endTime);
     }
 
     public ZonedDateTime startTime(){
@@ -51,7 +50,6 @@ public final class Clocking {
         return (
             label.equals(clocking.label) &&
             description.equals(clocking.description) &&
-            durationInMinutes == clocking.durationInMinutes &&
             startTime.equals(clocking.startTime) &&
             endTime.equals(clocking.endTime));
     }
@@ -61,45 +59,53 @@ public final class Clocking {
         return Objects.hash(
                 this.label,
                 this.description,
-                this.durationInMinutes,
                 this.startTime,
                 this.endTime);
     }
 
     public static final class Builder {
         private static final int DEFAULT_DURATION_IN_MINS = 30;
+        private Clock clock = Clock.systemDefaultZone();
         private String label = "";
         private String description = "";
-        private int durationInMinutes = 0;
         // startTime does *not* get a default time value as the time should be set
         // when a ClockingEntity is created, not when the Builder is created.
         private ZonedDateTime startTime = null;
         private ZonedDateTime endTime = null;
 
-        public Builder(String label, int durationInMinutes){
+        public Builder(String label){
             if(label == null) {
                 throw new IllegalArgumentException("label cannot be null");
             }
             this.label = label.trim();
-
-            if(durationInMinutes < 0) {
-                throw new IllegalArgumentException("durationInMinutes cannot be zero or negative");
-            }
-            this.durationInMinutes = durationInMinutes;
         }
 
-        public Builder(String label, int durationInMinutes, ZonedDateTime startTime){
-            this(label, durationInMinutes);
-            this.startTime(startTime);
+        Builder(String label, Clock clock){
+            this(label);
+            this.clock = clock;
         }
 
-        public Builder(String label, int durationInMinutes, LocalDateTime startTime){
-            this(label, durationInMinutes);
-            this.startTime(startTime);
+        public Builder(String label, ZonedDateTime startTime){
+            this(label);
+            startTime(startTime);
         }
 
-        private ZoneId getZone(){
-            return ZoneId.systemDefault();
+        public Builder(String label, LocalDateTime startTime){
+            this(label);
+            startTime(ZonedDateTime.of(startTime, clock.getZone()));
+        }
+
+
+        public Builder(String label, ZonedDateTime startTime, ZonedDateTime endTime){
+            this(label);
+            startTime(startTime);
+            endTime(endTime);
+        }
+
+        public Builder(String label, LocalDateTime startTime, LocalDateTime endTime){
+            this(label);
+            startTime(ZonedDateTime.of(startTime, clock.getZone()));
+            endTime(ZonedDateTime.of(endTime, clock.getZone()));
         }
 
         public Builder description(String description) throws IllegalArgumentException {
@@ -122,7 +128,7 @@ public final class Clocking {
             if(startTime == null) {
                 throw new IllegalArgumentException("startTime cannot be null");
             }
-            return startTime(ZonedDateTime.of(startTime, getZone()));
+            return startTime(ZonedDateTime.of(startTime, clock.getZone()));
         }
 
         public Builder endTime(ZonedDateTime endTime) throws IllegalArgumentException {
@@ -137,16 +143,14 @@ public final class Clocking {
             if(endTime == null) {
                 throw new IllegalArgumentException("endTime cannot be null");
             }
-            return endTime(ZonedDateTime.of(endTime, getZone()));
+            return endTime(ZonedDateTime.of(endTime, clock.getZone()));
         }
 
         public Clocking build(){
-            if (startTime == null) {
-                this.startTime = ZonedDateTime.now();
-            }
-            if (endTime == null){
-                endTime = startTime.plusMinutes(DEFAULT_DURATION_IN_MINS);
-            }
+            this.startTime = (startTime == null) ?
+                    ZonedDateTime.now(clock) : startTime;
+            this.endTime = (endTime == null) ?
+                    startTime.plusMinutes(DEFAULT_DURATION_IN_MINS) : endTime;
             return new Clocking(this);
         }
     }
