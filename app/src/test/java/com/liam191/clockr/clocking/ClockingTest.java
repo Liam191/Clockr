@@ -39,33 +39,30 @@ public class ClockingTest {
     }
 
     @Test
-    public void testLabel_WithNullLabelThrowsException(){
+    public void testLabel_WithNullThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("label cannot be empty or null");
-
         new Clocking.Builder(null).build();
     }
 
     @Test
-    public void testLabel_WithEmptyLabelThrowsException(){
+    public void testLabel_WithEmptyThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("label cannot be empty or null");
-
         new Clocking.Builder("").build();
     }
 
     @Test
-    public void testLabel_WithWhitespaceThrowsException(){
+    public void testLabel_WithJustWhitespaceThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("label cannot be empty or null");
-
         new Clocking.Builder("            ").build();
     }
 
 
     // Clocking description
     @Test
-    public void testCreateClocking_WithDescription(){
+    public void testDescription(){
         Clocking workClocking = new Clocking.Builder("working")
                 .description("A work clocking")
                 .build();
@@ -73,7 +70,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_WithDescriptionAndWhitespace(){
+    public void testDescription_WithWhitespace(){
         Clocking workClocking = new Clocking.Builder("working")
                 .description("         A work clocking          ")
                 .build();
@@ -81,16 +78,34 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_ThrowsExceptionWithNullDescription(){
+    public void testDescription_WithNullThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("description cannot be null");
-
+        exceptionRule.expectMessage("description cannot be empty or null");
         new Clocking.Builder("working")
                 .description(null)
                 .build();
     }
 
+    @Test
+    public void testDescription_WithEmptyThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("description cannot be empty or null");
+        new Clocking.Builder("working")
+                .description("")
+                .build();
+    }
 
+    @Test
+    public void testDescription_WithJustWhitespaceThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("description cannot be empty or null");
+        new Clocking.Builder("working")
+                .description("               ")
+                .build();
+    }
+
+
+    // Clocking duration
     @Test
     public void testCreateClocking_HasDefaultDurationInMinutes(){
         Clocking workClocking = new Clocking.Builder("working").build();
@@ -119,9 +134,12 @@ public class ClockingTest {
 
     @Test
     public void testCreateClocking_HasDefaultStartTime(){
-        Clocking workClocking = new Clocking.Builder("working")
+        ZonedDateTime expectedDate = ZonedDateTime.of(LocalDateTime.of(2020, 10, 11, 17,2,3), ZoneId.systemDefault());
+        Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
+
+        Clocking workClocking = new Clocking.Builder("working", testClock)
                 .build();
-        assertEquals(workClocking.startTime().toLocalDateTime(), LocalDateTime.now());
+        assertEquals(workClocking.startTime(), expectedDate);
     }
 
     @Test

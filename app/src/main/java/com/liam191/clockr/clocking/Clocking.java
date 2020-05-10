@@ -112,8 +112,8 @@ public final class Clocking {
 
 
         public Builder description(String description) throws IllegalArgumentException {
-            if(description == null) {
-                throw new IllegalArgumentException("description cannot be null");
+            if(description == null || description.trim().length() == 0) {
+                throw new IllegalArgumentException("description cannot be empty or null");
             }
             this.description = description.trim();
             return this;
