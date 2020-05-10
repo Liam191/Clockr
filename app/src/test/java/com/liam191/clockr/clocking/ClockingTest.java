@@ -18,7 +18,6 @@ public class ClockingTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
-    //          - validate that endTime is after startTime
 
     // Clocking label
     @Test
@@ -121,8 +120,9 @@ public class ClockingTest {
 
 
 
+    // CLocking startTime
     @Test
-    public void testCreateClocking_WithStartTime(){
+    public void testStartTime(){
         ZonedDateTime expectedStartTime = ZonedDateTime.of(2020, 3, 1, 18 , 37, 50,0,ZoneId.systemDefault());
         Clocking workClocking = new Clocking.Builder("working")
                 .startTime(expectedStartTime)
@@ -131,7 +131,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_HasDefaultStartTime(){
+    public void testStartTime_HasDefault(){
         ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
@@ -141,7 +141,7 @@ public class ClockingTest {
     }
 
     @Test
-    public void testCreateClocking_ThrowsExceptionWithNullStartTimeLocal(){
+    public void testStartTime_WithNullThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("startTime cannot be null");
 
@@ -151,35 +151,53 @@ public class ClockingTest {
                 .build();
     }
 
-    @Test
-    public void testCreateClocking_ThrowsExceptionWithNullStartTimeZoned(){
-        exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("startTime cannot be null");
-
-        ZonedDateTime nullTime = null;
-        new Clocking.Builder("working")
-                .startTime(nullTime)
-                .build();
-    }
 
     // endTime
     @Test
-    public void testCreateClocking_WithEndTime(){
-        ZonedDateTime expectedEndTime = ZonedDateTime.of(2020, 3, 1, 18 , 37, 50,0,ZoneId.systemDefault());
-        Clocking workClocking = new Clocking.Builder("working")
-                .endTime(expectedEndTime)
+    public void testEndTime(){
+        ZonedDateTime expectedStartDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        ZonedDateTime expectedEndDate = expectedStartDate.plusMinutes(5);
+        Clock testClock = Clock.fixed(expectedStartDate.toInstant(), expectedStartDate.getZone());
+
+        Clocking workClocking = new Clocking.Builder("working", testClock)
+                .endTime(expectedEndDate)
                 .build();
-        assertEquals(workClocking.endTime(), expectedEndTime);
+        assertEquals(workClocking.endTime(), expectedEndDate);
     }
 
     @Test
-    public void testCreateClocking_HasDefaultEndTime(){
+    public void testEndTime_HasDefault(){
         ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
                 .build();
         assertEquals(workClocking.endTime(), expectedDate.plusMinutes(30));
+    }
+
+
+    @Test
+    public void testEndTime_WithNullThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("endTime cannot be null");
+
+        ZonedDateTime nullTime = null;
+        new Clocking.Builder("working")
+                .endTime(nullTime)
+                .build();
+    }
+
+    @Test
+    public void testEndTime_WithTimeBeforeDefaultStartTimeThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("endTime cannot be before startTime");
+
+        ZonedDateTime startDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        Clock testClock = Clock.fixed(startDate.toInstant(), startDate.getZone());
+
+        new Clocking.Builder("working", testClock)
+                .endTime(startDate.minusMinutes(20))
+                .build();
     }
 /*
     @Test

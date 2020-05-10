@@ -126,8 +126,13 @@ public final class Clocking {
         public Clocking build(){
             this.startTime = (startTime == null) ?
                     ZonedDateTime.now(clock) : startTime;
+
             this.endTime = (endTime == null) ?
                     startTime.plusMinutes(DEFAULT_DURATION_IN_MINS) : endTime;
+
+            if(endTime.isBefore(startTime)){
+                throw new IllegalArgumentException("endTime cannot be before startTime");
+            }
             return new Clocking(this);
         }
     }
