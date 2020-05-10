@@ -19,7 +19,6 @@ public class ClockingTest {
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
     //          - validate that endTime is after startTime
-    // TODO: Remove LocalDateTime in Builder constructors and setters
 
     // Clocking label
     @Test
