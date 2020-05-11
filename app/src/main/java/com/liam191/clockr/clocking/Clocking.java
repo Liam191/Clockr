@@ -114,11 +114,18 @@ public final class Clocking {
 
 
         public Clocking build(){
-            this.startTime = (startTime == null) ?
-                    ZonedDateTime.now(clock) : startTime;
+            if(startTime == null && endTime == null) {
+                startTime = ZonedDateTime.now(clock);
+                endTime = startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
+            } else {
+                if(startTime == null){
+                    startTime = endTime.minusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
+                }
 
-            this.endTime = (endTime == null) ?
-                    startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes()) : endTime;
+                if(endTime == null){
+                    endTime = startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
+                }
+            }
 
             if(endTime.isBefore(startTime)){
                 throw new IllegalArgumentException("endTime cannot be before startTime");

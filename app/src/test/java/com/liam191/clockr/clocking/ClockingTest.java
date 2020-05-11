@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.threeten.bp.Clock;
+import org.threeten.bp.Duration;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
@@ -18,6 +19,7 @@ public class ClockingTest {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     // TODO: Create better validation around Strings, ints, date ranges, etc.
+
 
     // Clocking label
     @Test
@@ -54,6 +56,7 @@ public class ClockingTest {
         exceptionRule.expectMessage("label cannot be empty or null");
         new Clocking.Builder("            ").build();
     }
+
 
 
     // Clocking description
@@ -101,18 +104,19 @@ public class ClockingTest {
     }
 
 
+
     // Clocking duration
     @Test
     public void testDurationInMinutes_HasDefault(){
         Clocking workClocking = new Clocking.Builder("working").build();
-        assertEquals(workClocking.durationInMinutes(), 30);
+        assertEquals(workClocking.durationInMinutes(), Duration.ofMinutes(30));
     }
 
     @Test
     public void testDurationInMinutes_WithStartAndEndTimes(){
-        int expectedDuration = 123;
+        Duration expectedDuration = Duration.ofMinutes(123);
         ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 3, 0,0,0,0,ZoneId.systemDefault());
-        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration);
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
 
         Clocking workClocking = new Clocking.Builder("working")
                 .startTime(startTime)
@@ -165,8 +169,22 @@ public class ClockingTest {
                 .build();
     }
 
+    @Test
+    public void testStartTime_WithJustEndTimeHasDefaultStartTimeBefore(){
+        ZonedDateTime expectedEndDate = ZonedDateTime.parse("2020-09-09T10:00+01:00[Europe/London]");
+        ZonedDateTime expectedStartDate = expectedEndDate.minusMinutes(30);
 
-    // endTime
+        Clock testClock = Clock.fixed(ZonedDateTime.of(2020, 11, 23, 17,46,0,0, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+
+        Clocking clocking = new Clocking.Builder("working", testClock)
+                .endTime(expectedEndDate)
+                .build();
+        assertEquals(clocking.startTime(), expectedStartDate);
+    }
+
+
+
+    // Clocking endTime
     @Test
     public void testEndTime(){
         ZonedDateTime expectedStartDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
@@ -201,18 +219,6 @@ public class ClockingTest {
                 .build();
     }
 
-    @Test
-    public void testEndTime_WithTimeBeforeDefaultStartTimeThrowsException(){
-        exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("endTime cannot be before startTime");
-
-        ZonedDateTime startDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
-        Clock testClock = Clock.fixed(startDate.toInstant(), startDate.getZone());
-
-        new Clocking.Builder("working", testClock)
-                .endTime(startDate.minusMinutes(20))
-                .build();
-    }
 
 
     // Clocking equals
@@ -327,7 +333,6 @@ public class ClockingTest {
         assertFalse(clockingA.equals(clockingB));
         assertFalse(clockingB.equals(clockingA));
     }
-
 
 
 
