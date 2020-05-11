@@ -1,8 +1,8 @@
 package com.liam191.clockr.clocking;
 
 import org.threeten.bp.Clock;
+import org.threeten.bp.Duration;
 import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.temporal.ChronoUnit;
 
 import java.util.Objects;
 
@@ -27,8 +27,8 @@ public final class Clocking {
         return this.description;
     }
 
-    public int durationInMinutes(){
-        return (int)ChronoUnit.MINUTES.between(startTime, endTime);
+    public Duration durationInMinutes(){
+        return Duration.between(startTime, endTime);
     }
 
     public ZonedDateTime startTime(){
@@ -65,7 +65,7 @@ public final class Clocking {
 
 
     public static final class Builder {
-        private static final int DEFAULT_DURATION_IN_MINS = 30;
+        private static final Duration DEFAULT_CLOCKING_DURATION = Duration.ofMinutes(30);
         private Clock clock = Clock.systemDefaultZone();
         private String label = "";
         private String description = "";
@@ -73,6 +73,7 @@ public final class Clocking {
         // be set when a ClockingEntity is built, not when the Builder is created.
         private ZonedDateTime startTime = null;
         private ZonedDateTime endTime = null;
+
 
         public Builder(String label){
             if(label == null || label.trim().length() == 0) {
@@ -117,7 +118,7 @@ public final class Clocking {
                     ZonedDateTime.now(clock) : startTime;
 
             this.endTime = (endTime == null) ?
-                    startTime.plusMinutes(DEFAULT_DURATION_IN_MINS) : endTime;
+                    startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes()) : endTime;
 
             if(endTime.isBefore(startTime)){
                 throw new IllegalArgumentException("endTime cannot be before startTime");

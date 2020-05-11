@@ -26,7 +26,6 @@ final class ClockingRepository {
             ClockingEntity entity = new ClockingEntity();
             entity.label = clocking.label();
             entity.description = clocking.description();
-            entity.durationInMinutes = clocking.durationInMinutes();
             entity.startTime = clocking.startTime();
             entity.endTime = clocking.endTime();
             return entity;

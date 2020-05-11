@@ -1,13 +1,13 @@
 package com.liam191.clockr.repo.db;
 
+import org.threeten.bp.ZonedDateTime;
+
+import java.util.Objects;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
-
-import org.threeten.bp.ZonedDateTime;
-
-import java.util.Objects;
 
 @Entity
 public class ClockingEntity {
@@ -19,9 +19,6 @@ public class ClockingEntity {
 
     @ColumnInfo(name = "description")
     public String description;
-
-    @ColumnInfo(name = "duration_in_minutes")
-    public int durationInMinutes;
 
     @ColumnInfo(name = "start_time")
     @TypeConverters({ZonedDateTimeConverter.class})
@@ -40,7 +37,6 @@ public class ClockingEntity {
         return (
                 label.equals(entity.label) &&
                         description.equals(entity.description) &&
-                        durationInMinutes == entity.durationInMinutes &&
                         startTime.equals(entity.startTime) &&
                         endTime.equals(entity.endTime));
     }
@@ -50,7 +46,6 @@ public class ClockingEntity {
         return Objects.hash(
                 this.label,
                 this.description,
-                this.durationInMinutes,
                 this.startTime,
                 this.endTime);
     }
