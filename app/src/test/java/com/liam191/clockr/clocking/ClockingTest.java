@@ -125,6 +125,19 @@ public class ClockingTest {
         assertEquals(workClocking.durationInMinutes(), expectedDuration);
     }
 
+    @Test
+    public void testDurationInMinutes_WithStartAndEndTimesBackwardsOrder(){
+        Duration expectedDuration = Duration.ofMinutes(123);
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
+
+        Clocking workClocking = new Clocking.Builder("working")
+                .endTime(endTime)
+                .startTime(startTime)
+                .build();
+        assertEquals(workClocking.durationInMinutes(), expectedDuration);
+    }
+
 
 
     // CLocking startTime
