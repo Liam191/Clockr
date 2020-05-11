@@ -115,7 +115,7 @@ public class ClockingTest {
     @Test
     public void testDurationInMinutes_WithStartAndEndTimes(){
         Duration expectedDuration = Duration.ofMinutes(123);
-        ZonedDateTime startTime = ZonedDateTime.of(2020, 1, 3, 0,0,0,0,ZoneId.systemDefault());
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
         ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
 
         Clocking workClocking = new Clocking.Builder("working")
@@ -228,7 +228,7 @@ public class ClockingTest {
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
 
         Clocking clockingX = new Clocking.Builder("Same clocking").startTime(date).build();
-        Clocking clockingY = new Clocking.Builder("Same clocking").startTime(date).build();
+        Clocking clockingY = new Clocking.Builder("Same clocking").endTime(date.plusMinutes(30)).build();
         Clocking clockingZ = new Clocking.Builder("Same clocking").startTime(date).build();
         Clocking otherClocking = new Clocking.Builder("Different clocking").startTime(date).build();
 
@@ -250,7 +250,7 @@ public class ClockingTest {
     public void testEquals_FromSameAndDifferentBuilders(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -341,7 +341,7 @@ public class ClockingTest {
     public void testHashCode(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
@@ -358,7 +358,7 @@ public class ClockingTest {
     public void testHashCode_FromSameAndDifferentBuilders(){
         ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
-        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").startTime(date);
+        Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
         Clocking clockingA = builderOne.build();
         Clocking clockingB = builderOne.build();
