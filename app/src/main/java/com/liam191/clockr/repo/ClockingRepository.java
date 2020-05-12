@@ -15,7 +15,6 @@ final class ClockingRepository {
     }
 
     void add(Clocking clocking){
-        // TODO: map between dao and domain object
         clockingDao.add(Mapper.map(clocking));
     }
 
