@@ -62,6 +62,15 @@ public final class Clocking {
                 this.endTime);
     }
 
+    @Override
+    public String toString(){
+        return "Clocking { label: '"+ label
+                +"', description: '"+ description
+                +"', startTime: "+ startTime.toString()
+                +", endTime: "+ endTime.toString()
+                +" }";
+    }
+
 
 
     public static final class Builder {

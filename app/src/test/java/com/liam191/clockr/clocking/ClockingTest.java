@@ -447,4 +447,25 @@ public class ClockingTest {
         assertTrue(clockingY.equals(clockingA));
     }
 
+
+
+    // Clocking toString
+    @Test
+    public void testToString(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
+        Clock testClock = Clock.fixed(testDate.toInstant(), testDate.getZone());
+
+        String testString = "Clocking { "+
+                    "label: 'working', "+
+                    "description: '', "+
+                    "startTime: 2020-10-11T17:02:03+01:00[Europe/London], "+
+                    "endTime: 2020-10-11T17:32:03+01:00[Europe/London] "+
+                "}";
+
+        Clocking clocking = new Clocking.Builder("working", testClock)
+                .build();
+        assertEquals(clocking.toString(), testString);
+    }
+
+
 }
