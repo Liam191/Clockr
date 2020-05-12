@@ -14,16 +14,21 @@ final class ClockingRepository {
         this.clockingDao = clockingDao;
     }
 
-    void add(Clocking clocking){
-        clockingDao.add(Mapper.map(clocking));
+    void insert(Clocking clocking){
+        clockingDao.insert(Mapper.map(clocking));
+    }
+
+    void delete(Clocking clocking){
+        ClockingEntity entity = Mapper.map(clocking);
+        clockingDao.delete(entity.label, entity.description, entity.startTime, entity.endTime);
     }
 
 
-    public static class Mapper {
+    static final class Mapper {
 
         private Mapper(){}
 
-        public static ClockingEntity map(Clocking clocking){
+        static ClockingEntity map(Clocking clocking){
             ClockingEntity entity = new ClockingEntity();
             entity.label = clocking.label();
             entity.description = clocking.description();
@@ -32,7 +37,7 @@ final class ClockingRepository {
             return entity;
         }
 
-        public static Clocking map(ClockingEntity entity){
+        static Clocking map(ClockingEntity entity){
             return new Clocking.Builder(entity.label)
                     .startTime(ZonedDateTime.parse(entity.startTime))
                     .endTime(ZonedDateTime.parse(entity.endTime))

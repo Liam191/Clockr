@@ -1,10 +1,10 @@
 package com.liam191.clockr.repo.db;
 
+import java.util.Objects;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.util.Objects;
 
 @Entity
 public class ClockingEntity {
@@ -31,9 +31,10 @@ public class ClockingEntity {
         ClockingEntity entity = (ClockingEntity) o;
         return (
                 label.equals(entity.label) &&
-                        description.equals(entity.description) &&
-                        startTime.equals(entity.startTime) &&
-                        endTime.equals(entity.endTime));
+                description.equals(entity.description) &&
+                startTime.equals(entity.startTime) &&
+                endTime.equals(entity.endTime)
+        );
     }
 
     @Override
@@ -43,5 +44,15 @@ public class ClockingEntity {
                 this.description,
                 this.startTime,
                 this.endTime);
+    }
+
+    @Override
+    public String toString(){
+        return "ClockingEntity { uid: "+ uid
+                +", label: '"+ label
+                +"', description: '"+ description
+                +"', startTime: "+ startTime
+                +", endTime: "+ endTime
+                +" }";
     }
 }
