@@ -234,6 +234,69 @@ public class ClockingTest {
 
 
 
+    // Clocking startTime and endTime
+    @Test
+    public void testStartAndEndTimes() {
+        Duration expectedDuration = Duration.ofMinutes(65);
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
+
+        Clocking workClocking = new Clocking.Builder("working")
+                .endTime(endTime)
+                .startTime(startTime)
+                .build();
+        assertEquals(workClocking.startTime(), startTime);
+        assertEquals(workClocking.endTime(), endTime);
+        assertEquals(workClocking.durationInMinutes(), expectedDuration);
+    }
+
+    @Test
+    public void testStartAndEndTimes_WithDefaults() {
+        Duration expectedDuration = Duration.ofMinutes(30);
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
+        Clock testClock = Clock.fixed(startTime.toInstant(), startTime.getZone());
+
+        Clocking workClocking = new Clocking.Builder("working", testClock)
+                .build();
+        assertEquals(workClocking.startTime(), startTime);
+        assertEquals(workClocking.endTime(), endTime);
+        assertEquals(workClocking.durationInMinutes(), expectedDuration);
+    }
+
+    @Test
+    public void testStartAndEndTimes_WithJustStartTime() {
+        Duration expectedDuration = Duration.ofMinutes(30);
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
+        Clock testClock = Clock.fixed(startTime.toInstant(), startTime.getZone());
+
+        Clocking workClocking = new Clocking.Builder("working", testClock)
+                .startTime(startTime)
+                .build();
+        assertEquals(workClocking.startTime(), startTime);
+        assertEquals(workClocking.endTime(), endTime);
+        assertEquals(workClocking.durationInMinutes(), expectedDuration);
+    }
+
+    @Test
+    public void testStartAndEndTimes_WithJustEndTime() {
+        Duration expectedDuration = Duration.ofMinutes(30);
+        ZonedDateTime startTime = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        ZonedDateTime endTime = startTime.plusMinutes(expectedDuration.toMinutes());
+        Clock testClock = Clock.fixed(startTime.toInstant(), startTime.getZone());
+
+        Clocking workClocking = new Clocking.Builder("working", testClock)
+                .endTime(endTime)
+                .build();
+        assertEquals(workClocking.startTime(), startTime);
+        assertEquals(workClocking.endTime(), endTime);
+        assertEquals(workClocking.durationInMinutes(), expectedDuration);
+    }
+
+
+
+
     // Clocking equals
     @SuppressWarnings("EqualsWithItself")
     @Test
