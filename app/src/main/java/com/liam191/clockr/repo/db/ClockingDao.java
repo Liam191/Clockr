@@ -3,12 +3,10 @@ package com.liam191.clockr.repo.db;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.TypeConverters;
 
 import java.util.List;
 
 @Dao
-@TypeConverters({ZonedDateTimeConverter.class})
 public interface ClockingDao {
     @Insert
     public abstract void add(ClockingEntity clocking);
