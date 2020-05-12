@@ -1,8 +1,5 @@
 package com.liam191.clockr.repo;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.liam191.clockr.clocking.Clocking;
 
 import org.threeten.bp.LocalDateTime;
@@ -14,7 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 public final class ClockingDayView {
+
+    //TODO: Add DatabaseView annotation to DAO for ClockingDayView
 
     private final MutableLiveData<List<Clocking>> clockings = new MutableLiveData<>();
 
