@@ -45,6 +45,7 @@ public class ClockingRepositoryTest {
         Clocking clocking = new Clocking.Builder("TestClocking1").build();
         repository.add(clocking);
 
+        assertTrue(clockingTestDao.getAll().size() == 1);
         assertTrue(clockingTestDao.getAll().contains(ClockingRepository.Mapper.map(clocking)));
     }
 
