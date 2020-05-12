@@ -143,7 +143,7 @@ public class ClockingTest {
     // CLocking startTime
     @Test
     public void testStartTime(){
-        ZonedDateTime expectedStartTime = ZonedDateTime.of(2020, 3, 1, 18 , 37, 50,0,ZoneId.systemDefault());
+        ZonedDateTime expectedStartTime = ZonedDateTime.parse("2020-03-01T18:37:50Z[Europe/London]");
         Clocking workClocking = new Clocking.Builder("working")
                 .startTime(expectedStartTime)
                 .build();
@@ -152,7 +152,7 @@ public class ClockingTest {
 
     @Test
     public void testStartTime_HasDefault(){
-        ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
@@ -162,7 +162,7 @@ public class ClockingTest {
 
     @Test
     public void testStartTime_HasDefaultWithEndTime(){
-        ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
@@ -187,7 +187,7 @@ public class ClockingTest {
         ZonedDateTime expectedEndDate = ZonedDateTime.parse("2020-09-09T10:00+01:00[Europe/London]");
         ZonedDateTime expectedStartDate = expectedEndDate.minusMinutes(30);
 
-        Clock testClock = Clock.fixed(ZonedDateTime.of(2020, 11, 23, 17,46,0,0, ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+        Clock testClock = Clock.fixed(ZonedDateTime.parse("2020-11-23T17:46Z[Europe/London]").toInstant(), ZoneId.systemDefault());
 
         Clocking clocking = new Clocking.Builder("working", testClock)
                 .endTime(expectedEndDate)
@@ -200,7 +200,7 @@ public class ClockingTest {
     // Clocking endTime
     @Test
     public void testEndTime(){
-        ZonedDateTime expectedStartDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        ZonedDateTime expectedStartDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
         ZonedDateTime expectedEndDate = expectedStartDate.plusMinutes(5);
         Clock testClock = Clock.fixed(expectedStartDate.toInstant(), expectedStartDate.getZone());
 
@@ -212,7 +212,7 @@ public class ClockingTest {
 
     @Test
     public void testEndTime_HasDefault(){
-        ZonedDateTime expectedDate = ZonedDateTime.of(2020, 10, 11, 17,2,3,0, ZoneId.systemDefault());
+        ZonedDateTime expectedDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
         Clock testClock = Clock.fixed(expectedDate.toInstant(), expectedDate.getZone());
 
         Clocking workClocking = new Clocking.Builder("working", testClock)
@@ -238,7 +238,7 @@ public class ClockingTest {
     @SuppressWarnings("EqualsWithItself")
     @Test
     public void testEquals(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
 
         Clocking clockingX = new Clocking.Builder("Same clocking").startTime(date).build();
         Clocking clockingY = new Clocking.Builder("Same clocking").endTime(date.plusMinutes(30)).build();
@@ -261,7 +261,7 @@ public class ClockingTest {
 
     @Test
     public void testEquals_FromSameAndDifferentBuilders(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
@@ -278,7 +278,7 @@ public class ClockingTest {
 
     @Test
     public void testEquals_WithDifferentLabels(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking clockingA = new Clocking.Builder("Label").startTime(date).build();
         Clocking clockingB = new Clocking.Builder("Different label").startTime(date).build();
 
@@ -288,7 +288,7 @@ public class ClockingTest {
 
     @Test
     public void testEquals_WithDifferentDescriptions(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking clockingA = new Clocking.Builder("Label").startTime(date)
                 .description("Hello, world description!")
                 .build();
@@ -302,7 +302,7 @@ public class ClockingTest {
 
     @Test
     public void testEquals_WithDifferentDurations(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking clockingA = new Clocking.Builder("Label")
                 .startTime(date)
                 .endTime(date.plusMinutes(15))
@@ -320,10 +320,10 @@ public class ClockingTest {
     public void testEquals_WithDifferentStartTimes(){
 
         Clocking clockingA = new Clocking.Builder("Label")
-                .startTime(ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault()))
+                .startTime(ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]"))
                 .build();
         Clocking clockingB = new Clocking.Builder("Label")
-                .startTime(ZonedDateTime.of(2020, 3, 3, 14 , 59, 59,0,ZoneId.systemDefault()))
+                .startTime(ZonedDateTime.parse("2020-03-03T14:59:59Z[Europe/London]"))
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -333,14 +333,14 @@ public class ClockingTest {
 
     @Test
     public void testEquals_WithDifferentEndTimes(){
-        ZonedDateTime startDate = ZonedDateTime.of(2020, 3, 3, 10,0,0,0, ZoneId.systemDefault());
+        ZonedDateTime startDate = ZonedDateTime.parse("2020-03-03T10:00Z[Europe/London]");
         Clock testClock = Clock.fixed(startDate.toInstant(), startDate.getZone());
 
         Clocking clockingA = new Clocking.Builder("Label",testClock)
-                .endTime(ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault()))
+                .endTime(ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]"))
                 .build();
         Clocking clockingB = new Clocking.Builder("Label",testClock)
-                .endTime(ZonedDateTime.of(2020, 3, 3, 14 , 59, 59,0,ZoneId.systemDefault()))
+                .endTime(ZonedDateTime.parse("2020-03-03T14:59:59Z[Europe/London]"))
                 .build();
 
         assertFalse(clockingA.equals(clockingB));
@@ -352,7 +352,7 @@ public class ClockingTest {
     // Clocking hashCode
     @Test
     public void testHashCode(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
@@ -369,7 +369,7 @@ public class ClockingTest {
 
     @Test
     public void testHashCode_FromSameAndDifferentBuilders(){
-        ZonedDateTime date = ZonedDateTime.of(2020, 3, 3, 12 , 0, 0,0,ZoneId.systemDefault());
+        ZonedDateTime date = ZonedDateTime.parse("2020-03-03T12:00Z[Europe/London]");
         Clocking.Builder builderOne = new Clocking.Builder("ClockingEntity one").startTime(date);
         Clocking.Builder builderTwo = new Clocking.Builder("ClockingEntity one").endTime(date.plusMinutes(30));
 
