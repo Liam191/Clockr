@@ -1,8 +1,6 @@
 package com.liam191.clockr.repo.db;
 
 import org.junit.jupiter.api.Test;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,14 +10,16 @@ public class ZonedDateTimeConverterTest {
     // TODO: Complete testing here
     @Test
     public void testConverter_fromZonedDateTimeToString(){
-        ZonedDateTime zdt = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault());
-        String convertedTime = ZonedDateTimeConverter.fromZonedDateTime(zdt);
-        assertEquals(zdt.toString(), convertedTime);
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-01-03T00:00+00:00[Europe/London]");
+        String convertedTime = ZonedDateTimeConverter.fromZonedDateTime(testDate);
+        assertEquals(testDate.toString(), convertedTime);
     }
 
     @Test
     public void testConverter_fromEntityToClocking(){
-        ClockingEntity entity = new ClockingEntity();
-
+        String testString = "2020-01-03T00:00+00:00[Europe/London]";
+        ZonedDateTime testDate = ZonedDateTime.parse(testString);
+        ZonedDateTime convertedTime = ZonedDateTimeConverter.fromString(testString);
+        assertEquals(testDate, convertedTime);
     }
 }
