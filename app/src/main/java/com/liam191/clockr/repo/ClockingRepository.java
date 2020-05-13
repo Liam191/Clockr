@@ -24,6 +24,10 @@ final class ClockingRepository {
     }
 
     void replace(Clocking target, Clocking replacement){
+        if(target == null || replacement == null){
+            throw new IllegalArgumentException("target or replacement cannot be null.");
+        }
+
         delete(target);
         insert(replacement);
     }
