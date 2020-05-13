@@ -126,19 +126,20 @@ public final class Clocking {
             if(startTime == null && endTime == null) {
                 startTime = ZonedDateTime.now(clock);
                 endTime = startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
-            } else {
-                if(startTime == null){
-                    startTime = endTime.minusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
-                }
+            }
 
-                if(endTime == null){
-                    endTime = startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
-                }
+            if(startTime == null){
+                startTime = endTime.minusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
+            }
+
+            if(endTime == null){
+                endTime = startTime.plusMinutes(DEFAULT_CLOCKING_DURATION.toMinutes());
             }
 
             if(endTime.isBefore(startTime)){
                 throw new IllegalArgumentException("endTime cannot be before startTime");
             }
+
             return new Clocking(this);
         }
     }

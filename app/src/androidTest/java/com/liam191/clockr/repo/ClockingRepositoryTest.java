@@ -11,9 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.filters.SmallTest;
@@ -59,7 +56,7 @@ public class ClockingRepositoryTest {
 
         Clocking clocking = new Clocking.Builder("TestClocking1").build();
         repository.insert(clocking);
-        //assertTrue(clockingTestDao.getAll().size() == 1);
+        assertTrue(clockingTestDao.getAll().size() == 1);
 
         repository.delete(clocking);
         assertTrue(clockingTestDao.getAll().size() == 0);
@@ -68,7 +65,6 @@ public class ClockingRepositoryTest {
     @Test
     public void testing(){
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
-        Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, "--------------------");
 
         Clocking clocking = new Clocking.Builder("TestClocking1").build();
 
