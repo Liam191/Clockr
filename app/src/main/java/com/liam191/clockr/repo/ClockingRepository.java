@@ -23,6 +23,11 @@ final class ClockingRepository {
         clockingDao.delete(entity.label, entity.description, entity.startTime, entity.endTime);
     }
 
+    void replace(Clocking target, Clocking replacement){
+        delete(target);
+        insert(replacement);
+    }
+
 
     static final class Mapper {
 
