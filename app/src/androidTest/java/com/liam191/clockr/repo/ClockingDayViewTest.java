@@ -19,6 +19,7 @@ import java.util.List;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.filters.SmallTest;
@@ -82,6 +83,24 @@ public class ClockingDayViewTest {
 
         assertEquals(0, clockings.getValue().size());
     }
+
+    @Test
+    public void testGetAllForGivenDate_AddUpdatesLiveData(){
+        ClockingDayView view = new ClockingDayView.Factory(clockingTestDao)
+                .ofDate(ZonedDateTime.of(LocalDateTime.of(2020, 3, 3, 0, 0, 0), ZoneId.systemDefault()));
+
+        final List<Clocking>[] container = new List[1];
+        view.get().observeForever(new Observer<List<Clocking>>() {
+            @Override
+            public void onChanged(List<Clocking> clockings) {
+                container[0] = clockings;
+            }
+        });
+
+        assertEquals(container[0].size(), 0);
+    }
+
+
     /*
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
