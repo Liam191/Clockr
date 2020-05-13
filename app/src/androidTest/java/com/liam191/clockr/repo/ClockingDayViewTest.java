@@ -8,6 +8,7 @@ import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.threeten.bp.LocalDateTime;
@@ -16,6 +17,7 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -36,6 +38,9 @@ public class ClockingDayViewTest {
 
     private ClockrDatabase testDb;
     private ClockingDao clockingTestDao;
+
+    @Rule
+    public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
 
     @Before
     public void createTestDb(){
@@ -77,7 +82,7 @@ public class ClockingDayViewTest {
 
         assertEquals(0, clockings.getValue().size());
     }
-/*
+    /*
     @Test
     public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
         ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
@@ -94,6 +99,8 @@ public class ClockingDayViewTest {
         assertNotEquals(oldClockingList, newClockingList);
         assertNotSame(oldClockingList, newClockingList);
     }
+
+
 
     @Test
     public void testAddClocking(){

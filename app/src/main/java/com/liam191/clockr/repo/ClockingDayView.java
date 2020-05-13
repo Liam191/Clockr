@@ -26,10 +26,6 @@ public final class ClockingDayView {
         return clockings;
     }
 
-    //public void update(List<Clocking> newClockingList){
-    //    clockings.postValue(new ArrayList<>(newClockingList));
-    //}
-
     public static class Factory {
         private final ClockingDao clockingDao;
 
