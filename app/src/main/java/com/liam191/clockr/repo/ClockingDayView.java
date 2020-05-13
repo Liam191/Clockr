@@ -1,5 +1,8 @@
 package com.liam191.clockr.repo;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 
@@ -7,9 +10,6 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public final class ClockingDayView {
 

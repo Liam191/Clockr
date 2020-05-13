@@ -2,6 +2,14 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
@@ -16,14 +24,6 @@ import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
-
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -89,15 +89,7 @@ public class ClockingDayViewTest {
         ClockingDayView view = new ClockingDayView.Factory(clockingTestDao)
                 .ofDate(ZonedDateTime.of(LocalDateTime.of(2020, 3, 3, 0, 0, 0), ZoneId.systemDefault()));
 
-        final List<Clocking>[] container = new List[1];
-        view.get().observeForever(new Observer<List<Clocking>>() {
-            @Override
-            public void onChanged(List<Clocking> clockings) {
-                container[0] = clockings;
-            }
-        });
-
-        assertEquals(container[0].size(), 0);
+        assertEquals(getUpdates(view.get()).size(), 0);
     }
 
 
@@ -198,4 +190,16 @@ public class ClockingDayViewTest {
         assertEquals(0, clockingDayView.get().getValue().size());
     }
     */
+
+    static List getUpdates(LiveData liveData){
+        final List[] container = new List[1];
+        liveData.observeForever(new Observer<List<Clocking>>() {
+            @Override
+            public void onChanged(List<Clocking> clockings) {
+                container[0] = clockings;
+                liveData.removeObserver(this);
+            }
+        });
+        return container[0];
+    }
 }
