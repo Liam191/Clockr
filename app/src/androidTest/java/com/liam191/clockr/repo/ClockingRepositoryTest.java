@@ -57,7 +57,16 @@ public class ClockingRepositoryTest {
     }
 
     @Test
-    public void testRemove(){
+    public void testAdd_WithNull(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("Cannot insert null Clocking");
+
+        ClockingRepository repository = new ClockingRepository(clockingTestDao);
+        repository.insert(null);
+    }
+
+    @Test
+    public void testDelete(){
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
 
         Clocking clocking = new Clocking.Builder("TestClocking1").build();
@@ -67,6 +76,16 @@ public class ClockingRepositoryTest {
         repository.delete(clocking);
         assertTrue(clockingTestDao.getAll().size() == 0);
     }
+
+    @Test
+    public void testDelete_WithNull(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("Cannot delete null Clocking");
+
+        ClockingRepository repository = new ClockingRepository(clockingTestDao);
+        repository.delete(null);
+    }
+
 
     @Test
     public void testRemove_WithMultipleRows(){
@@ -102,7 +121,7 @@ public class ClockingRepositoryTest {
     @Test
     public void testReplace_WithBothNulls(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("target or replacement cannot be null.");
+        exceptionRule.expectMessage("target or replacement cannot be null");
 
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
         repository.replace(null, null);
@@ -111,7 +130,7 @@ public class ClockingRepositoryTest {
     @Test
     public void testReplace_WithNullTarget(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("target or replacement cannot be null.");
+        exceptionRule.expectMessage("target or replacement cannot be null");
 
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
         Clocking clocking = new Clocking.Builder("TestClockingBeforeReplace").build();
@@ -121,7 +140,7 @@ public class ClockingRepositoryTest {
     @Test
     public void testReplace_WithNullReplacement(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("target or replacement cannot be null.");
+        exceptionRule.expectMessage("target or replacement cannot be null");
 
         ClockingRepository repository = new ClockingRepository(clockingTestDao);
         Clocking clocking = new Clocking.Builder("TestClockingBeforeReplace").build();

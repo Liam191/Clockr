@@ -15,17 +15,25 @@ final class ClockingRepository {
     }
 
     void insert(Clocking clocking){
+        if(clocking == null){
+            throw new IllegalArgumentException("Cannot insert null Clocking");
+        }
+
         clockingDao.insert(Mapper.map(clocking));
     }
 
     void delete(Clocking clocking){
+        if(clocking == null){
+            throw new IllegalArgumentException("Cannot delete null Clocking");
+        }
+
         ClockingEntity entity = Mapper.map(clocking);
         clockingDao.delete(entity.label, entity.description, entity.startTime, entity.endTime);
     }
 
     void replace(Clocking target, Clocking replacement){
         if(target == null || replacement == null){
-            throw new IllegalArgumentException("target or replacement cannot be null.");
+            throw new IllegalArgumentException("target or replacement cannot be null");
         }
 
         delete(target);
