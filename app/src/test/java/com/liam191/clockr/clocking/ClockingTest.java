@@ -79,28 +79,26 @@ public class ClockingTest {
     @Test
     public void testDescription_WithNullThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("description cannot be empty or null");
+        exceptionRule.expectMessage("description cannot be null");
         new Clocking.Builder("working")
                 .description(null)
                 .build();
     }
 
     @Test
-    public void testDescription_WithEmptyThrowsException(){
-        exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("description cannot be empty or null");
-        new Clocking.Builder("working")
+    public void testDescription_WithEmpty(){
+        Clocking clocking = new Clocking.Builder("working")
                 .description("")
                 .build();
+        assertEquals("", clocking.description());
     }
 
     @Test
-    public void testDescription_WithJustWhitespaceThrowsException(){
-        exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("description cannot be empty or null");
-        new Clocking.Builder("working")
-                .description("               ")
+    public void testDescription_WithJustWhitespace(){
+        Clocking clocking = new Clocking.Builder("working")
+                .description("             ")
                 .build();
+        assertEquals("", clocking.description());
     }
 
 
