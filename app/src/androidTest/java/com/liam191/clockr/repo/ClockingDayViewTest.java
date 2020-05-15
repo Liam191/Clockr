@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
+import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.junit.After;
@@ -38,7 +39,10 @@ public class ClockingDayViewTest {
     //          - Use service locator for instantiation and caching instead?
 
     private ClockrDatabase testDb;
-    private ClockingDao clockingTestDao;
+    private ClockingDao testClockingDao;
+    private ClockingDayDao testClockingDayDao;
+    private ClockingRepository testRepository;
+    private ClockingDayView.Factory clockingViewFactory;
 
     @Rule
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
@@ -47,7 +51,12 @@ public class ClockingDayViewTest {
     public void createTestDb(){
         Context appContext = ApplicationProvider.getApplicationContext();
         testDb = Room.inMemoryDatabaseBuilder(appContext, ClockrDatabase.class).build();
-        clockingTestDao = testDb.clockingDao();
+
+        testClockingDao = testDb.clockingDao();
+        testClockingDayDao = testDb.clockingDayDao();
+        testRepository = new ClockingRepository(testClockingDao);
+
+        clockingViewFactory = new ClockingDayView.Factory(testRepository, testClockingDayDao);
     }
 
     @After
@@ -59,15 +68,14 @@ public class ClockingDayViewTest {
     // ClockingDayView Factory
     @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
-        ClockingDayView.Factory factory = new ClockingDayView.Factory(clockingTestDao);
         ZonedDateTime testDate = ZonedDateTime.of(LocalDateTime.of(2017, 4, 16, 0, 0 ,0), ZoneId.systemDefault());
-        assertNotSame(factory.ofDate(testDate), factory.ofDate(testDate));
+        assertNotSame(clockingViewFactory.ofDate(testDate), clockingViewFactory.ofDate(testDate));
     }
 
     @Test
     public void testFactoryOfDate_returnsDifferentInstancesForDifferentDates(){
-        ClockingDayView clockingDayView1 = new ClockingDayView.Factory(clockingTestDao).ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 16,0,0,0), ZoneId.systemDefault()));
-        ClockingDayView clockingDayView2 = new ClockingDayView.Factory(clockingTestDao).ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 17,0,0,0), ZoneId.systemDefault()));
+        ClockingDayView clockingDayView1 = clockingViewFactory.ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 16,0,0,0), ZoneId.systemDefault()));
+        ClockingDayView clockingDayView2 = clockingViewFactory.ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 17,0,0,0), ZoneId.systemDefault()));
 
         assertNotSame(clockingDayView1, clockingDayView2);
     }
@@ -77,7 +85,7 @@ public class ClockingDayViewTest {
 
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        LiveData<List<Clocking>> clockings = new ClockingDayView.Factory(clockingTestDao)
+        LiveData<List<Clocking>> clockings = clockingViewFactory
                 .ofDate(ZonedDateTime.of(LocalDateTime.of(2020, 3, 3, 0, 0, 0), ZoneId.systemDefault()))
                 .get();
 
@@ -86,10 +94,12 @@ public class ClockingDayViewTest {
 
     @Test
     public void testGetAllForGivenDate_AddUpdatesLiveData(){
-        ClockingDayView view = new ClockingDayView.Factory(clockingTestDao)
-                .ofDate(ZonedDateTime.of(LocalDateTime.of(2020, 3, 3, 0, 0, 0), ZoneId.systemDefault()));
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
+        ClockingDayView view = clockingViewFactory
+                .ofDate(testDate);
 
-        assertEquals(getLiveDataUpdates(view.get()).size(), 0);
+        view.add(new Clocking.Builder("Test").startTime(testDate).build());
+        assertEquals(1, getLiveDataUpdates(view.get()).size());
     }
 
 
