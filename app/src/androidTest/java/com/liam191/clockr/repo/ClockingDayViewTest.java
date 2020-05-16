@@ -2,6 +2,14 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -12,19 +20,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
-
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -68,28 +66,25 @@ public class ClockingDayViewTest {
     // ClockingDayView Factory
     @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
-        ZonedDateTime testDate = ZonedDateTime.of(LocalDateTime.of(2017, 4, 16, 0, 0 ,0), ZoneId.systemDefault());
+        ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
         assertNotSame(clockingViewFactory.ofDate(testDate), clockingViewFactory.ofDate(testDate));
     }
 
     @Test
-    public void testFactoryOfDate_returnsDifferentInstancesForDifferentDates(){
-        ClockingDayView clockingDayView1 = clockingViewFactory.ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 16,0,0,0), ZoneId.systemDefault()));
-        ClockingDayView clockingDayView2 = clockingViewFactory.ofDate(ZonedDateTime.of(LocalDateTime.of(2017, 4, 17,0,0,0), ZoneId.systemDefault()));
+    public void testFactoryOfDate_returnsNewInstancesForDifferentDates(){
+        ClockingDayView clockingDayView1 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]"));
+        ClockingDayView clockingDayView2 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-17T12:00:00Z[Europe/London]"));
 
         assertNotSame(clockingDayView1, clockingDayView2);
     }
 
 
 
-
+    //ClockingDayView
     @Test
     public void testGetAllForGivenDate_withNoData(){
-        LiveData<List<Clocking>> clockings = clockingViewFactory
-                .ofDate(ZonedDateTime.of(LocalDateTime.of(2020, 3, 3, 0, 0, 0), ZoneId.systemDefault()))
-                .get();
-
-        assertEquals(0, clockings.getValue().size());
+        ClockingDayView view = clockingViewFactory.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]"));
+        assertEquals(0, view.get().getValue().size());
     }
 
     @Test
@@ -103,104 +98,8 @@ public class ClockingDayViewTest {
     }
 
 
-    /*
-    @Test
-    public void testGetAllForGivenDate_ReturnsNewListOnUpdate(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        LiveData<List<Clocking>> clockings = clockingDayView.get();
 
-        List<Clocking> oldClockingList = clockings.getValue();
-        oldClockingList.add(new Clocking.Builder("TestClocking1").startTime(testDay).build());
-        clockingDayView.update(oldClockingList);
-
-        oldClockingList.add(new Clocking.Builder("TestClocking2").startTime(testDay).build());
-        List<Clocking> newClockingList = clockings.getValue();
-
-        assertNotEquals(oldClockingList, newClockingList);
-        assertNotSame(oldClockingList, newClockingList);
-    }
-
-
-
-    @Test
-    public void testAddClocking(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        LiveData<List<Clocking>> clockings = clockingDayView.get();
-
-        List<Clocking> clockingList = clockings.getValue();
-        clockingList.add(new Clocking.Builder("Test").startTime(testDay).build());
-        clockingDayView.update(clockingList);
-
-        assertEquals(clockingList, clockings.getValue());
-    }
-
-    @Test
-    public void testRemoveClockings_withOneClocking(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        LiveData<List<Clocking>> clockings = clockingDayView.get();
-
-        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay)
-                .build();
-
-        List<Clocking> clockingList = clockings.getValue();
-
-        clockingList.add(clocking1);
-        clockingList.remove(clocking1);
-        clockingDayView.update(clockingList);
-
-        assertEquals(0, clockingDayView.get().getValue().size());
-    }
-
-    @Test
-    public void testRemoveClockings_withThreeClockings(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        List<Clocking> clockingList = clockingDayView.get().getValue();
-
-        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay).build();
-        Clocking clocking2 = new Clocking.Builder("TestClocking2").startTime(testDay).build();
-        Clocking clocking3 = new Clocking.Builder("TestClocking3").startTime(testDay).build();
-
-        clockingList.add(clocking1);
-        clockingList.add(clocking2);
-        clockingList.add(clocking3);
-        clockingList.remove(clocking1);
-
-        clockingDayView.update(clockingList);
-
-        assertEquals(2, clockingDayView.get().getValue().size());
-    }
-
-    @Test
-    public void testRemoveClockings_withNoClockings(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        List<Clocking> clockingList = clockingDayView.get().getValue();
-
-        Clocking clocking1 = new Clocking.Builder("TestClocking1").startTime(testDay).build();
-
-        clockingList.remove(clocking1);
-        clockingDayView.update(clockingList);
-
-        assertEquals(0, clockingDayView.get().getValue().size());
-    }
-
-    @Test
-    public void testRemoveClockings_withNull(){
-        ZonedDateTime testDay = ZonedDateTime.of(2020, 3, 3,0,0,0,0, ZoneId.systemDefault());
-        ClockingDayView clockingDayView = new ClockingDayView.Factory(clockingTestDao).ofDate(testDay);
-        List<Clocking> clockingList = clockingDayView.get().getValue();
-
-        clockingList.remove(null);
-        clockingDayView.update(clockingList);
-
-        assertEquals(0, clockingDayView.get().getValue().size());
-    }
-    */
-
+    // LiveData helper method
     static List getLiveDataUpdates(LiveData liveData){
         final List[] container = new List[1];
         liveData.observeForever(new Observer<List<Clocking>>() {
