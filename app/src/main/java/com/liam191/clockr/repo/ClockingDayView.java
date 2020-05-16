@@ -35,7 +35,7 @@ public final class ClockingDayView {
         this.day = day;
 
         // TODO: Replace with observe and lifecycle reference when implementing ViewModel
-        clockingDayDao.getAllForDate(day.toString())
+        clockingDayDao.getAllForDate(day)
                 .observeForever(liveDataObserver);
     }
 

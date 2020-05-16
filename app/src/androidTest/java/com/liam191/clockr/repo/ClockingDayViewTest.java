@@ -65,6 +65,7 @@ public class ClockingDayViewTest {
     }
 
 
+
     // ClockingDayView Factory
     @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
