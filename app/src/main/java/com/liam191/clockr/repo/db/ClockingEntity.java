@@ -1,10 +1,13 @@
 package com.liam191.clockr.repo.db;
 
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.Objects;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity
 public class ClockingEntity {
@@ -18,10 +21,12 @@ public class ClockingEntity {
     public String description;
 
     @ColumnInfo(name = "start_time")
-    public String startTime;
+    @TypeConverters(ZonedDateTimeConverter.class)
+    public ZonedDateTime startTime;
 
     @ColumnInfo(name = "end_time")
-    public String endTime;
+    @TypeConverters(ZonedDateTimeConverter.class)
+    public ZonedDateTime endTime;
 
     @Override
     public boolean equals(Object o){
@@ -51,8 +56,8 @@ public class ClockingEntity {
         return "ClockingEntity { uid: "+ uid
                 +", label: '"+ label
                 +"', description: '"+ description
-                +"', startTime: "+ startTime
-                +", endTime: "+ endTime
+                +"', startTime: "+ startTime.toString()
+                +", endTime: "+ endTime.toString()
                 +" }";
     }
 }

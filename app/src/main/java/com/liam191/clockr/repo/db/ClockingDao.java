@@ -1,10 +1,13 @@
 package com.liam191.clockr.repo.db;
 
+import org.threeten.bp.ZonedDateTime;
+
+import java.util.List;
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-import java.util.List;
+import androidx.room.TypeConverters;
 
 @Dao
 public interface ClockingDao {
@@ -20,7 +23,8 @@ public interface ClockingDao {
                     "AND end_time = :endTime " +
                 "LIMIT 1" +
             ")")
-    void delete(String label, String description, String startTime, String endTime);
+    @TypeConverters(ZonedDateTimeConverter.class)
+    void delete(String label, String description, ZonedDateTime startTime, ZonedDateTime endTime);
 
     @Query("SELECT * FROM clockingentity")
     List<ClockingEntity> getAll();
