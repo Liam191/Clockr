@@ -26,7 +26,7 @@ final class ClockingRepository {
         }
 
         ClockingEntity entity = Mapper.map(clocking);
-        clockingDao.delete(entity.label, entity.description, entity.startTime, entity.endTime);
+        clockingDao.delete(entity);
     }
 
     void replace(Clocking target, Clocking replacement){
@@ -34,8 +34,7 @@ final class ClockingRepository {
             throw new IllegalArgumentException("target or replacement cannot be null");
         }
 
-        delete(target);
-        insert(replacement);
+        clockingDao.replace(Mapper.map(target), Mapper.map(replacement));
     }
 
 

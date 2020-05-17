@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
+import com.liam191.clockr.repo.db.ClockingEntity;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.junit.After;
@@ -12,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -146,4 +150,28 @@ public class ClockingRepositoryTest {
         Clocking clocking = new Clocking.Builder("TestClockingBeforeReplace").build();
         repository.replace(null, clocking);
     }
+
+    @Test
+    public void testReplace_WithMultipleRows(){
+        ClockingRepository repository = new ClockingRepository(clockingTestDao);
+        Clocking clocking = new Clocking.Builder("TestClocking1").build();
+        Clocking clockingReplacement = new Clocking.Builder("ReplacementClocking").build();
+
+        repository.insert(clocking);
+        repository.insert(clocking);
+        repository.insert(clocking);
+        repository.insert(clocking);
+
+        repository.replace(clocking, clockingReplacement);
+
+        List<ClockingEntity> expectedList = new ArrayList<>();
+        expectedList.add(ClockingRepository.Mapper.map(clockingReplacement));
+        expectedList.add(ClockingRepository.Mapper.map(clocking));
+        expectedList.add(ClockingRepository.Mapper.map(clocking));
+        expectedList.add(ClockingRepository.Mapper.map(clocking));
+
+        assertEquals(4, clockingTestDao.getAll().size());
+        assertEquals(expectedList, clockingTestDao.getAll());
+    }
+
 }
