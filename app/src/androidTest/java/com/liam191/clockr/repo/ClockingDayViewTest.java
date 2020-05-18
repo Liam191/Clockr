@@ -34,14 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ClockingDayViewTest {
 
-    // TODO: Implement add/replace/delete methods in ClockingDayView
     // TODO: Use ClockingDayView add/replace/delete methods instead of CLockingRepository
     // TODO: Test edge cases with Factory.ofDate()
     //          - Midnight in another timezone that would go back to the previous day with offset
 
     private ClockrDatabase testDb;
-    private ClockingDao testClockingDao;
-    private ClockingDayDao testClockingDayDao;
     private ClockingRepository testRepository;
     private ClockingDayView.Factory clockingViewFactory;
 
@@ -53,10 +50,10 @@ public class ClockingDayViewTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         testDb = Room.inMemoryDatabaseBuilder(appContext, ClockrDatabase.class).build();
 
-        testClockingDao = testDb.clockingDao();
-        testClockingDayDao = testDb.clockingDayDao();
-        testRepository = new ClockingRepository(testClockingDao);
+        ClockingDao testClockingDao = testDb.clockingDao();
+        ClockingDayDao testClockingDayDao = testDb.clockingDayDao();
 
+        testRepository = new ClockingRepository(testClockingDao);
         clockingViewFactory = new ClockingDayView.Factory(testRepository, testClockingDayDao);
     }
 
@@ -103,7 +100,7 @@ public class ClockingDayViewTest {
         Clocking expectedClocking2 = new Clocking.Builder("Expected2").startTime(expectedDate).build();
         Clocking expectedClocking3 = new Clocking.Builder("Expected3").startTime(expectedDate.plusMinutes(250)).build();
 
-        // Populate test database
+        // Populate test database using Repository before creating ClockingDayView instance
         testRepository.insert(new Clocking.Builder("Test1").startTime(otherDate1).build());
         testRepository.insert(new Clocking.Builder("Test2").startTime(otherDate1).build());
         testRepository.insert(new Clocking.Builder("Test3").startTime(otherDate2).build());
@@ -220,7 +217,6 @@ public class ClockingDayViewTest {
         assertEquals(3, view.get().getValue().size());
         assertEquals(expectedList, view.get().getValue());
     }
-
 
 
 
