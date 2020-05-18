@@ -32,10 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ClockingDayViewTest {
 
-    // TODO: Test ClockingDayView with different dates
-    // TODO: Cache for ClockingDayView instances of different dates?
-    //          - Static factory with cache can't be easily tested.
-    //          - Use service locator for instantiation and caching instead?
+    // TODO: Implement add/replace/delete methods in ClockingDayView
+    // TODO: Use ClockingDayView add/replace/delete methods instead of CLockingRepository
+    // TODO: Test edge cases with Factory.ofDate()
+    //          - Midnight in another timezone that would go back to the previous day with offset
 
     private ClockrDatabase testDb;
     private ClockingDao testClockingDao;
@@ -82,7 +82,7 @@ public class ClockingDayViewTest {
 
 
 
-    //ClockingDayView
+    //ClockingDayView get()
     @Test
     public void testGet_WithNoData(){
         ClockingDayView view = clockingViewFactory.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]"));
@@ -130,6 +130,19 @@ public class ClockingDayViewTest {
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
         assertEquals(1, getLiveDataUpdates(view.get()).size());
     }
+
+
+
+    // ClockingDayView add()
+    @Test
+    public void testAdd(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
+        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        view.add(new Clocking.Builder("Test").startTime(testDate).build());
+        assertEquals(1, view.get().getValue().size());
+    }
+
+
 
 
 
