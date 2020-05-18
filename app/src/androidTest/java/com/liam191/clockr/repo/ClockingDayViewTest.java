@@ -2,6 +2,14 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -15,14 +23,6 @@ import org.junit.runner.RunWith;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
-
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -115,7 +115,6 @@ public class ClockingDayViewTest {
         ClockingDayView view = clockingViewFactory
                 .ofDate(expectedDate);
 
-        List<Clocking> result = getLiveDataUpdates(view.get());
         assertEquals(3, getLiveDataUpdates(view.get()).size());
         assertTrue(getLiveDataUpdates(view.get()).contains(expectedClocking1));
         assertTrue(getLiveDataUpdates(view.get()).contains(expectedClocking2));
