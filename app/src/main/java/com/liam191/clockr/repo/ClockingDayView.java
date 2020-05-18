@@ -52,6 +52,10 @@ public final class ClockingDayView {
         clockingRepository.delete(clocking);
     }
 
+    public void replace(Clocking target, Clocking replacement){
+        clockingRepository.replace(target, replacement);
+    }
+
     public static class Factory {
         private final ClockingRepository clockingRepository;
         private final ClockingDayDao clockingDayDao;

@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -175,6 +177,49 @@ public class ClockingDayViewTest {
         assertEquals(2, view.get().getValue().size());
     }
 
+
+
+    // ClockingDayView replace()
+    @Test
+    public void testReplace(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
+        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        Clocking targetClocking = new Clocking.Builder("Test 1").startTime(testDate).build();
+        Clocking replacementClocking = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
+
+        view.add(targetClocking);
+        assertEquals(1, view.get().getValue().size());
+        assertEquals(targetClocking, view.get().getValue().get(0));
+
+        view.replace(targetClocking, replacementClocking);
+        assertEquals(1, view.get().getValue().size());
+        assertEquals(replacementClocking, view.get().getValue().get(0));
+    }
+
+    @Test
+    public void testReplace_WithMultipleClockings(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
+        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        Clocking testClocking1 = new Clocking.Builder("Test 1").startTime(testDate).build();
+        Clocking testClocking2 = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
+        Clocking testClocking3 = new Clocking.Builder("Test 3").startTime(testDate.plusMinutes(40)).build();
+        Clocking replacementClocking = new Clocking.Builder("Test 4").startTime(testDate.plusMinutes(100)).build();
+
+        view.add(testClocking1);
+        view.add(testClocking2);
+        view.add(testClocking3);
+        assertEquals(3, view.get().getValue().size());
+
+        List<Clocking> expectedList = new ArrayList<>(Arrays.asList(
+                testClocking1,
+                testClocking2,
+                replacementClocking
+        ));
+
+        view.replace(testClocking3, replacementClocking);
+        assertEquals(3, view.get().getValue().size());
+        assertEquals(expectedList, view.get().getValue());
+    }
 
 
 
