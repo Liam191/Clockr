@@ -4,6 +4,7 @@ package com.liam191.clockr.repo;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -14,7 +15,7 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ClockingDayView {
+public final class ClockingDayViewModel extends ViewModel {
 
     // TODO: Use date to return new instances
     // TODO: Add DatabaseView annotation to DAO for ClockingDayView
@@ -31,7 +32,7 @@ public final class ClockingDayView {
         clockingList.postValue(newClockingList);
     };
 
-    private ClockingDayView(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
+    private ClockingDayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
         this.clockingRepository = clockingRepository;
         this.day = day;
 
@@ -65,8 +66,8 @@ public final class ClockingDayView {
             this.clockingDayDao = clockingDayDao;
         }
 
-        public ClockingDayView ofDate(ZonedDateTime date){
-            return new ClockingDayView(clockingRepository, clockingDayDao, date);
+        public ClockingDayViewModel ofDate(ZonedDateTime date){
+            return new ClockingDayViewModel(clockingRepository, clockingDayDao, date);
         }
     }
 }

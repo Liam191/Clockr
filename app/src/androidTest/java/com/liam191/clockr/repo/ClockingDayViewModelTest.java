@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SmallTest
 @RunWith(AndroidJUnit4.class)
-public class ClockingDayViewTest {
+public class ClockingDayViewModelTest {
 
     // TODO: Use ClockingDayView add/replace/delete methods instead of CLockingRepository
     // TODO: Test edge cases with Factory.ofDate()
@@ -40,7 +40,7 @@ public class ClockingDayViewTest {
 
     private ClockrDatabase testDb;
     private ClockingRepository testRepository;
-    private ClockingDayView.Factory clockingViewFactory;
+    private ClockingDayViewModel.Factory clockingViewFactory;
 
     @Rule
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
@@ -54,7 +54,7 @@ public class ClockingDayViewTest {
         ClockingDayDao testClockingDayDao = testDb.clockingDayDao();
 
         testRepository = new ClockingRepository(testClockingDao);
-        clockingViewFactory = new ClockingDayView.Factory(testRepository, testClockingDayDao);
+        clockingViewFactory = new ClockingDayViewModel.Factory(testRepository, testClockingDayDao);
     }
 
     @After
@@ -73,10 +73,10 @@ public class ClockingDayViewTest {
 
     @Test
     public void testFactoryOfDate_returnsNewInstancesForDifferentDates(){
-        ClockingDayView clockingDayView1 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]"));
-        ClockingDayView clockingDayView2 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-17T12:00:00Z[Europe/London]"));
+        ClockingDayViewModel view1 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]"));
+        ClockingDayViewModel view2 = clockingViewFactory.ofDate(ZonedDateTime.parse("2017-04-17T12:00:00Z[Europe/London]"));
 
-        assertNotSame(clockingDayView1, clockingDayView2);
+        assertNotSame(view1, view2);
     }
 
 
@@ -84,7 +84,7 @@ public class ClockingDayViewTest {
     //ClockingDayView get()
     @Test
     public void testGet_WithNoData(){
-        ClockingDayView view = clockingViewFactory.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]"));
+        ClockingDayViewModel view = clockingViewFactory.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]"));
         assertEquals(0, view.get().getValue().size());
     }
 
@@ -111,7 +111,7 @@ public class ClockingDayViewTest {
         testRepository.insert(new Clocking.Builder("Test8").startTime(otherDate3).build());
         testRepository.insert(new Clocking.Builder("Test9").startTime(otherDate3).build());
 
-        ClockingDayView view = clockingViewFactory
+        ClockingDayViewModel view = clockingViewFactory
                 .ofDate(expectedDate);
 
         assertEquals(3, getLiveDataUpdates(view.get()).size());
@@ -123,7 +123,7 @@ public class ClockingDayViewTest {
     @Test
     public void testGet_AddUpdatesLiveData(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
-        ClockingDayView view = clockingViewFactory
+        ClockingDayViewModel view = clockingViewFactory
                 .ofDate(testDate);
 
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
@@ -136,7 +136,7 @@ public class ClockingDayViewTest {
     @Test
     public void testAdd(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
-        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        ClockingDayViewModel view = clockingViewFactory.ofDate(testDate);
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
         assertEquals(1, view.get().getValue().size());
     }
@@ -147,7 +147,7 @@ public class ClockingDayViewTest {
     @Test
     public void testDelete(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
-        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        ClockingDayViewModel view = clockingViewFactory.ofDate(testDate);
         Clocking testClocking = new Clocking.Builder("Test").startTime(testDate).build();
 
         view.add(testClocking);
@@ -160,7 +160,7 @@ public class ClockingDayViewTest {
     @Test
     public void testDelete_WithMultipleClockings(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
-        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        ClockingDayViewModel view = clockingViewFactory.ofDate(testDate);
         Clocking testClocking1 = new Clocking.Builder("Test 1").startTime(testDate).build();
         Clocking testClocking2 = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
         Clocking testClocking3 = new Clocking.Builder("Test 3").startTime(testDate.plusMinutes(40)).build();
@@ -180,7 +180,7 @@ public class ClockingDayViewTest {
     @Test
     public void testReplace(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
-        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        ClockingDayViewModel view = clockingViewFactory.ofDate(testDate);
         Clocking targetClocking = new Clocking.Builder("Test 1").startTime(testDate).build();
         Clocking replacementClocking = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
 
@@ -196,7 +196,7 @@ public class ClockingDayViewTest {
     @Test
     public void testReplace_WithMultipleClockings(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
-        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        ClockingDayViewModel view = clockingViewFactory.ofDate(testDate);
         Clocking testClocking1 = new Clocking.Builder("Test 1").startTime(testDate).build();
         Clocking testClocking2 = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
         Clocking testClocking3 = new Clocking.Builder("Test 3").startTime(testDate.plusMinutes(40)).build();
