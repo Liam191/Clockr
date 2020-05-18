@@ -144,6 +144,39 @@ public class ClockingDayViewTest {
 
 
 
+    // ClockingDayView delete()
+    @Test
+    public void testDelete(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
+        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        Clocking testClocking = new Clocking.Builder("Test").startTime(testDate).build();
+
+        view.add(testClocking);
+        assertEquals(1, view.get().getValue().size());
+
+        view.remove(testClocking);
+        assertEquals(0, view.get().getValue().size());
+    }
+
+    @Test
+    public void testDelete_WithMultipleClockings(){
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
+        ClockingDayView view = clockingViewFactory.ofDate(testDate);
+        Clocking testClocking1 = new Clocking.Builder("Test 1").startTime(testDate).build();
+        Clocking testClocking2 = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
+        Clocking testClocking3 = new Clocking.Builder("Test 3").startTime(testDate.plusMinutes(40)).build();
+
+        view.add(testClocking1);
+        view.add(testClocking2);
+        view.add(testClocking3);
+        assertEquals(3, view.get().getValue().size());
+
+        view.remove(testClocking1);
+        assertEquals(2, view.get().getValue().size());
+    }
+
+
+
 
 
     // LiveData helper method

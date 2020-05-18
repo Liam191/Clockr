@@ -48,6 +48,10 @@ public final class ClockingDayView {
         clockingRepository.insert(clocking);
     }
 
+    public void remove(Clocking clocking){
+        clockingRepository.delete(clocking);
+    }
+
     public static class Factory {
         private final ClockingRepository clockingRepository;
         private final ClockingDayDao clockingDayDao;
