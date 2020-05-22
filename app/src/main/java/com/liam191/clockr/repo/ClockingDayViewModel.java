@@ -1,10 +1,12 @@
 package com.liam191.clockr.repo;
 
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -57,7 +59,7 @@ public final class ClockingDayViewModel extends ViewModel {
         clockingRepository.replace(target, replacement);
     }
 
-    public static class Factory {
+    public static class Factory implements ViewModelProvider.Factory {
         private final ClockingRepository clockingRepository;
         private final ClockingDayDao clockingDayDao;
 
@@ -68,6 +70,12 @@ public final class ClockingDayViewModel extends ViewModel {
 
         public ClockingDayViewModel ofDate(ZonedDateTime date){
             return new ClockingDayViewModel(clockingRepository, clockingDayDao, date);
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            return null;
         }
     }
 }
