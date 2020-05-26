@@ -60,23 +60,30 @@ public final class ClockingDayViewModel extends ViewModel {
         clockingRepository.replace(target, replacement);
     }
 
-    public static class Factory implements ViewModelProvider.Factory {
+    public static class Builder implements ViewModelProvider.Factory {
         private final ClockingRepository clockingRepository;
         private final ClockingDayDao clockingDayDao;
+        private ZonedDateTime ofDate;
 
-        public Factory(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao){
+        public Builder(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao){
             this.clockingRepository = clockingRepository;
             this.clockingDayDao = clockingDayDao;
         }
 
-        public ClockingDayViewModel ofDate(ZonedDateTime date){
-            return new ClockingDayViewModel(clockingRepository, clockingDayDao, date);
+        public Builder ofDate(ZonedDateTime ofDate){
+            // TODO: Add null check
+            this.ofDate = ofDate;
+        }
+
+        ClockingDayViewModel build(){
+            return new ClockingDayViewModel(clockingRepository, clockingDayDao, ofDate);
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return null;
+            //noinspection unchecked
+            return (T) build();
         }
     }
 }
