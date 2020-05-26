@@ -2,9 +2,10 @@ package com.liam191.clockr.repo;
 
 
 import androidx.annotation.NonNull;
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,29 +20,32 @@ import java.util.List;
 
 public final class ClockingDayViewModel extends ViewModel {
 
-    // TODO: Use date to return new instances
-    // TODO: Add DatabaseView annotation to DAO for ClockingDayView
-
     private final ClockingRepository clockingRepository;
     private final ZonedDateTime day;
-    private final MutableLiveData<List<Clocking>> clockingList = new MutableLiveData<>();
+    private final LiveData<List<Clocking>> clockingList;
 
-    private final Observer<List<ClockingEntity>> liveDataObserver = clockingEntityList -> {
-        List<Clocking> newClockingList = new ArrayList<>();
-        for(ClockingEntity entity : clockingEntityList){
-            newClockingList.add(ClockingRepository.Mapper.map(entity));
+    private final Function<List<ClockingEntity>, LiveData<List<Clocking>>>
+            clockingSwitchMapFunction = clockingEntities -> {
+
+        List<Clocking> newClockings = new ArrayList<>();
+        for(ClockingEntity entity : clockingEntities){
+            newClockings.add(ClockingRepository.Mapper.map(entity));
         }
-        clockingList.postValue(newClockingList);
+
+        MutableLiveData<List<Clocking>> newLiveData = new MutableLiveData<>();
+        newLiveData.postValue(newClockings);
+
+        return newLiveData;
     };
 
     private ClockingDayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
         this.clockingRepository = clockingRepository;
         this.day = day;
 
-        // TODO: Replace with Transformations
-        //      -See: https://medium.com/androiddevelopers/viewmodels-and-livedata-patterns-antipatterns-21efaef74a54
-        clockingDayDao.getAllForDate(day)
-                .observeForever(liveDataObserver);
+        clockingList = Transformations.switchMap(
+                clockingDayDao.getAllForDate(day),
+                clockingSwitchMapFunction
+        );
     }
 
     public LiveData<List<Clocking>> get(){

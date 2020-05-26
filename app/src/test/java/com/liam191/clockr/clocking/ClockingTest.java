@@ -18,9 +18,6 @@ public class ClockingTest {
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
-    // TODO: Create better validation around Strings, ints, date ranges, etc.
-
-
     // Clocking label
     @Test
     public void testLabel(){

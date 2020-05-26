@@ -131,7 +131,7 @@ public class ClockingDayViewModelTest {
     @Test
     public void testGet_WithNoData(){
         ClockingDayViewModel view = clockingViewBuilder.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]")).build();
-        assertEquals(0, view.get().getValue().size());
+        assertEquals(0, getLiveDataUpdates(view.get()).size());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ClockingDayViewModelTest {
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
         ClockingDayViewModel view = clockingViewBuilder.ofDate(testDate).build();
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
-        assertEquals(1, view.get().getValue().size());
+        assertEquals(1, getLiveDataUpdates(view.get()).size());
     }
 
 
@@ -195,10 +195,10 @@ public class ClockingDayViewModelTest {
         Clocking testClocking = new Clocking.Builder("Test").startTime(testDate).build();
 
         view.add(testClocking);
-        assertEquals(1, view.get().getValue().size());
+        assertEquals(1, getLiveDataUpdates(view.get()).size());
 
         view.remove(testClocking);
-        assertEquals(0, view.get().getValue().size());
+        assertEquals(0, getLiveDataUpdates(view.get()).size());
     }
 
     @Test
@@ -213,10 +213,10 @@ public class ClockingDayViewModelTest {
         view.add(testClocking1);
         view.add(testClocking2);
         view.add(testClocking3);
-        assertEquals(3, view.get().getValue().size());
+        assertEquals(3, getLiveDataUpdates(view.get()).size());
 
         view.remove(testClocking1);
-        assertEquals(2, view.get().getValue().size());
+        assertEquals(2, getLiveDataUpdates(view.get()).size());
     }
 
 
@@ -230,12 +230,12 @@ public class ClockingDayViewModelTest {
         Clocking replacementClocking = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
 
         view.add(targetClocking);
-        assertEquals(1, view.get().getValue().size());
-        assertEquals(targetClocking, view.get().getValue().get(0));
+        assertEquals(1, getLiveDataUpdates(view.get()).size());
+        assertEquals(targetClocking, getLiveDataUpdates(view.get()).get(0));
 
         view.replace(targetClocking, replacementClocking);
-        assertEquals(1, view.get().getValue().size());
-        assertEquals(replacementClocking, view.get().getValue().get(0));
+        assertEquals(1, getLiveDataUpdates(view.get()).size());
+        assertEquals(replacementClocking, getLiveDataUpdates(view.get()).get(0));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ClockingDayViewModelTest {
         view.add(testClocking1);
         view.add(testClocking2);
         view.add(testClocking3);
-        assertEquals(3, view.get().getValue().size());
+        assertEquals(3, getLiveDataUpdates(view.get()).size());
 
         List<Clocking> expectedList = new ArrayList<>(Arrays.asList(
                 testClocking1,
@@ -259,8 +259,8 @@ public class ClockingDayViewModelTest {
         ));
 
         view.replace(testClocking3, replacementClocking);
-        assertEquals(3, view.get().getValue().size());
-        assertEquals(expectedList, view.get().getValue());
+        assertEquals(3, getLiveDataUpdates(view.get()).size());
+        assertEquals(expectedList, getLiveDataUpdates(view.get()));
     }
 
 
