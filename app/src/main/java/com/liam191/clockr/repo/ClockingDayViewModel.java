@@ -38,7 +38,8 @@ public final class ClockingDayViewModel extends ViewModel {
         this.clockingRepository = clockingRepository;
         this.day = day;
 
-        // TODO: Replace with observe and lifecycle reference when implementing ViewModel
+        // TODO: Replace with Transformations
+        //      -See: https://medium.com/androiddevelopers/viewmodels-and-livedata-patterns-antipatterns-21efaef74a54
         clockingDayDao.getAllForDate(day)
                 .observeForever(liveDataObserver);
     }
