@@ -73,6 +73,7 @@ public final class ClockingDayViewModel extends ViewModel {
         public Builder ofDate(ZonedDateTime ofDate){
             // TODO: Add null check
             this.ofDate = ofDate;
+            return this;
         }
 
         ClockingDayViewModel build(){

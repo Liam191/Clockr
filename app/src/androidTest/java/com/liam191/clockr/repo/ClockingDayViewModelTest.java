@@ -68,7 +68,7 @@ public class ClockingDayViewModelTest {
     @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
-        assertNotSame(clockingViewBuilder.ofDate(testDate), clockingViewBuilder.ofDate(testDate));
+        assertNotSame(clockingViewBuilder.ofDate(testDate).build(), clockingViewBuilder.ofDate(testDate).build());
     }
 
     @Test
