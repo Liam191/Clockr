@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.threeten.bp.ZonedDateTime;
 
@@ -39,8 +40,12 @@ public class ClockingDayViewModelTest {
     //          - Midnight in another timezone that would go back to the previous day with offset
 
     private ClockrDatabase testDb;
+    private ClockingDayDao testClockingDayDao;
     private ClockingRepository testRepository;
     private ClockingDayViewModel.Builder clockingViewBuilder;
+
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Rule
     public InstantTaskExecutorRule testRule = new InstantTaskExecutorRule();
@@ -51,7 +56,7 @@ public class ClockingDayViewModelTest {
         testDb = Room.inMemoryDatabaseBuilder(appContext, ClockrDatabase.class).build();
 
         ClockingDao testClockingDao = testDb.clockingDao();
-        ClockingDayDao testClockingDayDao = testDb.clockingDayDao();
+        testClockingDayDao = testDb.clockingDayDao();
 
         testRepository = new ClockingRepository(testClockingDao);
         clockingViewBuilder = new ClockingDayViewModel.Builder(testRepository, testClockingDayDao);
@@ -65,6 +70,28 @@ public class ClockingDayViewModelTest {
 
 
     // ClockingDayView Factory
+    @Test
+    public void testFactory_withNullRepositoryThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("clockingRepository cannot be null");
+        ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
+
+        new ClockingDayViewModel.Builder(null, testClockingDayDao)
+                .ofDate(testDate)
+                .build();
+    }
+
+    @Test
+    public void testFactory_withNullClockingDayDaoThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("clockingDayDao cannot be null");
+        ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
+
+        new ClockingDayViewModel.Builder(testRepository, null)
+                .ofDate(testDate)
+                .build();
+    }
+
     @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");

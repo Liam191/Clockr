@@ -66,12 +66,20 @@ public final class ClockingDayViewModel extends ViewModel {
         private ZonedDateTime ofDate;
 
         public Builder(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao){
+            if(clockingRepository == null){
+                throw new IllegalArgumentException("clockingRepository cannot be null");
+            }
+            if(clockingDayDao == null){
+                throw new IllegalArgumentException("clockingDayDao cannot be null");
+            }
+
             this.clockingRepository = clockingRepository;
             this.clockingDayDao = clockingDayDao;
         }
 
         public Builder ofDate(ZonedDateTime ofDate){
             // TODO: Add null check
+
             this.ofDate = ofDate;
             return this;
         }
