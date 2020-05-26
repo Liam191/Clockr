@@ -93,6 +93,25 @@ public class ClockingDayViewModelTest {
     }
 
     @Test
+    public void testFactory_withNullOfDateThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("ofDate cannot be null");
+
+        new ClockingDayViewModel.Builder(testRepository, testClockingDayDao)
+                .ofDate(null)
+                .build();
+    }
+
+    @Test
+    public void testFactory_withoutOfDateThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("ofDate must be set");
+
+        new ClockingDayViewModel.Builder(testRepository, testClockingDayDao)
+                .build();
+    }
+
+    @Test
     public void testFactoryOfDate_returnsNewInstanceWithSameDate(){
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
         assertNotSame(clockingViewBuilder.ofDate(testDate).build(), clockingViewBuilder.ofDate(testDate).build());

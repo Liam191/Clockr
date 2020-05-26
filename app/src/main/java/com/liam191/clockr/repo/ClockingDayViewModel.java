@@ -78,13 +78,17 @@ public final class ClockingDayViewModel extends ViewModel {
         }
 
         public Builder ofDate(ZonedDateTime ofDate){
-            // TODO: Add null check
-
+            if(ofDate == null){
+                throw new IllegalArgumentException("ofDate cannot be null");
+            }
             this.ofDate = ofDate;
             return this;
         }
 
         ClockingDayViewModel build(){
+            if(ofDate == null){
+                throw new IllegalArgumentException("ofDate must be set");
+            }
             return new ClockingDayViewModel(clockingRepository, clockingDayDao, ofDate);
         }
 
