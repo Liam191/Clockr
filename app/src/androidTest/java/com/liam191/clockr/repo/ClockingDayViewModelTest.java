@@ -2,14 +2,6 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
-
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -26,6 +18,15 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -71,7 +72,7 @@ public class ClockingDayViewModelTest {
 
     // ClockingDayView Factory
     @Test
-    public void testFactory_withNullRepositoryThrowsException(){
+    public void testFactoryBuild_withNullRepositoryThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("clockingRepository cannot be null");
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
@@ -82,7 +83,7 @@ public class ClockingDayViewModelTest {
     }
 
     @Test
-    public void testFactory_withNullClockingDayDaoThrowsException(){
+    public void testFactoryBuild_withNullClockingDayDaoThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("clockingDayDao cannot be null");
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
@@ -93,7 +94,7 @@ public class ClockingDayViewModelTest {
     }
 
     @Test
-    public void testFactory_withNullOfDateThrowsException(){
+    public void testFactoryBuild_withNullOfDateThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("ofDate cannot be null");
 
@@ -103,12 +104,31 @@ public class ClockingDayViewModelTest {
     }
 
     @Test
-    public void testFactory_withoutOfDateThrowsException(){
+    public void testFactoryBuild_withoutOfDateThrowsException(){
         exceptionRule.expect(IllegalArgumentException.class);
         exceptionRule.expectMessage("ofDate must be set");
 
         new ClockingDayViewModel.Builder(testRepository, testClockingDayDao)
                 .build();
+    }
+
+    @Test
+    public void testFactoryCreate_withWrongClassThrowsException(){
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("modelClass must be of type ClockingDayViewModel");
+
+        new ClockingDayViewModel.Builder(testRepository, testClockingDayDao)
+                .ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]"))
+                .create(ViewModel.class);
+    }
+
+    @Test
+    public void testFactoryCreate_withCorrectClass(){
+        ClockingDayViewModel viewModel = new ClockingDayViewModel.Builder(testRepository, testClockingDayDao)
+                .ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]"))
+                .create(ClockingDayViewModel.class);
+        assertTrue(viewModel != null);
+        assertEquals(viewModel.getClass(), ClockingDayViewModel.class);
     }
 
     @Test
