@@ -4,11 +4,13 @@ import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingEntity;
 
-final class ClockingRepository {
+// TODO: Review visibility of ClockingRepository
+public final class ClockingRepository {
 
     private ClockingDao clockingDao;
 
-    ClockingRepository(ClockingDao clockingDao){
+    // TODO: Review visibility of this constructor
+    public ClockingRepository(ClockingDao clockingDao){
         this.clockingDao = clockingDao;
     }
 
