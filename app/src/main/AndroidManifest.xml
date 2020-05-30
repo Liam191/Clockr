@@ -3,7 +3,7 @@
     package="com.liam191.clockr">
 
     <application
-        android:name="com.liam191.clockr.ClockrApp"
+        android:name="com.liam191.clockr.ClockrApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

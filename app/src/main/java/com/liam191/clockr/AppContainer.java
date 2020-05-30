@@ -10,11 +10,11 @@ import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
-public class AppContainer {
-    private ClockrDatabase clockrDatabase;
-    private ClockingDao clockingDao;
-    private ClockingRepository clockingRepository;
-    private ClockingDayDao clockingDayDao;
+public final class AppContainer {
+    private final ClockrDatabase clockrDatabase;
+    private final ClockingDao clockingDao;
+    private final ClockingRepository clockingRepository;
+    private final ClockingDayDao clockingDayDao;
 
     public AppContainer(Application application){
         clockrDatabase = Room.databaseBuilder(application.getApplicationContext(), ClockrDatabase.class, "clockrDatabase")
