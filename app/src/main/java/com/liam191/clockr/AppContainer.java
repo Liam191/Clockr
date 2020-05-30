@@ -1,6 +1,6 @@
 package com.liam191.clockr;
 
-import android.app.Application;
+import android.content.Context;
 
 import androidx.room.Room;
 
@@ -16,8 +16,8 @@ public final class AppContainer {
     private final ClockingRepository clockingRepository;
     private final ClockingDayDao clockingDayDao;
 
-    public AppContainer(Application application){
-        clockrDatabase = Room.databaseBuilder(application.getApplicationContext(), ClockrDatabase.class, "clockrDatabase")
+    public AppContainer(Context applicationContext){
+        clockrDatabase = Room.databaseBuilder(applicationContext, ClockrDatabase.class, "clockrDatabase")
                 .build();
         clockingDao = clockrDatabase.clockingDao();
         clockingDayDao = clockrDatabase.clockingDayDao();
