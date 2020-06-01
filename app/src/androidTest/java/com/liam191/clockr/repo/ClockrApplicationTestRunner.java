@@ -20,5 +20,4 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
             super.onCreate();
         }
     }
-
 }

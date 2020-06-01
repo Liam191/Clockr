@@ -1,6 +1,7 @@
 package com.liam191.clockr;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,6 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.liam191.clockr.repo.ClockingDayViewModel;
 
 import org.threeten.bp.ZonedDateTime;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,5 +28,10 @@ public class MainActivity extends AppCompatActivity {
                 container.clockingDayViewModelBuilder()
                         .ofDate(ZonedDateTime.now())
         ).get(ClockingDayViewModel.class);
+        viewModel.get().observe(this, (clockings)->{
+            Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, clockings.toString());
+            ((TextView) findViewById(R.id.test_text)).setText(clockings.toString());
+        });
+
     }
 }
