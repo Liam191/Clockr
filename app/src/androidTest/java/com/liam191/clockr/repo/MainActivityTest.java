@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.liam191.clockr.MainActivity;
 import com.liam191.clockr.R;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,11 +21,16 @@ public class MainActivityTest {
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
-    //@Rule
-    //public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    @Before
+    public void refreshAppContainer(){
+        ((ClockrApplicationTestRunner.FakeClockrApplication) activityTestRule.getActivity().getApplication())
+                .refresh();
+    }
 
     @Test
     public void testMainActivity(){
+
         onView(withId(R.id.test_text))
                 .check(matches(isDisplayed()))
                 .check(matches(withText("[]")));

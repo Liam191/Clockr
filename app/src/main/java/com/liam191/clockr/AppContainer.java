@@ -10,7 +10,7 @@ import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
-public final class AppContainer {
+public class AppContainer {
     private final ClockrDatabase clockrDatabase;
     private final ClockingDao clockingDao;
     private final ClockingRepository clockingRepository;
