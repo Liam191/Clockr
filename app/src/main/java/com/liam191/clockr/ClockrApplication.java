@@ -12,7 +12,7 @@ public class ClockrApplication extends Application {
     public void onCreate(){
         super.onCreate();
         AndroidThreeTen.init(this);
-        container = new AppContainer(getApplicationContext());
+        container = new AppContainerImpl(getApplicationContext());
     }
 
     public AppContainer getAppContainer(){

@@ -6,7 +6,7 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.runner.AndroidJUnitRunner;
 
-import com.liam191.clockr.AppContainer;
+import com.liam191.clockr.AppContainerImpl;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -20,7 +20,7 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
     }
 
     public static class FakeClockrApplication extends ClockrApplication {
-        private FakeAppContainer container;
+        private FakeAppContainerImpl container;
 
         @Override
         public void onCreate(){
@@ -28,21 +28,21 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
         }
 
         public void refresh(){
-            this.container = new FakeAppContainer(getApplicationContext());
+            this.container = new FakeAppContainerImpl(getApplicationContext());
         }
 
-        public FakeAppContainer getAppContainer(){
+        public FakeAppContainerImpl getAppContainer(){
             return container;
         }
 
         // TODO: Use an interface instead of overwriting classes here
-        public class FakeAppContainer extends AppContainer {
+        public class FakeAppContainerImpl implements AppContainerImpl {
             private final ClockrDatabase clockrDatabase;
             private final ClockingDao clockingDao;
             private final ClockingRepository clockingRepository;
             private final ClockingDayDao clockingDayDao;
 
-            public FakeAppContainer(Context applicationContext){
+            public FakeAppContainerImpl(Context applicationContext){
                 super(applicationContext);
                 clockrDatabase = Room.inMemoryDatabaseBuilder(applicationContext, ClockrDatabase.class)
                         .build();
