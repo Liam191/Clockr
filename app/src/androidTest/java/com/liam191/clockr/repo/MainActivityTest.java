@@ -31,12 +31,15 @@ public class MainActivityTest {
     public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
 
     @Before
-    public void refreshAppContainer(){
+    public void refreshDatabase(){
         ClockrApplicationTestRunner.FakeClockrApplication application =
                 ((ClockrApplicationTestRunner.FakeClockrApplication) activityTestRule
                         .getActivity()
                         .getApplication());
-        repository = application.getAppContainer().getClockingRepository();
+        //TODO: Refactor this mess into separate classes
+        ClockrApplicationTestRunner.FakeClockrApplication.FakeAppContainerImpl testAppContainer = application.getAppContainer();
+        testAppContainer.refreshData();
+        repository = testAppContainer.getClockingRepository();
     }
 
     @Test
@@ -50,10 +53,12 @@ public class MainActivityTest {
 
     @Test
     public void testMainActivity2(){
-        Clocking clocking2 = new Clocking.Builder("goodbye world").startTime(ZonedDateTime.parse("2020-06-04T07:00Z[Europe/London]")).build();
+        Clocking clocking1 = new Clocking.Builder("hello world").startTime(ZonedDateTime.parse("2020-06-04T08:00Z[Europe/London]")).build();
+        Clocking clocking2 = new Clocking.Builder("goodbye world").startTime(ZonedDateTime.parse("2020-06-04T09:00Z[Europe/London]")).build();
+        repository.insert(clocking1);
         repository.insert(clocking2);
         onView(withId(R.id.test_text))
                 .check(matches(isDisplayed()))
-                .check(matches(withText("["+ clocking2.toString() +"]")));
+                .check(matches(withText("["+ clocking1.toString() +", "+ clocking2.toString() +"]")));
     }
 }

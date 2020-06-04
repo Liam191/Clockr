@@ -20,11 +20,12 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
     }
 
     public static class FakeClockrApplication extends ClockrApplication {
-        private FakeAppContainerImpl container = new FakeAppContainerImpl(getApplicationContext());
+        private FakeAppContainerImpl container;
 
         @Override
         public void onCreate(){
             super.onCreate();
+            container = new FakeAppContainerImpl(getApplicationContext());
         }
 
         public FakeAppContainerImpl getAppContainer(){
