@@ -10,9 +10,6 @@ import com.liam191.clockr.repo.ClockingDayViewModel;
 
 import org.threeten.bp.ZonedDateTime;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class MainActivity extends AppCompatActivity {
 
     private ClockingDayViewModel viewModel;
@@ -22,14 +19,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppContainerImpl container = ((ClockrApplication) getApplication()).getAppContainer();
+        AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
         viewModel = new ViewModelProvider(
-                this,
-                container.clockingDayViewModelBuilder()
-                        .ofDate(ZonedDateTime.now())
+                this, container.clockingDayViewModelBuilder().ofDate(ZonedDateTime.now())
         ).get(ClockingDayViewModel.class);
+
         viewModel.get().observe(this, (clockings)->{
-            Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, clockings.toString());
             ((TextView) findViewById(R.id.test_text)).setText(clockings.toString());
         });
 

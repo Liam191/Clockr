@@ -24,6 +24,7 @@ public class AppContainerImpl implements AppContainer{
         clockingRepository = new ClockingRepository(clockingDao);
     }
 
+    @Override
     public ClockingDayViewModel.Builder clockingDayViewModelBuilder(){
         return new ClockingDayViewModel.Builder(clockingRepository, clockingDayDao);
     }

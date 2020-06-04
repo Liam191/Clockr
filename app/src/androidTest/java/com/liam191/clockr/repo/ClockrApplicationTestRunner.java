@@ -6,7 +6,7 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.runner.AndroidJUnitRunner;
 
-import com.liam191.clockr.AppContainerImpl;
+import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -20,30 +20,24 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
     }
 
     public static class FakeClockrApplication extends ClockrApplication {
-        private FakeAppContainerImpl container;
+        private FakeAppContainerImpl container = new FakeAppContainerImpl(getApplicationContext());
 
         @Override
         public void onCreate(){
             super.onCreate();
         }
 
-        public void refresh(){
-            this.container = new FakeAppContainerImpl(getApplicationContext());
-        }
-
         public FakeAppContainerImpl getAppContainer(){
             return container;
         }
 
-        // TODO: Use an interface instead of overwriting classes here
-        public class FakeAppContainerImpl implements AppContainerImpl {
+        public class FakeAppContainerImpl implements AppContainer {
             private final ClockrDatabase clockrDatabase;
             private final ClockingDao clockingDao;
             private final ClockingRepository clockingRepository;
             private final ClockingDayDao clockingDayDao;
 
             public FakeAppContainerImpl(Context applicationContext){
-                super(applicationContext);
                 clockrDatabase = Room.inMemoryDatabaseBuilder(applicationContext, ClockrDatabase.class)
                         .build();
                 clockingDao = clockrDatabase.clockingDao();
@@ -51,7 +45,18 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
                 clockingRepository = new ClockingRepository(clockingDao);
             }
 
-        }
+            @Override
+            public ClockingDayViewModel.Builder clockingDayViewModelBuilder() {
+                return new ClockingDayViewModel.Builder(clockingRepository, clockingDayDao);
+            }
 
+            public ClockingRepository getClockingRepository(){
+                return clockingRepository;
+            }
+
+            public void refreshData(){
+                clockrDatabase.clearAllTables();
+            }
+        }
     }
 }
