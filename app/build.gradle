@@ -43,6 +43,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
     testImplementation ('org.threeten:threetenbp:1.4.4'){
         exclude group:'com.jakewharton.threetenabp', module:'threetenabp'
     }
