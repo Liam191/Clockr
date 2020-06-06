@@ -1,6 +1,7 @@
 package com.liam191.clockr;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
@@ -12,7 +13,7 @@ public class ClockrApplication extends Application {
     public void onCreate(){
         super.onCreate();
         AndroidThreeTen.init(this);
-        container = new AppContainerImpl(getApplicationContext());
+        AsyncTask.execute(() -> container = new AppContainerImpl(getApplicationContext()));
     }
 
     public AppContainer getAppContainer(){
