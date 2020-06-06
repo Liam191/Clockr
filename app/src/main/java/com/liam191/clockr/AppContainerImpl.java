@@ -2,13 +2,13 @@ package com.liam191.clockr;
 
 import android.content.Context;
 
-import androidx.room.Room;
-
 import com.liam191.clockr.repo.ClockingDayViewModel;
 import com.liam191.clockr.repo.ClockingRepository;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
+
+import androidx.room.Room;
 
 public class AppContainerImpl implements AppContainer{
     private final ClockrDatabase clockrDatabase;

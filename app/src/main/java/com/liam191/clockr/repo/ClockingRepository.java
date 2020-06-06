@@ -12,6 +12,10 @@ public final class ClockingRepository {
     // TODO: Review visibility of this constructor
     public ClockingRepository(ClockingDao clockingDao){
         this.clockingDao = clockingDao;
+
+        insert(new Clocking.Builder("test1").build());
+        insert(new Clocking.Builder("test2").build());
+        insert(new Clocking.Builder("test3").build());
     }
 
     void insert(Clocking clocking){
