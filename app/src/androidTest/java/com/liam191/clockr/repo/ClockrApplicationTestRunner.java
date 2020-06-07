@@ -2,15 +2,16 @@ package com.liam191.clockr.repo;
 
 import android.app.Application;
 import android.content.Context;
-
-import androidx.room.Room;
-import androidx.test.runner.AndroidJUnitRunner;
+import android.os.AsyncTask;
 
 import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
+
+import androidx.room.Room;
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
 
@@ -25,7 +26,7 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
         @Override
         public void onCreate(){
             super.onCreate();
-            container = new FakeAppContainerImpl(getApplicationContext());
+            AsyncTask.execute(() -> container = new FakeAppContainerImpl(getApplicationContext()));
         }
 
         public FakeAppContainerImpl getAppContainer(){
