@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.get().observe(this, (clockings) -> adapter.updateClockingList(clockings));
     }
 
+    // TODO: Order clockings
+    //       - User sets chronological or reverse-chronological ordering
     private class ClockingAdapter extends RecyclerView.Adapter<ClockingAdapter.ClockingViewHolder> {
         private List<Clocking> clockingList;
 
