@@ -7,22 +7,26 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.liam191.clockr.clocking.Clocking;
-import com.liam191.clockr.repo.ClockingDayViewModel;
-
-import org.threeten.bp.ZonedDateTime;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.liam191.clockr.clocking.Clocking;
+import com.liam191.clockr.repo.ClockingDayViewModel;
+
+import org.threeten.bp.Clock;
+import org.threeten.bp.ZonedDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class MainActivity extends AppCompatActivity {
 
+    private Clock appClock;
     private ClockingDayViewModel viewModel;
     private RecyclerView recyclerView;
     private ClockingAdapter adapter;
@@ -33,18 +37,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
+        appClock = container.getAppClock();
+
         recyclerView = findViewById(R.id.clocking_recyclerview);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ClockingAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
         viewModel = new ViewModelProvider(
                 this, container.clockingDayViewModelBuilder().ofDate(ZonedDateTime.now())
         ).get(ClockingDayViewModel.class);
 
-        viewModel.get().observe(this, (clockings) -> adapter.updateClockingList(clockings));
+        viewModel.get().observe(this, (clockings) -> {
+            Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### updated > "+ clockings.toString());
+            adapter.updateClockingList(clockings);
+        });
     }
 
     // TODO: Order clockings
