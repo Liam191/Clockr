@@ -2,9 +2,7 @@ package com.liam191.clockr.repo;
 
 import android.app.Application;
 import android.content.Context;
-
-import androidx.room.Room;
-import androidx.test.runner.AndroidJUnitRunner;
+import android.os.AsyncTask;
 
 import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
@@ -16,6 +14,9 @@ import org.threeten.bp.Clock;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import androidx.room.Room;
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
 
@@ -30,10 +31,10 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
         @Override
         public void onCreate(){
             super.onCreate();
-        }
-
-        public void setContainer(FakeClockrApplication.FakeAppContainerImpl container){
-            this.container = container;
+            AsyncTask.execute(() -> {
+                Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appContainer init");
+                container = new FakeAppContainerImpl(getApplicationContext());
+            });
         }
 
         public FakeAppContainerImpl getAppContainer(){
@@ -41,18 +42,16 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
         }
 
         public static class FakeAppContainerImpl implements AppContainer {
-            private final Clock clock;
+            private Clock clock;
             private final ClockrDatabase clockrDatabase;
             private final ClockingDao clockingDao;
             private final ClockingRepository clockingRepository;
             private final ClockingDayDao clockingDayDao;
 
-            public FakeAppContainerImpl(Context applicationContext, Clock clock){
-                this.clock = clock;
+            public FakeAppContainerImpl(Context applicationContext){
                 clockrDatabase = Room.inMemoryDatabaseBuilder(applicationContext, ClockrDatabase.class)
                         .build();
                 clockingDao = clockrDatabase.clockingDao();
-                Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### setup > "+ clockingDao.getAll().toString());
                 clockingDayDao = clockrDatabase.clockingDayDao();
                 clockingRepository = new ClockingRepository(clockingDao);
             }
@@ -65,6 +64,10 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
             @Override
             public Clock getAppClock(){
                 return clock;
+            }
+
+            public void setAppClock(Clock clock){
+                this.clock = clock;
             }
 
             public ClockingRepository getClockingRepository(){

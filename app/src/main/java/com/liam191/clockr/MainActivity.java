@@ -7,12 +7,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.ClockingDayViewModel;
 
@@ -23,6 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
         appClock = container.getAppClock();
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appClock > ");
 
         recyclerView = findViewById(R.id.clocking_recyclerview);
         layoutManager = new LinearLayoutManager(this);
@@ -47,13 +48,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         viewModel = new ViewModelProvider(
-                this, container.clockingDayViewModelBuilder().ofDate(ZonedDateTime.now())
+                this, container.clockingDayViewModelBuilder().ofDate(ZonedDateTime.now(appClock))
         ).get(ClockingDayViewModel.class);
 
-        viewModel.get().observe(this, (clockings) -> {
-            Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### updated > "+ clockings.toString());
-            adapter.updateClockingList(clockings);
-        });
+        viewModel.get().observe(this, (clockings) -> adapter.updateClockingList(clockings));
     }
 
     // TODO: Order clockings
