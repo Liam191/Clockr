@@ -38,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appContainer > "+ container);
+
         appClock = container.getAppClock();
-        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appClock > ");
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appClock > " +ZonedDateTime.ofInstant(appClock.instant(), appClock.getZone()).toString());
 
         recyclerView = findViewById(R.id.clocking_recyclerview);
         layoutManager = new LinearLayoutManager(this);
@@ -65,15 +67,18 @@ public class MainActivity extends AppCompatActivity {
 
         public void updateClockingList(List<Clocking> clockingList){
             this.clockingList = clockingList;
+            notifyDataSetChanged();
         }
 
         private class ClockingViewHolder extends RecyclerView.ViewHolder {
             public TextView clockingLabel;
+            public TextView clockingDescription;
             public EditText clockingStartDate;
 
             public ClockingViewHolder(View itemView) {
                 super(itemView);
                 this.clockingLabel = itemView.findViewById(R.id.clocking_label);
+                this.clockingDescription = itemView.findViewById(R.id.clocking_description);
                 this.clockingStartDate = itemView.findViewById(R.id.clocking_startdate);
             }
         }
@@ -90,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ClockingViewHolder holder, int position) {
             Clocking clocking = clockingList.get(position);
             holder.clockingLabel.setText(clocking.label());
+            holder.clockingDescription.setText(clocking.description());
             holder.clockingStartDate.setText(clocking.startTime().toString());
         }
 
