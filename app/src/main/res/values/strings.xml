@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Clockr</string>
+    <string name="start_time_placeholder">00:00</string>
+    <string name="label_placeholder">Label</string>
+    <string name="description_placeholder">Description</string>
+    <string name="icon_content_description">Circle showing Clocking tag colour.</string>
 </resources>

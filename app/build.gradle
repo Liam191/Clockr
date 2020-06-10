@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "androidx.cardview:cardview:1.0.0"
     testImplementation ('org.threeten:threetenbp:1.4.4'){
         exclude group:'com.jakewharton.threetenabp', module:'threetenabp'
     }
@@ -58,5 +59,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
     androidTestImplementation 'androidx.test:core:1.2.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
 }

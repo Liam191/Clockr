@@ -10,6 +10,7 @@
         android:id="@+id/clocking_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#00A74545"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
