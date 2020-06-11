@@ -4,4 +4,5 @@
     <string name="label_placeholder">Label</string>
     <string name="description_placeholder">Description</string>
     <string name="icon_content_description">Circle showing Clocking tag colour.</string>
+    <string name="duration_placeholder">0m</string>
 </resources>

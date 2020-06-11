@@ -8,6 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.ClockingDayViewModel;
 
@@ -21,12 +27,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,14 +78,18 @@ public class MainActivity extends AppCompatActivity {
             public TextView clockingLabel;
             public TextView clockingDescription;
             public TextView clockingStartDate;
+            public TextView clockingDuration;
             public ImageView icon;
+            public View iconLine;
 
             public ClockingViewHolder(View itemView) {
                 super(itemView);
                 this.clockingLabel = itemView.findViewById(R.id.label);
                 this.clockingDescription = itemView.findViewById(R.id.description);
                 this.clockingStartDate = itemView.findViewById(R.id.start_time);
+                this.clockingDuration = itemView.findViewById(R.id.duration);
                 this.icon = itemView.findViewById(R.id.icon);
+                this.iconLine = itemView.findViewById(R.id.icon_line);
             }
         }
 
@@ -102,19 +106,20 @@ public class MainActivity extends AppCompatActivity {
             Clocking clocking = clockingList.get(position);
             holder.clockingLabel.setText(clocking.label());
             holder.clockingStartDate.setText(clocking.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
+            //TODO: Fix i18n warning about concatenating strings in text fields
+            holder.clockingDuration.setText(clocking.durationInMinutes().toMinutes() +"m");
 
             if(clocking.description().equals("")){
                 // Hide this view if there's nothing to display.
-                // We set height to 0 over visibility.GONE so the constraints of the layout still work
-                holder.clockingDescription.setHeight(0);
+                holder.clockingDescription.setVisibility(View.GONE);
             } else {
                 holder.clockingDescription.setText(clocking.description());
             }
 
             Random rnd = new Random();
-            holder.icon.setColorFilter(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
-
-
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            holder.icon.setColorFilter(color);
+            holder.iconLine.setBackgroundColor(color);
         }
 
         @Override

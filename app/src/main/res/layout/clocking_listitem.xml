@@ -9,9 +9,10 @@
         android:id="@+id/start_time"
         android:layout_width="0dp"
         android:layout_height="25dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:gravity="center|end"
         android:text="@string/start_time_placeholder"
+        app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintRight_toLeftOf="@+id/icon"
         app:layout_constraintTop_toTopOf="@+id/icon" />
 
@@ -20,10 +21,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:singleLine="false"
         android:text="@string/description_placeholder"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/label"
@@ -33,7 +32,7 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:gravity="center|start"
         android:singleLine="false"
         android:text="@string/label_placeholder"
@@ -43,9 +42,17 @@
         app:layout_constraintLeft_toRightOf="@+id/icon"
         app:layout_constraintTop_toTopOf="@+id/icon" />
 
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/duration_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/label"
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/view"
+        android:id="@+id/icon_line"
         android:layout_width="2dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -61,12 +68,13 @@
     <ImageView
         android:id="@+id/icon"
         android:contentDescription="@string/icon_content_description"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/clocking_circle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="@+id/icon_line" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

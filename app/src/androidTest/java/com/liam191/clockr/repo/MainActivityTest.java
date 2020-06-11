@@ -1,5 +1,9 @@
 package com.liam191.clockr.repo;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+
 import com.liam191.clockr.MainActivity;
 import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
@@ -9,10 +13,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -56,15 +61,18 @@ public class MainActivityTest {
         ZonedDateTime testDate = ZonedDateTime.parse("2020-03-04T08:11Z[Europe/London]");
 
         Clocking clocking1 = new Clocking.Builder("hello world")
-                .startTime(testDate.plusMinutes(10))
+                .startTime(testDate.plusMinutes(1))
+                .endTime(testDate.plusMinutes(10))
                 .description("This is a description for the first clocking.").build();
         Clocking clocking2 = new Clocking.Builder("goodbye world")
-                .startTime(testDate.plusMinutes(50))
+                .startTime(testDate.plusMinutes(2))
+                .endTime(testDate.plusMinutes(50))
                 .description("This a description for the second clocking.").build();
         Clocking clocking3 = new Clocking.Builder("new world")
-                .startTime(testDate.plusMinutes(120)).build();
+                .startTime(testDate.plusMinutes(3))
+                .endTime(testDate.plusMinutes(120)).build();
         Clocking clocking4 = new Clocking.Builder("old world")
-                .startTime(testDate.plusDays(5))
+                .startTime(testDate.plusDays(5).plusMinutes(4))
                 .description("This clocking has a different start date and shouldn't show up").build();
 
         repository.insert(clocking1);
@@ -74,24 +82,33 @@ public class MainActivityTest {
 
         activityTestRule.launchActivity(null);
 
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking1 > "+ clocking1.durationInMinutes().toMinutes() +"m"+ clocking1.toString());
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking2 > "+ clocking2.durationInMinutes().toMinutes() +"m"+ clocking2.toString());
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking3 > "+ clocking3.durationInMinutes().toMinutes() +"m"+ clocking3.toString());
+        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking4 > "+ clocking4.durationInMinutes().toMinutes() +"m"+ clocking4.toString());
+
         onView(withId(R.id.clocking_recyclerview))
                 .check(matches(hasChildCount(3)))
                 // clocking1
                 .check(matches(hasDescendant(withText(clocking1.label()))))
                 .check(matches(hasDescendant(withText(clocking1.description()))))
-                .check(matches(hasDescendant(withText(clocking1.startTime().toString()))))
+                .check(matches(hasDescendant(withText("9m"))))
+                .check(matches(hasDescendant(withText(clocking1.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))))))
                 // clocking2
                 .check(matches(hasDescendant(withText(clocking2.label()))))
                 .check(matches(hasDescendant(withText(clocking2.description()))))
-                .check(matches(hasDescendant(withText(clocking2.startTime().toString()))))
+                .check(matches(hasDescendant(withText("48m"))))
+                .check(matches(hasDescendant(withText(clocking2.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))))))
                 // clocking3
                 .check(matches(hasDescendant(withText(clocking3.label()))))
-                .check(matches(hasDescendant(withText(clocking3.description()))))
-                .check(matches(hasDescendant(withText(clocking3.startTime().toString()))))
+                .check(matches(not(hasDescendant(withText(clocking3.description())))))
+                .check(matches(hasDescendant(withText("117m"))))
+                .check(matches(hasDescendant(withText(clocking3.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))))))
                 // clocking4 - should not be displayed because it's from another date
                 .check(matches(not(hasDescendant(withText(clocking4.label())))))
                 .check(matches(not(hasDescendant(withText(clocking4.description())))))
-                .check(matches(not(hasDescendant(withText(clocking4.startTime().toString())))));
+                .check(matches(not(hasDescendant(withText("26m")))))
+                .check(matches(not(hasDescendant(withText(clocking4.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))))));
 
     }
 }
