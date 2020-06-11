@@ -16,9 +16,6 @@ import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
@@ -77,11 +74,6 @@ public class MainActivityTest {
         repository.insert(clocking4);
 
         activityTestRule.launchActivity(null);
-
-        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking1 > "+ clocking1.durationInMinutes().toMinutes() +"m"+ clocking1.toString());
-        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking2 > "+ clocking2.durationInMinutes().toMinutes() +"m"+ clocking2.toString());
-        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking3 > "+ clocking3.durationInMinutes().toMinutes() +"m"+ clocking3.toString());
-        Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### clocking4 > "+ clocking4.durationInMinutes().toMinutes() +"m"+ clocking4.toString());
 
         onView(withId(R.id.clocking_recyclerview))
                 .check(matches(hasChildCount(3)))

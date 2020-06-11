@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: Order clockings
     //       - User sets chronological or reverse-chronological ordering
+    // TODO: Refactor into separate classes.
     private class ClockingAdapter extends RecyclerView.Adapter<ClockingAdapter.ClockingViewHolder> {
         private List<Clocking> clockingList;
 
@@ -107,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
             holder.clockingLabel.setText(clocking.label());
             holder.clockingStartDate.setText(clocking.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
             //TODO: Fix i18n warning about concatenating strings in text fields
+            //TODO: Format based on hours and minutes
+            //      - A duration of 43 minutes would be "43m"
+            //      - A duration of 2 hours and 38 minutes would be "2h38m" rather than "258m"
             holder.clockingDuration.setText(clocking.durationInMinutes().toMinutes() +"m");
 
             if(clocking.description().equals("")){
