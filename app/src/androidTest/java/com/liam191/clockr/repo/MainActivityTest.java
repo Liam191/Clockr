@@ -45,10 +45,6 @@ public class MainActivityTest {
         activityTestRule = new ActivityTestRule(MainActivity.class);
         appContainer = ((ClockrApplicationTestRunner.FakeClockrApplication) ApplicationProvider.getApplicationContext()).getAppContainer();
         repository = appContainer.getClockingRepository();
-
-        //TODO: NPE when calling getAppContainer() because once the activity is created it's too late to use another appContainer
-        //      - See here for possible solutions: https://stackoverflow.com/a/23246170
-        //TODO: Refactor this mess into separate classes
     }
 
     @Test
