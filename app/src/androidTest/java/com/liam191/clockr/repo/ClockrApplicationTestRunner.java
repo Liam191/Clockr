@@ -58,8 +58,8 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
             }
 
             @Override
-            public ClockingDayViewModel.Builder clockingDayViewModelBuilder() {
-                return new ClockingDayViewModel.Builder(clockingRepository, clockingDayDao);
+            public DayViewModel.Builder clockingDayViewModelBuilder() {
+                return new DayViewModel.Builder(clockingRepository, clockingDayDao);
             }
 
             @Override

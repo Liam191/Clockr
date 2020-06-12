@@ -18,7 +18,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public final class ClockingDayViewModel extends ViewModel {
+public final class DayViewModel extends ViewModel {
 
     private final ClockingRepository clockingRepository;
     private final ZonedDateTime day;
@@ -38,7 +38,7 @@ public final class ClockingDayViewModel extends ViewModel {
         return newLiveData;
     };
 
-    private ClockingDayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
+    private DayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
         this.clockingRepository = clockingRepository;
         this.day = day;
 
@@ -89,18 +89,18 @@ public final class ClockingDayViewModel extends ViewModel {
             return this;
         }
 
-        ClockingDayViewModel build(){
+        DayViewModel build(){
             if(ofDate == null){
                 throw new IllegalArgumentException("ofDate must be set");
             }
-            return new ClockingDayViewModel(clockingRepository, clockingDayDao, ofDate);
+            return new DayViewModel(clockingRepository, clockingDayDao, ofDate);
         }
 
         @NonNull
         @Override
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if(modelClass != ClockingDayViewModel.class){
+            if(modelClass != DayViewModel.class){
                 throw new IllegalArgumentException("modelClass must be of type ClockingDayViewModel");
             }
             return (T) build();

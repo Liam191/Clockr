@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.R;
-import com.liam191.clockr.repo.ClockingDayViewModel;
+import com.liam191.clockr.repo.DayViewModel;
 
 import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class DayActivity extends AppCompatActivity {
 
     private Clock appClock;
-    private ClockingDayViewModel viewModel;
+    private DayViewModel viewModel;
     private RecyclerView recyclerView;
     private ClockingAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -46,7 +46,7 @@ public class DayActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(
                 this, container.clockingDayViewModelBuilder().ofDate(ZonedDateTime.now(appClock))
-        ).get(ClockingDayViewModel.class);
+        ).get(DayViewModel.class);
 
         viewModel.get().observe(this, (clockings) -> adapter.updateClockingList(clockings));
     }

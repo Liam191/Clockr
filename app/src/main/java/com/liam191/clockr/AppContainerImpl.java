@@ -2,7 +2,7 @@ package com.liam191.clockr;
 
 import android.content.Context;
 
-import com.liam191.clockr.repo.ClockingDayViewModel;
+import com.liam191.clockr.repo.DayViewModel;
 import com.liam191.clockr.repo.ClockingRepository;
 import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
@@ -27,8 +27,8 @@ public class AppContainerImpl implements AppContainer{
     }
 
     @Override
-    public ClockingDayViewModel.Builder clockingDayViewModelBuilder(){
-        return new ClockingDayViewModel.Builder(clockingRepository, clockingDayDao);
+    public DayViewModel.Builder clockingDayViewModelBuilder(){
+        return new DayViewModel.Builder(clockingRepository, clockingDayDao);
     }
 
     @Override
