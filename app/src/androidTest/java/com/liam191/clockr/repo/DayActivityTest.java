@@ -4,7 +4,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
-import com.liam191.clockr.MainActivity;
+import com.liam191.clockr.gui.dayview.DayActivity;
 import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
 
@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.IsNot.not;
 
 @LargeTest
-public class MainActivityTest {
+public class DayActivityTest {
 
     // TODO: Find a way to clear database between tests
     // TODO: Isolate dependency on time in Activities, maybe with set system time
@@ -39,7 +39,7 @@ public class MainActivityTest {
 
     @Before
     public void setup(){
-        activityTestRule = new ActivityTestRule(MainActivity.class);
+        activityTestRule = new ActivityTestRule(DayActivity.class);
         appContainer = ((ClockrApplicationTestRunner.FakeClockrApplication) ApplicationProvider.getApplicationContext()).getAppContainer();
         repository = appContainer.getClockingRepository();
     }

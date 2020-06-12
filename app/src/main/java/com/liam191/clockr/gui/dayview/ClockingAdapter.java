@@ -1,4 +1,4 @@
-package com.liam191.clockr;
+package com.liam191.clockr.gui.dayview;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
 
 import org.threeten.bp.format.DateTimeFormatter;

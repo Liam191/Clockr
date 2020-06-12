@@ -1,4 +1,4 @@
-package com.liam191.clockr;
+package com.liam191.clockr.gui.dayview;
 
 import android.os.Bundle;
 
@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.liam191.clockr.AppContainer;
+import com.liam191.clockr.ClockrApplication;
+import com.liam191.clockr.R;
 import com.liam191.clockr.repo.ClockingDayViewModel;
 
 import org.threeten.bp.Clock;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MainActivity extends AppCompatActivity {
+public class DayActivity extends AppCompatActivity {
 
     private Clock appClock;
     private ClockingDayViewModel viewModel;
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_day);
 
         AppContainer container = ((ClockrApplication) getApplication()).getAppContainer();
         Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appContainer > "+ container);
