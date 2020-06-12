@@ -6,17 +6,6 @@
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/start_time"
-        android:layout_width="0dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center|end"
-        android:text="@string/start_time_placeholder"
-        app:layout_constraintBottom_toBottomOf="@+id/icon"
-        app:layout_constraintRight_toLeftOf="@+id/icon"
-        app:layout_constraintTop_toTopOf="@+id/icon" />
-
-    <TextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,27 +17,61 @@
         app:layout_constraintStart_toStartOf="@+id/label"
         app:layout_constraintTop_toBottomOf="@+id/label" />
 
+
     <TextView
         android:id="@+id/label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:gravity="center|start"
         android:singleLine="false"
         android:text="@string/label_placeholder"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/tag" />
+
+    <TextView
+        android:id="@+id/tag"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center|start"
+        android:singleLine="false"
+        android:text="@string/tag_name"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/label"
+        app:layout_constraintTop_toTopOf="@+id/icon_line"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/start_time"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center|end"
+        android:text="@string/start_time_placeholder"
         app:layout_constraintBottom_toBottomOf="@+id/icon"
-        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintRight_toLeftOf="@+id/icon"
         app:layout_constraintTop_toTopOf="@+id/icon" />
 
     <TextView
         android:id="@+id/duration"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         android:text="@string/duration_placeholder"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/label"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
@@ -63,18 +86,18 @@
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#DDD"
         card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="0dp"></androidx.cardview.widget.CardView>
+        card_view:cardElevation="0dp"/>
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="16dp"
         android:contentDescription="@string/icon_content_description"
         android:src="@drawable/clocking_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/icon_line" />
+        app:layout_constraintTop_toBottomOf="@+id/tag" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

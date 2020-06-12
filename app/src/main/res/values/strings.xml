@@ -5,4 +5,6 @@
     <string name="description_placeholder">Description</string>
     <string name="icon_content_description">Circle showing Clocking tag colour.</string>
     <string name="duration_placeholder">0m</string>
+    <string name="tag_placeholder">Clocking Tag</string>
+    <string name="tag_name">Clocking Tag</string>
 </resources>

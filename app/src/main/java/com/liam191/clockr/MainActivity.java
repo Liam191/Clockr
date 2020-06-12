@@ -8,12 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.ClockingDayViewModel;
 
@@ -27,6 +21,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
 
         public void updateClockingList(List<Clocking> clockingList){
             this.clockingList = clockingList;
+            Logger.getAnonymousLogger().log(Level.INFO,"### updateClockingList > "+clockingList);
             notifyDataSetChanged();
         }
 
         private class ClockingViewHolder extends RecyclerView.ViewHolder {
+            public TextView clockingTag;
             public TextView clockingLabel;
             public TextView clockingDescription;
             public TextView clockingStartDate;
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             public ClockingViewHolder(View itemView) {
                 super(itemView);
+                this.clockingTag = itemView.findViewById(R.id.tag);
                 this.clockingLabel = itemView.findViewById(R.id.label);
                 this.clockingDescription = itemView.findViewById(R.id.description);
                 this.clockingStartDate = itemView.findViewById(R.id.start_time);
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ClockingViewHolder holder, int position) {
             Clocking clocking = clockingList.get(position);
             holder.clockingLabel.setText(clocking.label());
+            //TODO: Set tag name here
             holder.clockingStartDate.setText(clocking.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
             //TODO: Fix i18n warning about concatenating strings in text fields
             //TODO: Format based on hours and minutes
@@ -122,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            holder.clockingTag.setTextColor(color);
             holder.icon.setColorFilter(color);
             holder.iconLine.setBackgroundColor(color);
         }
@@ -130,6 +135,6 @@ public class MainActivity extends AppCompatActivity {
         public int getItemCount() {
             return clockingList.size();
         }
-    };
+    }
 
 }
