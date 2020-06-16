@@ -22,10 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DayListFragment extends Fragment {
 
+    private DayViewModel.Builder viewModelBuilder;
     private Clock appClock;
     private DayViewModel viewModel;
     private RecyclerView recyclerView;
     private ClockingAdapter adapter;
+
+    public DayListFragment(DayViewModel.Builder viewModelBuilder){
+        this.viewModelBuilder = viewModelBuilder;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class DayListFragment extends Fragment {
 
 
         viewModel = new ViewModelProvider(
-                this, container.getDayViewModelBuilder().ofDate(ZonedDateTime.now(appClock))
+                this, viewModelBuilder.ofDate(ZonedDateTime.now(appClock))
         ).get(DayViewModel.class);
 
         viewModel.get().observe(this, (clockings) -> adapter.updateClockingList(clockings));

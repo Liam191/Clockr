@@ -1,20 +1,27 @@
 package com.liam191.clockr.repo;
 
+import android.content.Context;
+
 import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
-import com.liam191.clockr.gui.dayview.DayActivity;
+import com.liam191.clockr.gui.dayview.ClockrFragmentFactory;
+import com.liam191.clockr.gui.dayview.DayListFragment;
+import com.liam191.clockr.repo.db.ClockingDao;
+import com.liam191.clockr.repo.db.ClockingDayDao;
+import com.liam191.clockr.repo.db.ClockrDatabase;
 
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
+import androidx.fragment.app.testing.FragmentScenario;
+import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -27,21 +34,27 @@ import static org.hamcrest.core.IsNot.not;
 @LargeTest
 public class DayListFragmentTest {
 
-    // TODO: Find a way to clear database between tests
-    // TODO: Isolate dependency on time in Activities, maybe with set system time
-    //       in tests or a getClock() method in AppContainer?
+    private ClockrDatabase testDb;
+    private ClockingDayDao testClockingDayDao;
+    private ClockingRepository testRepository;
+    private DayViewModel.Builder clockingViewBuilder;
 
-    public ClockrApplicationTestRunner.FakeClockrApplication.FakeAppContainerImpl appContainer;
-    public ClockingRepository repository;
-
-    @Rule
-    public ActivityTestRule activityTestRule;
 
     @Before
-    public void setup(){
-        activityTestRule = new ActivityTestRule(DayActivity.class);
-        appContainer = ((ClockrApplicationTestRunner.FakeClockrApplication) ApplicationProvider.getApplicationContext()).getAppContainer();
-        repository = appContainer.getClockingRepository();
+    public void createTestDb(){
+        Context appContext = ApplicationProvider.getApplicationContext();
+        testDb = Room.inMemoryDatabaseBuilder(appContext, ClockrDatabase.class).build();
+
+        ClockingDao testClockingDao = testDb.clockingDao();
+        testClockingDayDao = testDb.clockingDayDao();
+
+        testRepository = new ClockingRepository(testClockingDao);
+        clockingViewBuilder = new DayViewModel.Builder(testRepository, testClockingDayDao);
+    }
+
+    @After
+    public void teardownTestDb(){
+        testDb.close();
     }
 
     @Test
@@ -52,6 +65,7 @@ public class DayListFragmentTest {
         appContainer.setAppClock(fakeClock);
 
         ZonedDateTime testDate = ZonedDateTime.parse("2020-03-04T08:11Z[Europe/London]");
+
 
         Clocking clocking1 = new Clocking.Builder("hello world")
                 .startTime(testDate.plusMinutes(1))
@@ -68,12 +82,12 @@ public class DayListFragmentTest {
                 .startTime(testDate.plusDays(5).plusMinutes(4))
                 .description("This clocking has a different start date and shouldn't show up").build();
 
-        repository.insert(clocking1);
-        repository.insert(clocking2);
-        repository.insert(clocking3);
-        repository.insert(clocking4);
+        testRepository.insert(clocking1);
+        testRepository.insert(clocking2);
+        testRepository.insert(clocking3);
+        testRepository.insert(clocking4);
 
-        activityTestRule.launchActivity(null);
+        FragmentScenario.launchInContainer(DayListFragment.class, null, new ClockrFragmentFactory(clockingViewBuilder));
 
         onView(withId(R.id.clocking_recyclerview))
                 .check(matches(hasChildCount(3)))
