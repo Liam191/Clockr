@@ -27,7 +27,7 @@ public class AppContainerImpl implements AppContainer{
     }
 
     @Override
-    public DayViewModel.Builder clockingDayViewModelBuilder(){
+    public DayViewModel.Builder getDayViewModelBuilder(){
         return new DayViewModel.Builder(clockingRepository, clockingDayDao);
     }
 

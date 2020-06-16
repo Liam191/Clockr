@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".gui.dayview.DayActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/clocking_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#00A74545"
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/day_fragment_container"
+        android:name="com.liam191.clockr.gui.dayview.DayFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

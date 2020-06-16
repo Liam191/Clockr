@@ -1,12 +1,8 @@
 package com.liam191.clockr.repo;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-
-import com.liam191.clockr.gui.dayview.DayActivity;
 import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
+import com.liam191.clockr.gui.dayview.DayActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +11,10 @@ import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.IsNot.not;
 
 @LargeTest
-public class DayActivityTest {
+public class DayListFragmentTest {
 
     // TODO: Find a way to clear database between tests
     // TODO: Isolate dependency on time in Activities, maybe with set system time

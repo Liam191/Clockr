@@ -18,7 +18,7 @@ public class AppContainerImplTest {
         ZonedDateTime testDate = ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]");
 
         AppContainerImpl container = new AppContainerImpl(ApplicationProvider.getApplicationContext());
-        DayViewModel viewModel = container.clockingDayViewModelBuilder()
+        DayViewModel viewModel = container.getDayViewModelBuilder()
                 .ofDate(testDate)
                 .build();
         assertTrue(viewModel != null);
