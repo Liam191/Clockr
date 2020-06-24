@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,30 +20,18 @@ public final class DayViewModel extends ViewModel {
 
     private final ClockingRepository clockingRepository;
     private final ZonedDateTime day;
-    private final LiveData<List<Clocking>> clockingList;
-
-    private final Function<List<ClockingEntity>, LiveData<List<Clocking>>>
-            clockingSwitchMapFunction = clockingEntities -> {
-
-        List<Clocking> newClockings = new ArrayList<>();
-        for(ClockingEntity entity : clockingEntities){
-            newClockings.add(ClockingRepository.Mapper.map(entity));
-        }
-
-        MutableLiveData<List<Clocking>> newLiveData = new MutableLiveData<>();
-        newLiveData.postValue(newClockings);
-
-        return newLiveData;
-    };
+    private final MutableLiveData<List<Clocking>> clockingList = new MutableLiveData<>();
 
     private DayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
         this.clockingRepository = clockingRepository;
         this.day = day;
 
-        clockingList = Transformations.switchMap(
-                clockingDayDao.getAllForDate(day),
-                clockingSwitchMapFunction
-        );
+        List<Clocking> newClockings = new ArrayList<>();
+        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+            newClockings.add(ClockingRepository.Mapper.map(entity));
+        }
+        clockingList.postValue(newClockings);
+
     }
 
     public LiveData<List<Clocking>> get(){
