@@ -19,11 +19,13 @@ import androidx.lifecycle.ViewModelProvider;
 public final class DayViewModel extends ViewModel {
 
     private final ClockingRepository clockingRepository;
+    private final ClockingDayDao clockingDayDao;
     private final ZonedDateTime day;
     private final MutableLiveData<List<Clocking>> clockingList = new MutableLiveData<>();
 
     private DayViewModel(ClockingRepository clockingRepository, ClockingDayDao clockingDayDao, ZonedDateTime day){
         this.clockingRepository = clockingRepository;
+        this.clockingDayDao = clockingDayDao;
         this.day = day;
 
         List<Clocking> newClockings = new ArrayList<>();
@@ -40,14 +42,29 @@ public final class DayViewModel extends ViewModel {
 
     public void add(Clocking clocking){
         clockingRepository.insert(clocking);
+        List<Clocking> newClockings = new ArrayList<>();
+        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+            newClockings.add(ClockingRepository.Mapper.map(entity));
+        }
+        clockingList.postValue(newClockings);
     }
 
     public void remove(Clocking clocking){
         clockingRepository.delete(clocking);
+        List<Clocking> newClockings = new ArrayList<>();
+        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+            newClockings.add(ClockingRepository.Mapper.map(entity));
+        }
+        clockingList.postValue(newClockings);
     }
 
     public void replace(Clocking target, Clocking replacement){
         clockingRepository.replace(target, replacement);
+        List<Clocking> newClockings = new ArrayList<>();
+        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+            newClockings.add(ClockingRepository.Mapper.map(entity));
+        }
+        clockingList.postValue(newClockings);
     }
 
     public static class Builder implements ViewModelProvider.Factory {
