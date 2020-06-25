@@ -1,6 +1,8 @@
 package com.liam191.clockr.repo;
 
 
+import android.os.AsyncTask;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockingEntity;
@@ -9,6 +11,8 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -28,43 +32,58 @@ public final class DayViewModel extends ViewModel {
         this.clockingDayDao = clockingDayDao;
         this.day = day;
 
-        List<Clocking> newClockings = new ArrayList<>();
-        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-            newClockings.add(ClockingRepository.Mapper.map(entity));
-        }
-        clockingList.postValue(newClockings);
-
     }
 
     public LiveData<List<Clocking>> get(){
+        AsyncTask.execute(() -> {
+            List<Clocking> newClockings = new ArrayList<>();
+            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+                newClockings.add(ClockingRepository.Mapper.map(entity));
+            }
+            clockingList.postValue(newClockings);
+            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - get");
+        });
+
         return clockingList;
     }
 
     public void add(Clocking clocking){
         clockingRepository.insert(clocking);
-        List<Clocking> newClockings = new ArrayList<>();
-        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-            newClockings.add(ClockingRepository.Mapper.map(entity));
-        }
-        clockingList.postValue(newClockings);
+        AsyncTask.execute(() -> {
+            List<Clocking> newClockings = new ArrayList<>();
+            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+                newClockings.add(ClockingRepository.Mapper.map(entity));
+            }
+            clockingList.postValue(newClockings);
+            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - add");
+
+        });
     }
 
     public void remove(Clocking clocking){
         clockingRepository.delete(clocking);
-        List<Clocking> newClockings = new ArrayList<>();
-        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-            newClockings.add(ClockingRepository.Mapper.map(entity));
-        }
-        clockingList.postValue(newClockings);
+        AsyncTask.execute(() -> {
+            List<Clocking> newClockings = new ArrayList<>();
+            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+                newClockings.add(ClockingRepository.Mapper.map(entity));
+            }
+            clockingList.postValue(newClockings);
+            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - remove");
+
+        });
     }
 
     public void replace(Clocking target, Clocking replacement){
         clockingRepository.replace(target, replacement);
-        List<Clocking> newClockings = new ArrayList<>();
-        for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-            newClockings.add(ClockingRepository.Mapper.map(entity));
-        }
-        clockingList.postValue(newClockings);
+        AsyncTask.execute(() -> {
+            List<Clocking> newClockings = new ArrayList<>();
+            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
+                newClockings.add(ClockingRepository.Mapper.map(entity));
+            }
+            clockingList.postValue(newClockings);
+            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - replace");
+
+        });
     }
 
     public static class Builder implements ViewModelProvider.Factory {
