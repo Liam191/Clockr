@@ -11,8 +11,6 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -41,7 +39,6 @@ public final class DayViewModel extends ViewModel {
                 newClockings.add(ClockingRepository.Mapper.map(entity));
             }
             clockingList.postValue(newClockings);
-            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - get");
         });
 
         return clockingList;
@@ -55,8 +52,6 @@ public final class DayViewModel extends ViewModel {
                 newClockings.add(ClockingRepository.Mapper.map(entity));
             }
             clockingList.postValue(newClockings);
-            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - add");
-
         });
     }
 
@@ -68,20 +63,18 @@ public final class DayViewModel extends ViewModel {
                 newClockings.add(ClockingRepository.Mapper.map(entity));
             }
             clockingList.postValue(newClockings);
-            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - remove");
-
         });
     }
 
     public void replace(Clocking target, Clocking replacement){
-        clockingRepository.replace(target, replacement);
         AsyncTask.execute(() -> {
+            clockingRepository.replace(target, replacement);
+
             List<Clocking> newClockings = new ArrayList<>();
             for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
                 newClockings.add(ClockingRepository.Mapper.map(entity));
             }
             clockingList.postValue(newClockings);
-            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModel - replace");
 
         });
     }

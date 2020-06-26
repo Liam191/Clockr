@@ -4,9 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import androidx.room.Room;
-import androidx.test.runner.AndroidJUnitRunner;
-
 import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.repo.db.ClockingDao;
@@ -15,8 +12,8 @@ import com.liam191.clockr.repo.db.ClockrDatabase;
 
 import org.threeten.bp.Clock;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import androidx.room.Room;
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
 
@@ -31,10 +28,7 @@ public class ClockrApplicationTestRunner extends AndroidJUnitRunner {
         @Override
         public void onCreate(){
             super.onCreate();
-            AsyncTask.execute(() -> {
-                Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "### appContainer init");
-                container = new FakeAppContainerImpl(getApplicationContext());
-            });
+            AsyncTask.execute(() -> container = new FakeAppContainerImpl(getApplicationContext()));
         }
 
         public FakeAppContainerImpl getAppContainer(){

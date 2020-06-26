@@ -7,7 +7,6 @@ import com.liam191.clockr.repo.db.ClockingDao;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockrDatabase;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,11 +16,12 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import androidx.annotation.Nullable;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -63,12 +63,6 @@ public class DayViewModelTest {
         testRepository = new ClockingRepository(testClockingDao);
         clockingViewBuilder = new DayViewModel.Builder(testRepository, testClockingDayDao);
     }
-
-    @After
-    public void teardownTestDb(){
-        testDb.close();
-    }
-
 
 
     // ClockingDayView Factory
@@ -142,7 +136,6 @@ public class DayViewModelTest {
     public void testFactoryOfDate_returnsNewInstancesForDifferentDates(){
         DayViewModel view1 = clockingViewBuilder.ofDate(ZonedDateTime.parse("2017-04-16T12:00:00Z[Europe/London]")).build();
         DayViewModel view2 = clockingViewBuilder.ofDate(ZonedDateTime.parse("2017-04-17T12:00:00Z[Europe/London]")).build();
-
         assertNotSame(view1, view2);
     }
 
@@ -152,7 +145,7 @@ public class DayViewModelTest {
     @Test
     public void testGet_WithNoData(){
         DayViewModel view = clockingViewBuilder.ofDate(ZonedDateTime.parse("2020-03-03T12:00:00Z[Europe/London]")).build();
-        assertEquals(0, getLiveDataUpdates(view.get()).size());
+        assertEquals(0, DayViewModelTest.getOrAwaitValue(view.get()).size());
     }
 
     @Test
@@ -180,19 +173,19 @@ public class DayViewModelTest {
 
         DayViewModel view = clockingViewBuilder.ofDate(expectedDate).build();
 
-        assertEquals(3, getLiveDataUpdates(view.get()).size());
-        assertTrue(getLiveDataUpdates(view.get()).contains(expectedClocking1));
-        assertTrue(getLiveDataUpdates(view.get()).contains(expectedClocking2));
-        assertTrue(getLiveDataUpdates(view.get()).contains(expectedClocking3));
+        assertEquals(3, DayViewModelTest.getOrAwaitValue(view.get()).size());
+        assertTrue(DayViewModelTest.getOrAwaitValue(view.get()).contains(expectedClocking1));
+        assertTrue(DayViewModelTest.getOrAwaitValue(view.get()).contains(expectedClocking2));
+        assertTrue(DayViewModelTest.getOrAwaitValue(view.get()).contains(expectedClocking3));
     }
 
     @Test
-    public void testGet_AddUpdatesLiveData(){
+    public void testGet_AddUpdatesLiveData() {
         ZonedDateTime testDate = ZonedDateTime.parse("2020-10-11T17:02:03+01:00[Europe/London]");
         DayViewModel view = clockingViewBuilder.ofDate(testDate).build();
 
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
-        assertEquals(1, getLiveDataUpdates(view.get()).size());
+        assertEquals(1, DayViewModelTest.getOrAwaitValue(view.get()).size());
     }
 
 
@@ -202,29 +195,25 @@ public class DayViewModelTest {
     public void testAdd(){
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
         DayViewModel view = clockingViewBuilder.ofDate(testDate).build();
+
         view.add(new Clocking.Builder("Test").startTime(testDate).build());
-        assertEquals(1, getLiveDataUpdates(view.get()).size());
+        assertEquals(1, DayViewModelTest.getOrAwaitValue(view.get()).size());
     }
 
 
 
     // ClockingDayView delete()
     @Test
-    public void testDelete(){
+    public void testDelete() {
         ZonedDateTime testDate = ZonedDateTime.parse("2020-08-19T12:00:00Z[Europe/London]");
         DayViewModel view = clockingViewBuilder.ofDate(testDate).build();
         Clocking testClocking = new Clocking.Builder("Test").startTime(testDate).build();
-        Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModelTEST - add()");
 
         view.add(testClocking);
-        //assertEquals(1, getLiveDataUpdates(view.get()).size());
-        Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModelTEST - assert 1: "+ getLiveDataUpdates(view.get()));
-
+        assertEquals(1, getOrAwaitValue(view.get()).size());
 
         view.remove(testClocking);
-        Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModelTEST - assert 0: "+ getLiveDataUpdates(view.get()));
-
-        //assertEquals(0, getLiveDataUpdates(view.get()).size());
+        assertEquals(0, getOrAwaitValue(view.get()).size());
 
     }
 
@@ -240,10 +229,10 @@ public class DayViewModelTest {
         view.add(testClocking1);
         view.add(testClocking2);
         view.add(testClocking3);
-        assertEquals(3, getLiveDataUpdates(view.get()).size());
+        assertEquals(3, DayViewModelTest.getOrAwaitValue(view.get()).size());
 
         view.remove(testClocking1);
-        assertEquals(2, getLiveDataUpdates(view.get()).size());
+        assertEquals(2, DayViewModelTest.getOrAwaitValue(view.get()).size());
     }
 
 
@@ -257,12 +246,14 @@ public class DayViewModelTest {
         Clocking replacementClocking = new Clocking.Builder("Test 2").startTime(testDate.plusMinutes(20)).build();
 
         view.add(targetClocking);
-        assertEquals(1, getLiveDataUpdates(view.get()).size());
-        assertEquals(targetClocking, getLiveDataUpdates(view.get()).get(0));
+
+        assertEquals(1, DayViewModelTest.getOrAwaitValue(view.get()).size());
+        assertEquals(targetClocking, DayViewModelTest.getOrAwaitValue(view.get()).get(0));
 
         view.replace(targetClocking, replacementClocking);
-        assertEquals(1, getLiveDataUpdates(view.get()).size());
-        assertEquals(replacementClocking, getLiveDataUpdates(view.get()).get(0));
+
+        assertEquals(1, DayViewModelTest.getOrAwaitValue(view.get()).size());
+        assertEquals(replacementClocking, DayViewModelTest.getOrAwaitValue(view.get()).get(0));
     }
 
     @Test
@@ -277,7 +268,8 @@ public class DayViewModelTest {
         view.add(testClocking1);
         view.add(testClocking2);
         view.add(testClocking3);
-        assertEquals(3, getLiveDataUpdates(view.get()).size());
+
+        assertEquals(3, getOrAwaitValue(view.get()).size());
 
         List<Clocking> expectedList = new ArrayList<>(Arrays.asList(
                 testClocking1,
@@ -286,32 +278,33 @@ public class DayViewModelTest {
         ));
 
         view.replace(testClocking3, replacementClocking);
-        assertEquals(3, getLiveDataUpdates(view.get()).size());
-        assertEquals(expectedList, getLiveDataUpdates(view.get()));
+        assertEquals(3, getOrAwaitValue(view.get()).size());
+        assertEquals(expectedList, getOrAwaitValue(view.get()));
     }
 
 
-
-    // LiveData helper method
-    static List getLiveDataUpdates(LiveData liveData){
-        CountDownLatch c = new CountDownLatch(1);
-        int rand = new Random().nextInt();
-        final List[] container = new List[1];
-        liveData.observeForever(new Observer<List<Clocking>>() {
+    public static <T> T getOrAwaitValue(final LiveData<T> liveData){
+        final Object[] data = new Object[1];
+        final CountDownLatch latch = new CountDownLatch(2);
+        Observer<T> observer = new Observer<T>() {
             @Override
-            public void onChanged(List<Clocking> clockings) {
-                Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModelTEST "+ rand +" - onChanged > "+ clockings);
-                container[0] = clockings;
-                c.countDown();
-                liveData.removeObserver(this);
+            public void onChanged(@Nullable T o) {
+                data[0] = o;
+                latch.countDown();
+
+                if(latch.getCount() == 0) {
+                    liveData.removeObserver(this);
+                }
             }
-        });
+        };
+        liveData.observeForever(observer);
 
         try{
-            c.await();
-        } catch (Exception e){
-            Logger.getLogger("DayViewModelTest - getLiveDataUpdates").log(Level.SEVERE, e.toString());
+            latch.await(200, TimeUnit.MILLISECONDS);
+        } catch(Exception e){
+            Logger.getAnonymousLogger().log(Level.INFO, "## DayViewModelTEST - getOrAwaitValue timed out!");
         }
-        return container[0];
+        //noinspection unchecked
+        return (T) data[0];
     }
 }
