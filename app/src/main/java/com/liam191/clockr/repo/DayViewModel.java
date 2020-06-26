@@ -33,49 +33,32 @@ public final class DayViewModel extends ViewModel {
     }
 
     public LiveData<List<Clocking>> get(){
-        AsyncTask.execute(() -> {
-            List<Clocking> newClockings = new ArrayList<>();
-            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-                newClockings.add(ClockingRepository.Mapper.map(entity));
-            }
-            clockingList.postValue(newClockings);
-        });
-
+        fetchClockings();
         return clockingList;
     }
 
     public void add(Clocking clocking){
         clockingRepository.insert(clocking);
-        AsyncTask.execute(() -> {
-            List<Clocking> newClockings = new ArrayList<>();
-            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-                newClockings.add(ClockingRepository.Mapper.map(entity));
-            }
-            clockingList.postValue(newClockings);
-        });
+        fetchClockings();
     }
 
     public void remove(Clocking clocking){
         clockingRepository.delete(clocking);
-        AsyncTask.execute(() -> {
-            List<Clocking> newClockings = new ArrayList<>();
-            for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
-                newClockings.add(ClockingRepository.Mapper.map(entity));
-            }
-            clockingList.postValue(newClockings);
-        });
+        fetchClockings();
     }
 
     public void replace(Clocking target, Clocking replacement){
-        AsyncTask.execute(() -> {
-            clockingRepository.replace(target, replacement);
+        clockingRepository.replace(target, replacement);
+        fetchClockings();
+    }
 
+    public void fetchClockings(){
+        AsyncTask.execute(() -> {
             List<Clocking> newClockings = new ArrayList<>();
             for(ClockingEntity entity : clockingDayDao.getAllForDate(day)){
                 newClockings.add(ClockingRepository.Mapper.map(entity));
             }
             clockingList.postValue(newClockings);
-
         });
     }
 
