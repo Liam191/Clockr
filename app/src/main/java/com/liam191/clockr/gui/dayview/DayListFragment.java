@@ -5,6 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.liam191.clockr.AppContainer;
 import com.liam191.clockr.ClockrApplication;
 import com.liam191.clockr.R;
@@ -14,11 +24,6 @@ import org.threeten.bp.Clock;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class DayListFragment extends Fragment {
 
@@ -56,5 +61,14 @@ public class DayListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        NavController navController = Navigation.findNavController(view);
+        AppBarConfiguration appBarConf = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+
+        NavigationUI.setupWithNavController(toolbar, navController, appBarConf);
     }
 }
