@@ -3,6 +3,12 @@ package com.liam191.clockr.repo;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.repo.db.ClockingDayDao;
 import com.liam191.clockr.repo.db.ClockingEntity;
@@ -11,12 +17,6 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 public final class DayViewModel extends ViewModel {
 
@@ -29,7 +29,6 @@ public final class DayViewModel extends ViewModel {
         this.clockingRepository = clockingRepository;
         this.clockingDayDao = clockingDayDao;
         this.day = day;
-
     }
 
     public LiveData<List<Clocking>> get(){
@@ -47,7 +46,7 @@ public final class DayViewModel extends ViewModel {
         fetchClockings();
     }
 
-    public void replace(Clocking target, Clocking replacement){
+    public void replace(Clocking target, Clocking replacement) {
         clockingRepository.replace(target, replacement);
         fetchClockings();
     }
@@ -88,6 +87,8 @@ public final class DayViewModel extends ViewModel {
         }
 
         DayViewModel build(){
+            // TODO: Remove mandatory ofDate?
+            //     - Is it necessary with a mutable date? Is a default really a good alternative?
             if(ofDate == null){
                 throw new IllegalArgumentException("ofDate must be set");
             }
