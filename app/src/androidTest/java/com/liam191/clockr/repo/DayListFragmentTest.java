@@ -2,6 +2,11 @@ package com.liam191.clockr.repo;
 
 import android.content.Context;
 
+import androidx.fragment.app.testing.FragmentScenario;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.filters.LargeTest;
+
 import com.liam191.clockr.R;
 import com.liam191.clockr.clocking.Clocking;
 import com.liam191.clockr.gui.dayview.ClockrFragmentFactory;
@@ -18,12 +23,8 @@ import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
-import androidx.fragment.app.testing.FragmentScenario;
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.filters.LargeTest;
-
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -39,6 +40,7 @@ public class DayListFragmentTest {
     private ClockingRepository testRepository;
     private DayViewModel.Builder clockingViewBuilder;
 
+    // TODO: Implement custom ViewMatchers for Clockings (remove all the excess matcher code in tests)
 
     @Before
     public void createTestDb(){
@@ -56,6 +58,7 @@ public class DayListFragmentTest {
     public void teardownTestDb(){
         testDb.close();
     }
+
 
     @Test
     public void testMainActivity(){
@@ -112,5 +115,59 @@ public class DayListFragmentTest {
                 .check(matches(not(hasDescendant(withText("26m")))))
                 .check(matches(not(hasDescendant(withText(clocking4.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))))));
 
+    }
+
+    @Test
+    public void testMainActivity_WithDifferentDates(){
+        ZonedDateTime fakeNow = ZonedDateTime.parse("2020-03-04T10:00:00Z[Europe/London]");
+        Clock fakeClock = Clock.fixed(fakeNow.toInstant(), fakeNow.getZone());
+        ClockrApplicationTestRunner.FakeClockrApplication.FakeAppContainerImpl appContainer = ((ClockrApplicationTestRunner.FakeClockrApplication) ApplicationProvider.getApplicationContext()).getAppContainer();
+        appContainer.setAppClock(fakeClock);
+
+        ZonedDateTime testDate = ZonedDateTime.parse("2020-03-04T08:11Z[Europe/London]");
+
+        Clocking clocking1 = new Clocking.Builder("hello world")
+                .startTime(testDate.plusMinutes(1))
+                .endTime(testDate.plusMinutes(10))
+                .description("This is a description for the first clocking.").build();
+        Clocking clocking2 = new Clocking.Builder("old world")
+                .startTime(testDate.plusDays(1).plusMinutes(4))
+                .description("This clocking has a different start date and shouldn't show up").build();
+
+        testRepository.insert(clocking1);
+        testRepository.insert(clocking2);
+
+        // TODO: Fix 'View null does not have a NavController set' error in tests
+        //       - Look into NavController testing video
+        FragmentScenario.launchInContainer(DayListFragment.class, null, new ClockrFragmentFactory(clockingViewBuilder));
+
+        onView(withId(R.id.clocking_recyclerview))
+                .check(matches(hasChildCount(1)))
+                // clocking1
+                .check(matches(hasDescendant(withText(clocking1.label()))))
+                .check(matches(hasDescendant(withText(clocking1.description()))))
+                .check(matches(hasDescendant(withText("9m"))))
+                .check(matches(hasDescendant(withText(clocking1.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))))))
+                // clocking2 - should not be displayed because it's from another date
+                .check(matches(not(hasDescendant(withText(clocking2.label())))))
+                .check(matches(not(hasDescendant(withText(clocking2.description())))))
+                .check(matches(not(hasDescendant(withText("26m")))))
+                .check(matches(not(hasDescendant(withText(clocking2.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))))));
+
+
+        onView(withId(R.id.toolbar_next)).perform(click());
+
+        onView(withId(R.id.clocking_recyclerview))
+                .check(matches(hasChildCount(1)))
+                // clocking1 - should not be displayed after changing the date
+                .check(matches(not(hasDescendant(withText(clocking1.label())))))
+                .check(matches(not(hasDescendant(withText(clocking1.description())))))
+                .check(matches(not(hasDescendant(withText("9m")))))
+                .check(matches(not(hasDescendant(withText(clocking1.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))))))
+                // clocking2
+                .check(matches(hasDescendant(withText(clocking2.label()))))
+                .check(matches(hasDescendant(withText(clocking2.description()))))
+                .check(matches(hasDescendant(withText("26m"))))
+                .check(matches(hasDescendant(withText(clocking2.startTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))))));
     }
 }

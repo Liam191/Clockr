@@ -65,7 +65,7 @@ public class DayListFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        NavController navController = Navigation.findNavController(view);
+        NavController navController = Navigation.findNavController(getActivity().findViewById(R.id.nav_host_fragment));
         AppBarConfiguration appBarConf = new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = view.findViewById(R.id.toolbar);
 
